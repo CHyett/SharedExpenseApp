@@ -178,8 +178,8 @@ app.post('/data', (req,res) => {
 // start the server
 
 https.createServer({
-  key: fs.readFileSync('key2.pem'),
-  cert: fs.readFileSync('cert2.pem')
+  key: fs.readFileSync('privkey.pem'),
+  cert: fs.readFileSync('fullchain.pem')
 }, app).listen(port, function () {
   console.log(`Server is running on port: ${port}`);
 })
