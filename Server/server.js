@@ -10,6 +10,8 @@ var requests = 0
 
 const app = express();
 const port = 443;
+app.set('trust proxy', true)
+app.use(express.static(path.join(__dirname)))
 
 
 const TRANSACTION_SUCCESS_STATUSES = [
@@ -70,13 +72,17 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.get('/',(req,res) => {
     requests+=1
-    res.send('hello losers')
-    console.log('GOT GET REQUEST')
+    res.send('Hello Losers')
+
+    console.log('GOT GET root REQUEST')
+    console.log("IP from sender is",req.ip)
 
 })
 
+
 app.get("/client_token", (req, res) => {
   console.log("Got client token request")
+  console.log("IP from sender is",req.ip)
   gateway.clientToken.generate({}, (err, response) => {
     res.send(response.clientToken)
   })
@@ -85,6 +91,7 @@ app.get("/client_token", (req, res) => {
 
 app.post("/checkout", (req, res) => {
   console.log("Received checkout get request")
+  console.log("IP from sender is",req.ip)
   let transactionErrors
   const paymentMethodNonce = req.body.nonce
   const amount = req.body.amount
@@ -156,17 +163,6 @@ app.post("/checkout", (req, res) => {
 
 
 
-app.get('/test', (req, res) => {
-    //console.log(req.query.msg)
-	  res.sendFile('test.txt',{root: __dirname})
-    //const num = parseFloat(req.query.msg)
-    //const result = num + 69
-    //res.send(result.toString())
-    console.log('GOT GET REQUEST')
-})
-
-
-
 app.post('/data', (req,res) => {
     const data = req.body
     console.log(data.amount)
@@ -184,11 +180,5 @@ https.createServer({
   console.log(`Server is running on port: ${port}`);
 })
 
-
-/*
-app.listen(port, () => {
-    console.log(`Server is running on port: ${port}`);
-});
-*/
 
 //module.exports = gateway
