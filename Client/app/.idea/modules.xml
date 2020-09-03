@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Shared Expense App.iml" filepath="$PROJECT_DIR$/../Shared Expense App.iml" group="Shared Expense App" />
+      <module fileurl="file://$PROJECT_DIR$/app.iml" filepath="$PROJECT_DIR$/app.iml" group="Shared Expense App/app" />
+    </modules>
+  </component>
+</project>

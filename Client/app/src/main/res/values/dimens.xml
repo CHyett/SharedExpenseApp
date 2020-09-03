@@ -1,0 +1,7 @@
+<resources>
+    <dimen name="fab_margin">50dp</dimen>
+    <dimen name="edit_text_width">150sp</dimen>
+    <dimen name="edit_text_height">55dp</dimen>
+    <dimen name="activityMainButtonPadding">50sp</dimen>
+    <dimen name="activityMainButtonCorners">20sp</dimen>
+</resources>
