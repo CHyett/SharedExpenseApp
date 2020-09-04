@@ -6,12 +6,31 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require("body-parser");
 const routes = require("./routes.js")
-var requests = 0
+const mysql = require("mysql")
+let requests = 0
 
 const app = express();
 const port = 443;
 app.set('trust proxy', true)
-app.use(express.static(path.join(__dirname)))
+app.use(express.static(path.join("./images")))
+
+//db stuff
+
+const mysqlConnection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'root',
+  password : 'underthetop182',
+  database : 'MySQL80',
+  multipleStatements : true
+})
+
+mysqlConnection.connect((err)=>{
+  if(!err)
+    console.log("Connected to database")
+  else
+    console.log("Connection to database failed")
+})
+
 
 
 const TRANSACTION_SUCCESS_STATUSES = [
@@ -70,106 +89,7 @@ app.use('/',routes)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.get('/',(req,res) => {
-    requests+=1
-    res.send('Hello Losers')
 
-    console.log('GOT GET root REQUEST')
-    console.log("IP from sender is",req.ip)
-
-})
-
-
-app.get("/client_token", (req, res) => {
-  console.log("Got client token request")
-  console.log("IP from sender is",req.ip)
-  gateway.clientToken.generate({}, (err, response) => {
-    res.send(response.clientToken)
-  })
-})
-
-
-app.post("/checkout", (req, res) => {
-  console.log("Received checkout get request")
-  console.log("IP from sender is",req.ip)
-  let transactionErrors
-  const paymentMethodNonce = req.body.nonce
-  const amount = req.body.amount
-  const deviceData = req.body.deviceData
-  console.log("Nonce is: ",paymentMethodNonce)
-  console.log("amount is: ", amount)
-
-  //res.send("Got that stupid ass nonce")
-
-/*
-
-  gateway.transaction
-  .sale({
-    amount,
-    paymentMethodNonce,
-    options: { submitForSettlement: true },
-  })
-  .then((result) => {
-    const { success, transaction } = result
-
-    return new Promise((resolve, reject) => {
-      if (success || transaction) {
-        //res.redirect(`checkouts/${transaction.id}`);
-        res.send(result)
-
-        resolve();
-      }
-
-      reject(result);
-    })
-  })
-  .catch(({ errors }) => {
-    const deepErrors = errors.deepErrors();
-
-    debug('errors from transaction.sale %O', deepErrors);
-
-    req.flash('error', { msg: formatErrors(deepErrors) });
-    res.redirect('checkouts/new');
-  })
-
-*/
-
-  gateway.transaction.sale({
-    amount: amount,
-    paymentMethodNonce: paymentMethodNonce,
-    deviceData: deviceData,
-    options: {
-      submitForSettlement: true
-    }
-  }, function(err, result) {
-    if(!result.success || err){
-      console.log("Transaction Failed you Retard.")
-      res.send("Transaction Failed you Retard.")
-    } else{
-      console.log("Transaction Complete You Bitchass Mothafucka!")
-      res.send("Transaction Complete You Bitchass Mothafucka!")
-    }
-    console.log(typeof(result))
-    console.log(result.success)
-
-  // Use payment method nonce here
-  })
-
-
-
-})
-
-
-
-
-
-app.post('/data', (req,res) => {
-    const data = req.body
-    console.log(data.amount)
-    console.log(data.groupID)
-    res.send('got that shit')
-
-})
 
 // start the server
 
