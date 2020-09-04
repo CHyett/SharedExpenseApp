@@ -13,22 +13,27 @@ const app = express();
 const port = 443;
 app.set('trust proxy', true)
 app.use(express.static(path.join("./images")))
+app.use('/',routes)
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 //db stuff
 
 const mysqlConnection = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
-  password : 'underthetop182',
-  database : 'MySQL80',
+  password : 'password',
+  database : 'userdb',
   multipleStatements : true
 })
 
 mysqlConnection.connect((err)=>{
-  if(!err)
+  if(!err){
     console.log("Connected to database")
-  else
+  }
+  else{
     console.log("Connection to database failed")
+  }
 })
 
 
@@ -85,9 +90,7 @@ const gateway = braintree.connect({
 
 
 
-app.use('/',routes)
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+
 
 
 
