@@ -16,7 +16,6 @@ app.use('/',routes)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-//db stuff
 
 
 
