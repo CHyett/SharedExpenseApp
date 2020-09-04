@@ -40,7 +40,7 @@ class RegisterFragment : Fragment() {
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
         binding.registerFragmentRegisterButton.setOnClickListener {
-            Toast.makeText(activity, User(viewModel.newUserUsername.value!!, viewModel.newUserPassword.value!!, viewModel.newUserEmail.value!!, viewModel.newUserDateOfBirth.value!!).toString(), Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, User(viewModel.newUserUsername.value!!, viewModel.newUserPassword.value!!, viewModel.newUserEmail.value!!, viewModel.newUserDateOfBirth.value!!).toString(), Toast.LENGTH_LONG).show()
             viewModel.register() }
     }
 
