@@ -11,7 +11,7 @@ routes.get('/database',(req,res)=>{
   //console.log(database.query("SELECT * from user;"))
   database.mysqlConnection.query("SELECT * from user",(err,rows,fields)=>{
     if(!err)
-      res.send(rows[0])
+      res.send(rows)
     else
       res.send("")
   })
@@ -28,6 +28,24 @@ routes.get('/database',(req,res)=>{
   */
 })
 
+routes.get('/insert',(req,res)=>{
+  console.log("GOT GET insert REQUEST")
+  //console.log(database.query("SELECT * from user;"))
+  const username = 'jimbo'
+  const email = 'pass@email.com'
+  const password = 'passyword'
+  database.mysqlConnection.query(`INSERT INTO userdb.user (username, email, password) VALUES ('${username}', '${email}','${password}')`,(err,result)=>{
+    if(!err){
+      res.send("Row added")
+      console.log("Row added")
+    }else{
+      res.send("error adding row")
+      console.log("error adding row")
+      //throw err
+    }
+  })
+
+})
 
 
 
@@ -51,7 +69,7 @@ routes.get("/client_token", (req, res) => {
 
 
 routes.post("/checkout", (req, res) => {
-  console.log("Received checkout get request")
+  console.log("Received checkout post request")
   console.log("IP from sender is",req.ip)
   let transactionErrors
   const paymentMethodNonce = req.body.nonce
