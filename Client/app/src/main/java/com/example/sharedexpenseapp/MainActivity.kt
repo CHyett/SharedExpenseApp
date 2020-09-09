@@ -1,5 +1,27 @@
 package com.example.sharedexpenseapp
 
+
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+
+class MainActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+    }
+
+}
+
+
+
+
+
+
+//Previous working code
+
+/*package com.example.sharedexpenseapp
+
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -95,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-}
+}*/
 
 //Snackbar code
 /*fab.setOnClickListener { view ->
