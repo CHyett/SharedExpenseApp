@@ -1,3 +1,5 @@
+//Put credentials from lines 67-72 in a seperate file marked by .gitignore so that people can't access our credentials
+
 const braintree = require('braintree')
 const { Transaction } = require('braintree')
 const https = require('https');
