@@ -1,9 +1,11 @@
 <resources>
+
+    <!-- Global resources -->
     <dimen name="fab_margin">50dp</dimen>
     <dimen name="edit_text_width">150dp</dimen>
     <dimen name="edit_text_height">55dp</dimen>
-    <dimen name="activityMainButtonPadding">50dp</dimen>
-    <dimen name="activityMainButtonCorners">20dp</dimen>
+    <dimen name="button_padding">50dp</dimen>
+    <dimen name="button_corners">20dp</dimen>
 
     <!-- login screen dimensions -->
     <dimen name="login_password_top_margin">60dp</dimen>
@@ -15,7 +17,7 @@
     <dimen name="register_fragment_title_margin_top">60dp</dimen>
     <dimen name="register_fragment_title_text_size">50sp</dimen>
     <dimen name="register_fragment_username_edittext_margin_top">100dp</dimen>
-    <dimen name="register_fragment_password_edittext_margin_top">65dp</dimen>
+    <dimen name="register_fragment_password_edittext_margin_top">30dp</dimen>
     <dimen name="register_fragment_edittext_height">55dp</dimen>
     <dimen name="register_fragment_edittext_width">250dp</dimen>
 </resources>

@@ -3,6 +3,4 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#1BBE00</color>
     <color name="colorAccent">#03DAC5</color>
-    <color name="activityMainButtonColor">#6200EE</color>
-    <color name="activityMainButtonTextColor">#FFFFFF</color>
 </resources>

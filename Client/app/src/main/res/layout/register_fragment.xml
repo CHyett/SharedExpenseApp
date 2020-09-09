@@ -55,39 +55,25 @@
             android:layout_width="@dimen/register_fragment_edittext_width"
             android:layout_height="@dimen/register_fragment_edittext_height"
             android:hint="@string/register_email_edittext_hint"
-            android:inputType="text"
+            android:inputType="textEmailAddress"
             android:text="@={viewmodel.newUserEmail$app_debug}"
             android:layout_marginTop="@dimen/register_fragment_password_edittext_margin_top"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/register_screen_password_edittext" />
 
-
-        <EditText
-            android:id="@+id/register_screen_dob_edittext"
-            style="@style/AppTheme.EditText"
-            android:layout_width="@dimen/register_fragment_edittext_width"
-            android:layout_height="@dimen/register_fragment_edittext_height"
-            android:hint="@string/register_dob_edittext_hint"
-            android:inputType="date"
-            android:text="@={viewmodel.newUserDateOfBirth$app_debug}"
-            android:layout_marginTop="@dimen/register_fragment_password_edittext_margin_top"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/register_screen_email_edittext" />
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/register_fragment_register_button"
             style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/activityMainButtonColor"
+            android:background="@color/colorPrimary"
             android:text="@string/register_register_button"
-            android:layout_marginTop="@dimen/register_fragment_password_edittext_margin_top"
-            app:cornerRadius="@dimen/activityMainButtonCorners"
+            app:cornerRadius="@dimen/button_corners"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/register_screen_dob_edittext" />
+            app:layout_constraintTop_toBottomOf="@+id/register_screen_email_edittext" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -22,11 +22,7 @@ class LoginFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.login_fragment, container, false)
-        binding.lifecycleOwner = this
-        viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
-        binding.viewmodel = viewModel
         return binding.root
-        //return inflater.inflate(R.layout.login_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,6 +32,9 @@ class LoginFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
+        binding.viewmodel = viewModel
+        binding.lifecycleOwner = this
         binding.submitButton.setOnClickListener { viewModel.submit() }
         binding.registrationLink.setOnClickListener { navController.navigate(R.id.action_loginFragment_to_registerFragment) }
     }

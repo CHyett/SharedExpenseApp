@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../Shared Expense App.iml" filepath="$PROJECT_DIR$/../Shared Expense App.iml" group="Shared Expense App" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1752927969/Shared_Expense_App.iml" filepath="$PROJECT_DIR$/.idea/modules/-1752927969/Shared_Expense_App.iml" group="Shared_Expense_App" />
       <module fileurl="file://$PROJECT_DIR$/app.iml" filepath="$PROJECT_DIR$/app.iml" group="Shared Expense App/app" />
     </modules>
   </component>
