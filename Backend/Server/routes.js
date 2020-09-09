@@ -28,19 +28,20 @@ routes.get('/database',(req,res)=>{
   */
 })
 
-routes.get('/insert',(req,res)=>{
-  console.log("GOT GET insert REQUEST")
+routes.post('/register',(req,res)=>{
+  console.log("GOT POST register REQUEST")
+  console.log(req.body)
   //console.log(database.query("SELECT * from user;"))
-  const username = 'jimbo'
-  const email = 'pass@email.com'
-  const password = 'passyword'
+  const username = req.body.username
+  const email = req.body.email
+  const password = req.body.password
   database.mysqlConnection.query(`INSERT INTO userdb.user (username, email, password) VALUES ('${username}', '${email}','${password}')`,(err,result)=>{
     if(!err){
-      res.send("Row added")
-      console.log("Row added")
+      res.send("Successfully Registered You Retard")
+      console.log("Row Added")
     }else{
-      res.send("error adding row")
-      console.log("error adding row")
+      res.send("Couldn't register you cause you're a gay retard.")
+      console.log("Error Adding Row")
       //throw err
     }
   })
@@ -71,7 +72,8 @@ routes.get("/client_token", (req, res) => {
 routes.post("/checkout", (req, res) => {
   console.log("Received checkout post request")
   console.log("IP from sender is",req.ip)
-  let transactionErrors
+
+
   const paymentMethodNonce = req.body.nonce
   const amount = req.body.amount
   const deviceData = req.body.deviceData

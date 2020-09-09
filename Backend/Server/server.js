@@ -12,9 +12,9 @@ const app = express();
 const port = 443;
 app.set('trust proxy', true)
 app.use(express.static(path.join("../Client/images")))
-app.use('/',routes)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use('/',routes)
 
 
 
