@@ -56,13 +56,11 @@ routes.get('/',(req,res) => {
     res.send('Hello Losers')
 
     console.log('GOT GET root REQUEST')
-    console.log("IP from sender is",req.ip)
 
 })
 
 routes.get("/client_token", (req, res) => {
   console.log("Got client token request")
-  console.log("IP from sender is",req.ip)
   gateway.clientToken.generate({}, (err, response) => {
     res.send(response.clientToken)
   })
@@ -70,8 +68,6 @@ routes.get("/client_token", (req, res) => {
 
 
 routes.post("/checkout", (req, res) => {
-  console.log("Received checkout post request")
-  console.log("IP from sender is",req.ip)
 
 
   const paymentMethodNonce = req.body.nonce
@@ -155,7 +151,6 @@ routes.get('/bitch',(req,res) => {
 routes.get('/emily',(req,res) => {
     res.sendFile('emily.html',{root: "../Client"})
     console.log('GOT GET emily REQUEST')
-    console.log("IP from sender is",req.ip)
 
 })
 

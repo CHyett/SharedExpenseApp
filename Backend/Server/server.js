@@ -8,6 +8,7 @@ const fs = require('fs');
 const express = require('express');
 const path = require('path');
 const bodyParser = require("body-parser");
+const middleware = require("./middleware.js")
 const routes = require("./routes.js")
 let requests = 0
 
@@ -17,6 +18,7 @@ app.set('trust proxy', true)
 app.use(express.static(path.join("../Client/images")))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(middleware.ipsend)
 app.use('/',routes)
 
 
