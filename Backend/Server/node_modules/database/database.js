@@ -8,9 +8,9 @@ const mysqlConnection = mysql.createConnection({
 })
 
 mysqlConnection.connect((err)=>{
-  if(!err)
+  if(!err){
     console.log("Connected to Database")
-  else {
+  }else{
     console.log("Connection to database failed!")
   }
 })
@@ -41,6 +41,4 @@ function query(string){
 
   })
   */
-}
-
-module.exports = {query, mysqlConnection}
+module.exports = {mysqlConnection}
