@@ -1,3 +1,4 @@
 *.pem
 *.jpg
 *.png
+braintreeCerts.json

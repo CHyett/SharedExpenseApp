@@ -1,5 +1,6 @@
 //Put credentials from lines 67-72 in a seperate file marked by .gitignore so that people can't access our credentials
 
+const braintreeCerts = require("./braintreeCerts.json")
 const braintree = require('braintree')
 const { Transaction } = require('braintree')
 const https = require('https');
@@ -66,9 +67,9 @@ function createResultObject({ status }) {
 
 const gateway = braintree.connect({
   environment: braintree.Environment.Sandbox,
-  merchantId: "ztyj4ktc4wmv4tp3",
-  publicKey: "y3yvv9bc8y5pyysv",
-  privateKey: "8373b55587b7e1d7eaa2b8c91a96e22c"
+  merchantId: braintreeCerts.merchantId,
+  publicKey: braintreeCerts.publicKey,
+  privateKey: braintreeCerts.privateKey
 })
 
 
