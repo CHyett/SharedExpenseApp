@@ -15,7 +15,7 @@ mysqlConnection.connect((err)=>{
   }
 })
 
-
+/*
 function query(string){
   mysqlConnection.query(string,(err,rows,fields)=>{
     if(!err)
@@ -23,7 +23,7 @@ function query(string){
     else
       return ""
   })
-
+*/
 
 
 
