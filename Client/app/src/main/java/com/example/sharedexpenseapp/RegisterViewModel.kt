@@ -20,11 +20,11 @@ class RegisterViewModel : ViewModel() {
         get() = liveRegistrationStatus
 
     internal fun register() {
-        val httpClient = AsyncHttpClient()
         val params = RequestParams()
         params.put("username", newUserUsername.value)
         params.put("password", newUserPassword.value)
         params.put("email", newUserEmail.value)
+        val httpClient = AsyncHttpClient()
         httpClient.post(REGISTER_ENDPOINT, params, object: AsyncHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
                 responseBody?.let { liveRegistrationStatus.value = String(it) }

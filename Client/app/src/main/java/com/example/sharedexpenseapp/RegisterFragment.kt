@@ -18,9 +18,9 @@ import com.example.sharedexpenseapp.databinding.RegisterFragmentBinding
 
 
 private const val USERNAME_REGEX = "^[A-Z0-9a-z]{7,15}$"
-private const val USERNAME_ERROR = "Please enter between 8-15 alphanumeric characters"
+private const val USERNAME_ERROR = "Please enter between 7-15 alphanumeric characters"
 //private const val PASSWORD_REGEX = """^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[\]:;<>,.?\/~_+\-=|\\\\]).{8,32}$"""
-private const val PASSWORD_ERROR = "Your password must be between 7-15 alphanumeric characters"
+private const val PASSWORD_ERROR = "Your password must be between 8-15 alphanumeric characters"
 private const val EMAIL_ERROR = "Your eMail is invalid"
 
 class RegisterFragment : Fragment() {
