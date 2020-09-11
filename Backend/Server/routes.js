@@ -35,7 +35,7 @@ routes.post('/register',(req,res)=>{
   const username = req.body.username
   const email = req.body.email
   const password = req.body.password
-  database.mysqlConnection.query(`INSERT INTO userdb.user (username, email, password) VALUES ('${username}', '${email}','${password}')`,(err,result)=>{
+  database.mysqlConnection.query(`INSERT INTO userdb.user (username, email, password) VALUES ('${username}', '${email}','${password}');`,(err,result)=>{
     if(!err){
       res.send("Successfully Registered You Retard")
       console.log("Row Added")
@@ -45,6 +45,30 @@ routes.post('/register',(req,res)=>{
       //throw err
     }
   })
+
+})
+
+routes.get('/login',(req,res)=>{
+
+  const username = req.query.username
+  const password = req.query.password
+  //console.log(username)
+  //console.log(password)
+
+  database.mysqlConnection.query(`SELECT userID FROM userdb.user WHERE username = '${username}' AND password = '${password}';`,(err,rows,fields)=>{
+
+    if(rows.length == 1){
+      res.send("Yo bitchass ID is: " + rows[0].userID)
+      console.log("Yo bitchass ID is: " + rows[0].userID)
+    }else{
+      res.send("you ain't registered biatch.")
+      console.log("you ain't registered biatch.")
+    }
+
+  })
+
+
+  //res.send("got that shit")
 
 })
 
