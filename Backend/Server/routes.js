@@ -10,9 +10,9 @@ routes.get('/database',(req,res)=>{
   console.log("GOT GET database REQUEST")
   //console.log(database.query("SELECT * from user;"))
   database.mysqlConnection.query("SELECT * from user",(err,rows,fields)=>{
-    if(!err)
+    if(!err){
       res.send(rows)
-    else
+    }else
       res.send("")
   })
 
@@ -35,14 +35,22 @@ routes.post('/register',(req,res)=>{
   const username = req.body.username
   const email = req.body.email
   const password = req.body.password
-  database.mysqlConnection.query(`INSERT INTO userdb.user (username, email, password) VALUES ('${username}', '${email}','${password}');`,(err,result)=>{
+  database.mysqlConnection.query(`INSERT INTO userdb.user (username, email, password) VALUES ('${username}', '${email}','${password}');`,(err,result,fields)=>{
     if(!err){
       res.send("Successfully Registered You Retard")
       console.log("Row Added")
+      console.log(result)
+      //console.log("last id is: " + result.insertId)
     }else{
-      res.send("Couldn't register you cause you're a gay retard.")
-      console.log("Error Adding Row")
-      //throw err
+      if(err.errno == 1062){
+        res.send("You're already registered dumbass.")
+        console.log("Error Adding Row")
+        //console.log(err.errno)
+        //throw err
+      }else{
+        res.send("Couldn't register you for whatever goddamn reason I don't really care.")
+        console.log("Error adding row")
+      }
     }
   })
 
@@ -52,15 +60,24 @@ routes.get('/login',(req,res)=>{
 
   const username = req.query.username
   const password = req.query.password
+  const amountOwed = 30
+  const amountSpent = 20
   //console.log(username)
   //console.log(password)
 
-  database.mysqlConnection.query(`SELECT userID FROM userdb.user WHERE username = '${username}' AND password = '${password}';`,(err,rows,fields)=>{
+  database.mysqlConnection.query(`SELECT id FROM userdb.user WHERE username = '${username}' AND password = '${password}';`,(err,rows,fields)=>{
 
+    //console.log(err)
     if(rows.length == 1){
-      res.send("Yo bitchass ID is: " + rows[0].userID)
-      console.log("Yo bitchass ID is: " + rows[0].userID)
+      res.send({
+        amountOwed,
+        amountSpent
+      })
+      console.log(res.statusCode)
+
+      console.log("Yo bitchass ID is: " + rows[0].id)
     }else{
+      res.status(401)
       res.send("you ain't registered biatch.")
       console.log("you ain't registered biatch.")
     }
@@ -69,6 +86,19 @@ routes.get('/login',(req,res)=>{
 
 
   //res.send("got that shit")
+
+})
+
+
+routes.post('/create_group',(req,res)=>{
+
+  const name = req.body.username
+  const users = req.body.users
+
+  databse.mysqlConnection.query(`INSERT INTO userdb.group (name) VALUES ('${name}');`,(err,results,fields)=>{
+    console.log(results.insertId)
+
+  })
 
 })
 
