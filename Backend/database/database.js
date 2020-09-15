@@ -1,4 +1,5 @@
 const mysql = require("mysql")
+const util = require("util")
 
 const mysqlConnection = mysql.createConnection({
   host     : "localhost",
@@ -14,6 +15,8 @@ mysqlConnection.connect((err)=>{
     console.log("Connection to database failed!")
   }
 })
+
+const query = util.promisify(mysqlConnection.query).bind(mysqlConnection)
 
 /*
 function query(string){
@@ -41,4 +44,4 @@ function query(string){
 
   })
   */
-module.exports = {mysqlConnection}
+module.exports = {mysqlConnection,query}

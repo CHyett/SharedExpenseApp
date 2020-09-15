@@ -10,6 +10,7 @@ const path = require('path');
 const bodyParser = require("body-parser");
 const middleware = require("./middleware.js")
 const routes = require("./routes.js")
+const util = require('util')
 let requests = 0
 
 const app = express();

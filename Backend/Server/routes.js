@@ -1,5 +1,6 @@
 const express = require('express')
 const database = require('database')
+const util = require('util')
 
 
 const routes = express.Router()
@@ -28,6 +29,7 @@ routes.get('/database',(req,res)=>{
   */
 })
 
+
 routes.post('/register',(req,res)=>{
   console.log("GOT POST register REQUEST")
   console.log(req.body)
@@ -55,6 +57,7 @@ routes.post('/register',(req,res)=>{
   })
 
 })
+
 
 routes.get('/login',(req,res)=>{
 
@@ -89,20 +92,84 @@ routes.get('/login',(req,res)=>{
 
 })
 
+/*
+routes.post('/create_group',async(req,res)=>{
+  let userID
+  let groupID
+  const groupname = req.body.groupname
+  const username = req.body.username
+  console.log("username is: " + username)
+  console.log("groupname is: " + groupname)
 
-routes.post('/create_group',(req,res)=>{
+  const test1 = await database.mysqlConnection.query(`SELECT id FROM userdb.user WHERE username = '${username}';`,async (err,rows,fields)=>{
+    userID = rows[0].id
+    console.log("userID in function: " + userID)
+    return userID
+  })
 
-  const name = req.body.username
-  const users = req.body.users
+  const test2 = await database.mysqlConnection.query(`INSERT INTO userdb.group (name) VALUES ('${groupname}');`,(err,results,fields)=>{
+    groupID = results.insertId
+    console.log("groupID in function: " + groupID)
+    if(!err){
+      res.send("Successfully Created Group Retard")
+      console.log("Row Added to Group Table")
+      return groupID
+    }else{
+        res.send("Couldn't create group for some stupid reason I don't know.")
+        console.log("Error Adding Row")
+        return 0
+    }
 
-  databse.mysqlConnection.query(`INSERT INTO userdb.group (name) VALUES ('${name}');`,(err,results,fields)=>{
-    console.log(results.insertId)
 
   })
 
+  console.log("userID is: " + test1)
+  console.log("groupID is: " + test2)
+  database.mysqlConnection.query(`INSERT INTO userdb.user2group (userID,groupID) VALUES ('${userID}','${groupID}');`,(err,results,fields)=>{
+    if(!err){
+      console.log("added to user2group table")
+    }else{
+      console.log("Couldnt add to user2group")
+      console.log(err)
+    }
+
+
+  })
+
+
 })
+*/
+
+routes.post('/create_group', async(req,res)=>{
+
+  const groupname = req.body.groupname
+  const username = req.body.username
+
+  console.log("username is: " + username)
+  console.log("groupname is: " + groupname)
+
+  const userQ = await database.query(`SELECT id FROM userdb.user WHERE username = '${username}';`)
+  const userID = userQ[0].id
+  console.log("userID is: " + userID)
+
+  const groupQ = await database.query(`INSERT INTO userdb.group (name) VALUES ('${groupname}');`)
+  const groupID = groupQ.insertId
+  console.log("groupID is: " + groupID)
+
+  const user2groupQ = database.query(`INSERT INTO userdb.user2group (userID,groupID) VALUES ('${userID}','${groupID}');`,(err,results,fields)=>{
+    if(!err){
+      console.log("Row added to group table.")
+      res.send("Group Created Bitch")
+    }else{
+      console.log("could not add row to group table")
+      res.send("Group Creation Failed Retard!")
+    }
+  })
+
+  res.send("Group Created!")
 
 
+})
 
 
 
