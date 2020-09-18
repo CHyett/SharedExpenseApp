@@ -3,13 +3,29 @@ package com.example.sharedexpenseapp
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
+import android.view.View
 import android.widget.EditText
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
 import com.google.android.material.textfield.TextInputEditText
 
-@BindingAdapter("android:text")
+
+@BindingAdapter("isEnabled")
+fun setIsEnabled(button: com.google.android.material.button.MaterialButton, enabled: Boolean) {
+    button.isEnabled = enabled
+}
+
+
+
+
+
+
+
+
+
+
+/*@BindingAdapter("android:text")
 internal fun setText(view: EditText, value: Float?) {
     println("Binding adapter function fired")
     view.text = value?.let { SpannableStringBuilder(value.toString()) } ?: SpannableStringBuilder("")
@@ -41,4 +57,4 @@ fun setTextChangedListener(editText: TextInputEditText, listener: InverseBinding
             listener.onChange()
         }
     })
-}
+}*/

@@ -3,13 +3,27 @@ package com.example.sharedexpenseapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var viewModel: MainActivityViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModelFactory = MainActivityViewModelFactory(application)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel::class.java)
         setContentView(R.layout.activity_main)
+        viewModel.orientation.observe(this, Observer {
+            this.requestedOrientation = it
+        })
     }
+
+    /*override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt("appOrientation", viewModel.orientation.value!!)
+        super.onSaveInstanceState(outState)
+    }*/
 
 }
 

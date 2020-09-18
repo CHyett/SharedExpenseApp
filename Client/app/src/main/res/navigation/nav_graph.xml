@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/homePageFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -19,6 +19,15 @@
         android:id="@+id/registerFragment"
         android:name="com.example.sharedexpenseapp.RegisterFragment"
         android:label="RegisterFragment"
-        tools:layout="@layout/register_fragment"/>
+        tools:layout="@layout/register_fragment">
+        <action
+            android:id="@+id/action_registerFragment_to_homePageFragment"
+            app:destination="@id/homePageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homePageFragment"
+        android:name="com.example.sharedexpenseapp.HomePageFragment"
+        android:label="HomePageFragment"
+        tools:layout="@layout/home_page_fragment" />
 
 </navigation>

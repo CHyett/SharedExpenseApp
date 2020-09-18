@@ -22,4 +22,15 @@
     <dimen name="register_fragment_password_edittext_margin_top">30dp</dimen>
     <dimen name="register_fragment_edittext_height">55dp</dimen>
     <dimen name="register_fragment_edittext_width">250dp</dimen>
+
+    <!-- home screen dimens -->
+    <dimen name="home_fragment_imageview_dimens">200dp</dimen>
+    <dimen name="home_fragment_profile_picture_radius">100dp</dimen>
+    <dimen name="home_fragment_imageview_margin_top">100dp</dimen>
+    <dimen name="home_fragment_edittetext_width">180dp</dimen>
+    <dimen name="home_fragment_edittetext_height">55dp</dimen>
+    <dimen name="home_fragment_group_name_form_margin_top">100dp</dimen>
+    <dimen name="home_fragment_log_out_button_margin_bottom">50dp</dimen>
+
+
 </resources>

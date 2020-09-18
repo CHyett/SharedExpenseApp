@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewmodel" type="com.example.sharedexpenseapp.LoginViewModel"/>
+        <variable name="viewmodel" type="com.example.sharedexpenseapp.MainActivityViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,12 +14,14 @@
 
         <EditText
             android:id="@+id/login_username_eddittext"
+            style="@style/AppTheme.EditText"
             android:layout_width="@dimen/login_fragment_edittext_width"
             android:layout_height="@dimen/login_fragment_edittext_height"
             android:layout_marginTop="@dimen/login_fragment_username_edittext_margin_top"
             android:hint="@string/login_edittext_username_hint"
             android:inputType="text"
             android:text="@={viewmodel.liveUsername$app_debug}"
+            android:autofillHints="@string/login_screen_username_autofill"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -33,6 +35,7 @@
             android:hint="@string/login_edittext_password_hint"
             android:inputType="textPassword"
             android:text="@={viewmodel.livePassword$app_debug}"
+            android:autofillHints="@string/login_screen_password_autofill"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/login_username_eddittext" />
