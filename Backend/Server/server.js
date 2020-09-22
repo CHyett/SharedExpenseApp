@@ -11,6 +11,7 @@ const bodyParser = require("body-parser");
 const middleware = require("./middleware.js")
 const routes = require("./routes.js")
 const util = require('util')
+const socket = require('socket.io')
 let requests = 0
 
 const app = express();
@@ -83,12 +84,23 @@ const gateway = braintree.connect({
 
 // start the server
 
-https.createServer({
+const server = https.createServer({
   key: fs.readFileSync('privkey.pem'),
   cert: fs.readFileSync('fullchain.pem')
 }, app).listen(port, function () {
   console.log(`Server is running on port: ${port}`);
 })
+
+
+//Create a socket connection
+const io = socket(server)
+
+
+
+io.on('connection',(socket)=>{
+  console.log("made socket connection")
+})
+
 
 
 //module.exports = mysqlConnection

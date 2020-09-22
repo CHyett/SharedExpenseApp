@@ -30,6 +30,7 @@ routes.get('/database',(req,res)=>{
 })
 
 
+
 routes.post('/register',(req,res)=>{
   console.log("GOT POST register REQUEST")
   console.log(req.body)
@@ -55,6 +56,13 @@ routes.post('/register',(req,res)=>{
       }
     }
   })
+
+})
+
+routes.get('/tos',(req,res)=>{
+  res.send("This site is still under construction... retard")
+
+
 
 })
 
@@ -141,12 +149,13 @@ routes.post('/create_group',async(req,res)=>{
 */
 
 routes.post('/create_group', async(req,res)=>{
-
+  const members = req.body.members
   const groupname = req.body.groupname
   const username = req.body.username
 
   console.log("username is: " + username)
   console.log("groupname is: " + groupname)
+  //console.log("members to add: " + members[0])
 
   const userQ = await database.query(`SELECT id FROM userdb.user WHERE username = '${username}';`)
   const userID = userQ[0].id
@@ -165,8 +174,6 @@ routes.post('/create_group', async(req,res)=>{
       res.send("Group Creation Failed Retard!")
     }
   })
-
-  res.send("Group Created!")
 
 
 })
@@ -275,6 +282,10 @@ routes.get('/emily',(req,res) => {
 
 })
 
+routes.get('*',(req,res)=>{
+  res.status(404)
+  res.send("This Shit don't exist yo!\nAlso, where's ma foty thousan?!")
+})
 
 
 
