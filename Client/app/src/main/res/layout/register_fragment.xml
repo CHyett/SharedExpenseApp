@@ -32,6 +32,7 @@
             android:inputType="text"
             android:text="@={viewmodel.newUserUsername$app_debug}"
             android:layout_marginTop="@dimen/register_fragment_username_edittext_margin_top"
+            android:autofillHints="@string/register_screen_username_autofill"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/register_fragment_title" />
@@ -45,6 +46,7 @@
             android:inputType="textPassword"
             android:text="@={viewmodel.newUserPassword$app_debug}"
             android:layout_marginTop="@dimen/register_fragment_password_edittext_margin_top"
+            android:autofillHints="register_screen_password_autofill"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/register_screen_username_edittext" />
@@ -58,6 +60,7 @@
             android:inputType="textEmailAddress"
             android:text="@={viewmodel.newUserEmail$app_debug}"
             android:layout_marginTop="@dimen/register_fragment_password_edittext_margin_top"
+            android:autofillHints="@string/register_screen_email_autofill"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/register_screen_password_edittext" />

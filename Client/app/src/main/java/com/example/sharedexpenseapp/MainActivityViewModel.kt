@@ -1,71 +1,132 @@
 package com.example.sharedexpenseapp
 
-import android.view.View
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.google.android.material.snackbar.Snackbar
+import android.app.Application
+import android.content.pm.ActivityInfo
+import androidx.lifecycle.*
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import com.example.sharedexpenseapp.database.ApplicationDatabase
+import com.example.sharedexpenseapp.database.Entry
 import com.loopj.android.http.AsyncHttpClient
-import com.loopj.android.http.AsyncHttpResponseHandler
-import com.loopj.android.http.RequestParams
 import com.loopj.android.http.TextHttpResponseHandler
 import cz.msebera.android.httpclient.Header
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
-internal const val REQUEST_CODE = 26
-private const val GET_TOKEN_ENDPOINT = "https://ourapp.live/client_token"
-internal const val CHECKOUT_ENDPOINT = "https://ourapp.live/checkout"
 
-class MainActivityViewModel: ViewModel() {
+private const val LOGIN_ENDPOINT = "https://ourapp.live/login"
+const val LOGIN_TAG = "login_status"
+const val USERNAME_TAG = "user_name"
 
-    private val liveClientToken = MutableLiveData<String>()
-    internal val clientToken: LiveData<String>
-        get() = liveClientToken
+class MainActivityViewModel(application: Application): AndroidViewModel(application) {
 
-    private val liveResponseMessage = MutableLiveData<String>()
-    internal val responseMessage: LiveData<String>
-        get() = liveResponseMessage
+    //LiveData for HomePageFragment
+    private val liveUser = MutableLiveData<String>()
+    internal val user: LiveData<String>
+        get() = liveUser
 
-    private val liveErrorMessage = MutableLiveData<String>()
-    internal val errorMessage: LiveData<String>
-        get() = liveErrorMessage
+    private val liveIsLoggedIn = MutableLiveData<Boolean>()
+    internal val isLoggedIn: LiveData<Boolean>
+        get() = liveIsLoggedIn
 
-    internal val liveAmount = MutableLiveData<String>()
+    private val liveLoginStatus = MutableLiveData<String>()
+    internal val loginStatus: LiveData<String>
+        get() = liveLoginStatus
 
+    //HttpClient for this ViewModel
     private val httpClient = AsyncHttpClient()
 
-    //Get client token, prepare drop-in ui, and collect device data for Braintree
-    internal fun getClientToken(callback: () -> Unit) {
-        httpClient.get(GET_TOKEN_ENDPOINT, object: TextHttpResponseHandler() {
-            override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: String?) {
-                liveClientToken.value = responseBody ?: "" //Make some code for what to do if responseBody is null
-                callback()
+    internal val orientation = MutableLiveData<Int>()
+
+    internal var navController: NavController? = null
+
+    //LiveData for LoginFragment
+    internal val liveUsername = MutableLiveData<String>()
+
+    internal val livePassword = MutableLiveData<String>()
+
+    private val repository: ApplicationRepository
+
+    init {
+        val entryDao = ApplicationDatabase.getDatabase(application, viewModelScope).entryDao()
+        repository = ApplicationRepository(entryDao, viewModelScope)
+        viewModelScope.launch(Dispatchers.IO) {
+            liveUser.postValue(repository.getUsername())
+        }
+        runBlocking {
+            launch(Dispatchers.IO) {
+                liveIsLoggedIn.postValue(repository.getIsLoggedIn())
+            }
+        }
+    }
+
+    internal fun saveLoginStatus(loginStatus: Boolean) { liveIsLoggedIn.value = loginStatus
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.setIsLoggedIn(Entry(LOGIN_TAG, null, loginStatus))
+        }
+    }
+
+    //does username need to be nullable?
+    internal fun saveUsername(username: String?) { liveUser.value = username; username?.let {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.setUsername(Entry(USERNAME_TAG, username, null))
+        }
+    }}
+
+
+    internal fun testFunctionUsername(): String {
+        return liveUser.value ?: "User is not present"
+    }
+
+    internal fun testFunctionStatus(): Boolean {
+        return liveIsLoggedIn.value ?: false
+    }
+
+    internal fun logIn(callback: (loginStatus: Boolean) -> Unit) {
+        //See if you can use the data class
+        httpClient.get("$LOGIN_ENDPOINT?username=${liveUsername.value}&password=${livePassword.value}", object: TextHttpResponseHandler() {
+            override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseString: String?) {
+                responseString?.let { liveLoginStatus.value = it }
+                if(statusCode == 200) {
+                    liveUser.value = liveUsername.value!!
+                    callback(true)
+                } else
+                    callback(false)
             }
 
-            override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseBody: String?, error: Throwable?) {
-                liveErrorMessage.value = error.toString()
+            override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, error: Throwable?) {
+                responseString?.let { liveLoginStatus.value = "Failed! $it" }
+                error?.let { println("Throwable was ${error.message}") }
             }
         })
     }
 
-    internal fun sendPayment(amount: Float, nonce: String?, deviceData: String) {
-        val client = AsyncHttpClient()
-        val params = RequestParams()
-        params.put("nonce", nonce)
-        params.put("amount", amount)
-        params.put("deviceData", deviceData)
-        client.post(CHECKOUT_ENDPOINT, params, object: AsyncHttpResponseHandler(){
-            override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: ByteArray?) {
-                if(response != null) liveResponseMessage.value = String(response) else println("No response")
+    internal fun logOut() {
+        orientation.value = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        liveUser.value = null
+        liveIsLoggedIn.value = false
+        runBlocking {
+            launch(Dispatchers.IO) {
+                repository.setIsLoggedIn(Entry(LOGIN_TAG, null, false))
+                repository.setUsername(Entry(USERNAME_TAG, null, null))
             }
-            override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: ByteArray?, throwable: Throwable?) {
-                liveErrorMessage.value = "Failed to send payment: status code $statusCode"
-            }
-        })
+        }
+        val navOptions = NavOptions.Builder().setPopUpTo(R.id.homePageFragment, true).build()
+        navController!!.navigate(R.id.homePageFragment, null, navOptions)
     }
 
-    internal fun snackBarFunction(view: View) {
-        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-            .setAction("Action", null).show()
+    override fun onCleared() {
+        liveIsLoggedIn.value?.let { saveLoginStatus(it) }
+        liveUser.value?.let { saveUsername(it) }
+        super.onCleared()
     }
 
 }
+
+/*
+*
+* TODO:
+*  Use SQLite database for persistent data instead of SavedStateHandle.
+*
+* */

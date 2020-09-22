@@ -13,8 +13,11 @@ private const val REGISTER_ENDPOINT = "https://ourapp.live/register"
 class RegisterViewModel : ViewModel() {
 
     internal val newUserUsername = MutableLiveData<String>()
+
     internal val newUserPassword = MutableLiveData<String>()
+
     internal val newUserEmail = MutableLiveData<String>()
+
     private val liveRegistrationStatus = MutableLiveData<String>()
     internal val registrationStatus: LiveData<String>
         get() = liveRegistrationStatus

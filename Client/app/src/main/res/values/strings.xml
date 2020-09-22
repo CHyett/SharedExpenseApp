@@ -15,6 +15,8 @@
     <string name="login_edittext_password_hint">Enter your password</string>
     <string name="login_screen_submit">Submit</string>
     <string name="login_screen_register">Not a member? <u>Register here</u></string>
+    <string name="login_screen_username_autofill">Username</string>
+    <string name="login_screen_password_autofill">Password</string>
 
     <!-- Strings used for register fragment -->
     <string name="register_fragment_title">Register Here!</string>
@@ -23,5 +25,18 @@
     <string name="register_email_edittext_hint">Enter your email</string>
     <string name="register_dob_edittext_hint">Enter your birthday</string>
     <string name="register_register_button">Register</string>
+    <string name="register_screen_username_autofill">Username</string>
+    <string name="register_screen_password_autofill">Password</string>
+    <string name="register_screen_email_autofill">email</string>
+
+    <!-- Strings used for home fragment -->
+    <string name="home_fragment_charge_button">Charge</string>
+    <string name="home_fragment_pay_button">Pay</string>
+    <string name="home_fragment_image_description">Profile picture</string>
+    <string name="home_fragment_create_group_button">Create group</string>
+    <string name="home_fragment_create_group_edittext_hint">Group name</string>
+    <string name="home_fragment_submit_group_name_button">Submit</string>
+    <string name="home_fragment_create_group_name_edittext_autofill">Username</string>
+    <string name="home_fragment_log_out">Log out</string>
 
 </resources>
