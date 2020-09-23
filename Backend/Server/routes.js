@@ -1,10 +1,18 @@
 const express = require('express')
 const database = require('database')
 const util = require('util')
+const admin = require('firebase-admin')
 
 
 const routes = express.Router()
 
+
+const serviceAccount = require("./firebaseServiceAccountKey.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://partem-621b3.firebaseio.com"
+})
 
 
 routes.get('/database',(req,res)=>{
@@ -95,9 +103,12 @@ routes.get('/login',(req,res)=>{
 
   })
 
+})
 
-  //res.send("got that shit")
 
+routes.post('/firebase_token',(req,res)=>{
+  const token = req.body.token
+  const username = req.body.username
 })
 
 /*
