@@ -1,18 +1,22 @@
 const express = require('express')
 const database = require('database')
 const util = require('util')
-const admin = require('firebase-admin')
+const firebase = require('./firebase.js')
+
+const TESTOKEN = 'fZxFKPwkT7GhUkR-W7zUMe:APA91bF8n4F78gn4FjAiomzxthFSu5r4tAKVwQN5aOAnEfWzYF5JE_xETQ77f5sYETTIwR3t1tRr2NPTeno82fn4G5EoNr1ce6OrXIicqXKviMJBgQieVyAS8ce2YTMOQnfv2EhPPf8p'
 
 
 const routes = express.Router()
 
 
-const serviceAccount = require("./firebaseServiceAccountKey.json");
-
+//const serviceAccount = require("./firebaseServiceAccountKey.json");
+/*
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://partem-621b3.firebaseio.com"
 })
+
+*/
 
 
 routes.get('/database',(req,res)=>{
@@ -40,7 +44,7 @@ routes.get('/database',(req,res)=>{
 
 
 routes.post('/register',(req,res)=>{
-  console.log("GOT POST register REQUEST")
+  //console.log("GOT POST register REQUEST")
   console.log(req.body)
   //console.log(database.query("SELECT * from user;"))
   const username = req.body.username
@@ -109,6 +113,37 @@ routes.get('/login',(req,res)=>{
 routes.post('/firebase_token',(req,res)=>{
   const token = req.body.token
   const username = req.body.username
+  console.log("got that firebase")
+  console.log("token is: " + token)
+  console.log("username is: " + username)
+
+
+
+})
+
+routes.get('/test',(req,res)=>{
+
+  const message = {
+  data: {
+    topic: 'HEY',
+    amount: '69'
+  },
+  token: TESTOKEN
+  }
+
+  // Send a message to the device corresponding to the provided
+  // registration token.
+  firebase.messaging().send(message)
+    .then((response) => {
+      // Response is a message ID string.
+      console.log('Successfully sent message:', response)
+    })
+    .catch((error) => {
+      console.log('Error sending message:', error)
+    })
+
+
+
 })
 
 /*
