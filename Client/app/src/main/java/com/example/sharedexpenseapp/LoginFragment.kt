@@ -24,9 +24,7 @@ private const val PASSWORD_ERROR = "Your password must be between 8-15 alphanume
 
 class LoginFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = LoginFragment()
-    }
+    companion object { fun newInstance() = LoginFragment() }
 
     private lateinit var binding: LoginFragmentBinding
 
@@ -68,9 +66,9 @@ class LoginFragment : Fragment() {
                 sharedViewModel.logIn {
                     if(it) {
                         sharedViewModel.livePassword.value = ""
-                        sharedViewModel.liveUsername.value = ""
                         sharedViewModel.saveLoginStatus(true)
                         sharedViewModel.saveUsername(sharedViewModel.liveUsername.value!!)
+                        sharedViewModel.liveUsername.value = ""
                         navController.popBackStack()
                     }
                 }

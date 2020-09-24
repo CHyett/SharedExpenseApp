@@ -8,8 +8,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler
 import com.loopj.android.http.RequestParams
 import cz.msebera.android.httpclient.Header
 
-private const val REGISTER_ENDPOINT = "https://ourapp.live/register"
-
 class RegisterViewModel : ViewModel() {
 
     internal val newUserUsername = MutableLiveData<String>()
@@ -17,6 +15,10 @@ class RegisterViewModel : ViewModel() {
     internal val newUserPassword = MutableLiveData<String>()
 
     internal val newUserEmail = MutableLiveData<String>()
+
+    private val liveProgress = MutableLiveData(50)
+    internal val progress: LiveData<Int>
+        get() = liveProgress
 
     private val liveRegistrationStatus = MutableLiveData<String>()
     internal val registrationStatus: LiveData<String>
@@ -28,9 +30,10 @@ class RegisterViewModel : ViewModel() {
         params.put("password", newUserPassword.value)
         params.put("email", newUserEmail.value)
         val httpClient = AsyncHttpClient()
-        httpClient.post(REGISTER_ENDPOINT, params, object: AsyncHttpResponseHandler() {
+        httpClient.post(Endpoints.REGISTER_ENDPOINT.endpoint, params, object: AsyncHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
                 responseBody?.let { liveRegistrationStatus.value = String(it) }
+                clearEditTexts()
             }
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?, error: Throwable?) {
@@ -38,6 +41,12 @@ class RegisterViewModel : ViewModel() {
                 error?.let { println("Throwable was ${error.message}") }
             }
         })
+    }
+
+    private fun clearEditTexts() {
+        newUserUsername.value = ""
+        newUserPassword.value = ""
+        newUserEmail.value = ""
     }
 
 }

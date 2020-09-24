@@ -23,4 +23,11 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="register_fragment_edittext">
+        <item name="android:paddingLeft">@dimen/register_fragment_edittext_padding_left</item>
+        <item name="android:background">@drawable/edittext_background</item>
+        <item name="android:layout_width">@dimen/register_fragment_edittext_width</item>
+        <item name="android:layout_height">@dimen/edit_text_height</item>
+    </style>
+
 </resources>

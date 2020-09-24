@@ -4,6 +4,8 @@
     <string name="edit_text_hint">Enter an amount</string>
     <string name="submit_button_text">Retrieve client token</string>
     <string name="transaction_button_text">Drop-in UI</string>
+    <string name="test_string">This is the notification string</string>
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -28,6 +30,7 @@
     <string name="register_screen_username_autofill">Username</string>
     <string name="register_screen_password_autofill">Password</string>
     <string name="register_screen_email_autofill">email</string>
+    <string name="register_screen_agreement_text">By tapping submit you agree to our <a href="https://ourapp.live/tos">terms of service</a> and that you are over 18 years of age.</string>
 
     <!-- Strings used for home fragment -->
     <string name="home_fragment_charge_button">Charge</string>

@@ -10,9 +10,6 @@ import com.loopj.android.http.RequestParams
 import cz.msebera.android.httpclient.Header
 
 
-private const val CREATE_GROUP_ENDPOINT = "https://ourapp.live/create_group"
-
-
 class HomePageViewModel: ViewModel() {
 
     private val liveProfilePicture = MutableLiveData<String>()
@@ -34,7 +31,7 @@ class HomePageViewModel: ViewModel() {
         val params = RequestParams()
         params.put("groupname", liveGroupName.value!!.trim())
         params.put("username", username)
-        client.post(CREATE_GROUP_ENDPOINT, params,  object: AsyncHttpResponseHandler() {
+        client.post(Endpoints.CREATE_GROUP_ENDPOINT.endpoint, params,  object: AsyncHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
                 liveShowGroupNameForm.value = View.GONE
                 liveGroupName.value = ""

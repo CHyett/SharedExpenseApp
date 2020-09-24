@@ -30,8 +30,6 @@ class HomePageFragment : Fragment() {
 
     private lateinit var navController: NavController
 
-    private lateinit var socket: Socket
-
     private val sharedViewModel: MainActivityViewModel by activityViewModels()
 
 
@@ -72,15 +70,6 @@ class HomePageFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
-
-        //Test code that should be removed at some point
-        try {
-            socket = IO.socket("https://ourapp.live/")
-            socket.connect()
-        } catch(e: Exception) {
-            Toast.makeText(activity, e.message, Toast.LENGTH_LONG).show()
-        }
-
 
         //LiveData observers
         viewModel.liveGroupName.observe(viewLifecycleOwner, Observer {

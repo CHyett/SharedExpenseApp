@@ -14,8 +14,6 @@ import com.loopj.android.http.TextHttpResponseHandler
 import cz.msebera.android.httpclient.Header
 
 internal const val REQUEST_CODE = 26
-private const val GET_TOKEN_ENDPOINT = "https://ourapp.live/client_token"
-internal const val CHECKOUT_ENDPOINT = "https://ourapp.live/checkout"
 
 //Old ViewModel data. Will be moved into a new ViewModel when app is updated
 private val liveClientToken = MutableLiveData<String>()
@@ -41,7 +39,7 @@ private val httpClient = AsyncHttpClient()
 
 //Get client token, prepare drop-in ui, and collect device data for Braintree
 internal fun getClientToken(callback: () -> Unit) {
-    httpClient.get(GET_TOKEN_ENDPOINT, object: TextHttpResponseHandler() {
+    httpClient.get(Endpoints.CLIENT_TOKEN_ENDPOINT.endpoint, object: TextHttpResponseHandler() {
         override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: String?) {
             liveClientToken.value = responseBody ?: "" //Make some code for what to do if responseBody is null
             callback()
@@ -59,7 +57,7 @@ internal fun sendPayment(amount: Float, nonce: String?, deviceData: String) {
     params.put("nonce", nonce)
     params.put("amount", amount)
     params.put("deviceData", deviceData)
-    client.post(CHECKOUT_ENDPOINT, params, object: AsyncHttpResponseHandler(){
+    client.post(Endpoints.CHECKOUT_ENDPOINT.endpoint, params, object: AsyncHttpResponseHandler(){
         override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: ByteArray?) {
             if(response != null) liveResponseMessage.value = String(response) else println("No response")
         }

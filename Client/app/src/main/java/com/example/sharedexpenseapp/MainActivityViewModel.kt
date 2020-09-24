@@ -8,14 +8,13 @@ import androidx.navigation.NavOptions
 import com.example.sharedexpenseapp.database.ApplicationDatabase
 import com.example.sharedexpenseapp.database.Entry
 import com.loopj.android.http.AsyncHttpClient
+import com.loopj.android.http.AsyncHttpResponseHandler
+import com.loopj.android.http.RequestParams
 import com.loopj.android.http.TextHttpResponseHandler
 import cz.msebera.android.httpclient.Header
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 
 
-private const val LOGIN_ENDPOINT = "https://ourapp.live/login"
 const val LOGIN_TAG = "login_status"
 const val USERNAME_TAG = "user_name"
 
@@ -51,14 +50,39 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
     init {
         val entryDao = ApplicationDatabase.getDatabase(application, viewModelScope).entryDao()
         repository = ApplicationRepository(entryDao, viewModelScope)
-        viewModelScope.launch(Dispatchers.IO) {
-            liveUser.postValue(repository.getUsername())
-        }
         runBlocking {
             launch(Dispatchers.IO) {
                 liveIsLoggedIn.postValue(repository.getIsLoggedIn())
+                liveUser.postValue(repository.getUsername())
             }
         }
+    }
+
+    companion object {
+
+        private val client = AsyncHttpClient()
+
+        var firebaseToken: String? = null
+
+        fun sendToServer(username: String?) {
+            val token = firebaseToken
+            if (token != null) {
+                val params = RequestParams()
+                params.put("token", token)
+                params.put("username", username)
+                client.post(Endpoints.FIREBASE_TOKEN_ENDPOINT.endpoint, params, object : AsyncHttpResponseHandler() {
+                    override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
+                        println("firebase token post request status code: $statusCode")
+                        responseBody?.let { println(String(it)) }
+                    }
+
+                    override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?, error: Throwable?) {
+                        println("There was an error posting firebase token to server")
+                    }
+                })
+            }
+        }
+
     }
 
     internal fun saveLoginStatus(loginStatus: Boolean) { liveIsLoggedIn.value = loginStatus
@@ -74,18 +98,9 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         }
     }}
 
-
-    internal fun testFunctionUsername(): String {
-        return liveUser.value ?: "User is not present"
-    }
-
-    internal fun testFunctionStatus(): Boolean {
-        return liveIsLoggedIn.value ?: false
-    }
-
     internal fun logIn(callback: (loginStatus: Boolean) -> Unit) {
         //See if you can use the data class
-        httpClient.get("$LOGIN_ENDPOINT?username=${liveUsername.value}&password=${livePassword.value}", object: TextHttpResponseHandler() {
+        httpClient.get("${Endpoints.LOGIN_ENDPOINT.endpoint}?username=${liveUsername.value}&password=${livePassword.value}", object: TextHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseString: String?) {
                 responseString?.let { liveLoginStatus.value = it }
                 if(statusCode == 200) {
@@ -106,11 +121,9 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         orientation.value = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         liveUser.value = null
         liveIsLoggedIn.value = false
-        runBlocking {
-            launch(Dispatchers.IO) {
-                repository.setIsLoggedIn(Entry(LOGIN_TAG, null, false))
-                repository.setUsername(Entry(USERNAME_TAG, null, null))
-            }
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.setIsLoggedIn(Entry(LOGIN_TAG, null, false))
+            repository.setUsername(Entry(USERNAME_TAG, null, null))
         }
         val navOptions = NavOptions.Builder().setPopUpTo(R.id.homePageFragment, true).build()
         navController!!.navigate(R.id.homePageFragment, null, navOptions)
@@ -128,5 +141,10 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
 *
 * TODO:
 *  Use SQLite database for persistent data instead of SavedStateHandle.
+*  Change user live data to be static
+*  Change login status live satus to be static
+*  Change device orientation to be static
+*  Change nav controller to be static
+*  Think about changing repository to be static
 *
 * */

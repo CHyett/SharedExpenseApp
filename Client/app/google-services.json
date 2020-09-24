@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "808162647479",
+    "firebase_url": "https://partem-621b3.firebaseio.com",
+    "project_id": "partem-621b3",
+    "storage_bucket": "partem-621b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808162647479:android:8d43332b74bc6f5d389c32",
+        "android_client_info": {
+          "package_name": "com.example.sharedexpenseapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "808162647479-ihof5uucducjp1vfv9eqb77tsdtfqdei.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCaMkDjn9kiCvI2wdjiZCzP2QB2VDL6lg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "808162647479-ihof5uucducjp1vfv9eqb77tsdtfqdei.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
