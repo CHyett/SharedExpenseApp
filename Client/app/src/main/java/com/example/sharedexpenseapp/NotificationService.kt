@@ -1,11 +1,12 @@
 package com.example.sharedexpenseapp
 
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.example.sharedexpenseapp.mainactivity.MainActivityViewModel
 
 
 class NotificationService : FirebaseMessagingService() {
-
 
     override fun onNewToken(token: String) {
         println("The token is: $token")

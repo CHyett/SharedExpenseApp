@@ -4,6 +4,7 @@ import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
@@ -11,8 +12,8 @@ import androidx.databinding.InverseBindingListener
 import com.google.android.material.textfield.TextInputEditText
 
 
-@BindingAdapter("isEnabled")
-fun setIsEnabled(button: com.google.android.material.button.MaterialButton, enabled: Boolean) {
+@BindingAdapter("app:isEnabled")
+fun setIsEnabled(button: Button, enabled: Boolean) {
     button.isEnabled = enabled
 }
 

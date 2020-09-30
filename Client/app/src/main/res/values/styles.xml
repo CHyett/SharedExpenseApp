@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorSecondary</item>
@@ -16,7 +16,7 @@
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
-        <item  name="windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -28,6 +28,25 @@
         <item name="android:background">@drawable/edittext_background</item>
         <item name="android:layout_width">@dimen/register_fragment_edittext_width</item>
         <item name="android:layout_height">@dimen/edit_text_height</item>
+        <item name="android:textColorHint">@color/colorAccent</item>
+    </style>
+
+    <style name="register_fragment_submit_button">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:background">@drawable/register_button_bg</item>
+        <item name="android:text">@string/register_register_button</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="login_fragment_buttons">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="home_page_fragment_buttons">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
 </resources>

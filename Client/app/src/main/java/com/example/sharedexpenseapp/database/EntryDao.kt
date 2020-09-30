@@ -1,8 +1,9 @@
 package com.example.sharedexpenseapp.database
 
 import androidx.room.*
-import com.example.sharedexpenseapp.LOGIN_TAG
-import com.example.sharedexpenseapp.USERNAME_TAG
+
+private const val USERNAME_TAG = "user_name"
+private const val LOGIN_TAG = "login_status"
 
 @Dao
 interface EntryDao {

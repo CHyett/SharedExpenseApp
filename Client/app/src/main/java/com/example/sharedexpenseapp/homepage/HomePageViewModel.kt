@@ -1,14 +1,14 @@
-package com.example.sharedexpenseapp
+package com.example.sharedexpenseapp.homepage
 
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.sharedexpenseapp.enums.Endpoints
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
 import com.loopj.android.http.RequestParams
 import cz.msebera.android.httpclient.Header
-
 
 class HomePageViewModel: ViewModel() {
 

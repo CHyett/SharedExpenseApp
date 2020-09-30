@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewmodel" type="com.example.sharedexpenseapp.MainActivityViewModel"/>
+        <variable name="viewmodel" type="com.example.sharedexpenseapp.login.LoginViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".LoginFragment">
+        tools:context=".login.LoginFragment">
 
         <EditText
             android:id="@+id/login_username_eddittext"
@@ -41,27 +41,20 @@
             app:layout_constraintTop_toBottomOf="@+id/login_username_eddittext" />
 
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/submit_button"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            style="@style/login_fragment_buttons"
             android:text="@string/login_screen_submit"
-            app:cornerRadius="@dimen/button_corners"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/login_password_edittext"
             app:layout_constraintVertical_bias="0.2"/>
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/registration_link"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/login_fragment_buttons"
             android:text="@string/login_screen_register"
-            app:cornerRadius="@dimen/button_corners"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

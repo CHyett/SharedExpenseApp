@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.sharedexpenseapp.LoginFragment"
+        android:name="com.example.sharedexpenseapp.login.LoginFragment"
         android:label="LoginFragment"
         tools:layout="@layout/login_fragment">
         <action
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.sharedexpenseapp.RegisterFragment"
+        android:name="com.example.sharedexpenseapp.registration.RegisterFragment"
         android:label="RegisterFragment"
         tools:layout="@layout/register_fragment">
         <action
@@ -26,7 +26,7 @@
     </fragment>
     <fragment
         android:id="@+id/homePageFragment"
-        android:name="com.example.sharedexpenseapp.HomePageFragment"
+        android:name="com.example.sharedexpenseapp.homepage.HomePageFragment"
         android:label="HomePageFragment"
         tools:layout="@layout/home_page_fragment" />
 

@@ -1,4 +1,4 @@
-package com.example.sharedexpenseapp
+package com.example.sharedexpenseapp.login
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,12 +8,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.basgeekball.awesomevalidation.AwesomeValidation
 import com.basgeekball.awesomevalidation.ValidationStyle
+import com.example.sharedexpenseapp.R
 import com.example.sharedexpenseapp.databinding.LoginFragmentBinding
 import com.google.android.material.snackbar.Snackbar
+import com.example.sharedexpenseapp.mainactivity.MainActivityViewModel
 
 
 private const val USERNAME_REGEX = "^[A-Z0-9a-z]{7,15}$"
@@ -30,7 +33,9 @@ class LoginFragment : Fragment() {
 
     private lateinit var navController: NavController
 
-    private val sharedViewModel: MainActivityViewModel by activityViewModels() //Shared by this fragment and HomePageFragment
+    private val sharedViewModel: MainActivityViewModel by activityViewModels()
+
+    private lateinit var viewModel: LoginViewModel
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -40,13 +45,14 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
         navController = findNavController()
         sharedViewModel.saveLoginStatus(false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        binding.viewmodel = sharedViewModel
+        binding.viewmodel = viewModel
         binding.lifecycleOwner = this
 
         //Form validation
@@ -55,7 +61,7 @@ class LoginFragment : Fragment() {
         //validation.addValidation(binding.loginPasswordEdittext, PASSWORD_REGEX, PASSWORD_ERROR)
 
         //LiveData observers
-        sharedViewModel.loginStatus.observe(viewLifecycleOwner, Observer {
+        viewModel.loginStatus.observe(viewLifecycleOwner, Observer {
                 Snackbar.make(binding.submitButton, it, Snackbar.LENGTH_LONG).setAction("Action", null).show()
         })
 
@@ -63,12 +69,12 @@ class LoginFragment : Fragment() {
         binding.registrationLink.setOnClickListener { navController.navigate(R.id.action_loginFragment_to_registerFragment) }
         binding.submitButton.setOnClickListener {
             if (validation.validate()) {
-                sharedViewModel.logIn {
+                viewModel.logIn {
                     if(it) {
-                        sharedViewModel.livePassword.value = ""
                         sharedViewModel.saveLoginStatus(true)
-                        sharedViewModel.saveUsername(sharedViewModel.liveUsername.value!!)
-                        sharedViewModel.liveUsername.value = ""
+                        sharedViewModel.saveUsername(viewModel.liveUsername.value!!)
+                        viewModel.livePassword.value = ""
+                        viewModel.liveUsername.value = ""
                         navController.popBackStack()
                     }
                 }

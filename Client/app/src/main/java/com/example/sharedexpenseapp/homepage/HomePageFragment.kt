@@ -1,47 +1,55 @@
-package com.example.sharedexpenseapp
+package com.example.sharedexpenseapp.homepage
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import com.example.sharedexpenseapp.login.LoginFragment
+import com.example.sharedexpenseapp.R
 import com.example.sharedexpenseapp.databinding.HomePageFragmentBinding
-import com.github.nkzawa.socketio.client.IO
+import com.example.sharedexpenseapp.mainactivity.MainActivityViewModel
 import com.google.android.material.snackbar.Snackbar
-import java.lang.Exception
-import com.github.nkzawa.socketio.client.Socket
 
 class HomePageFragment : Fragment() {
 
     companion object { fun newInstance() = LoginFragment() }
 
+    //Exclusive ViewModel for HomePageFragment
     private lateinit var viewModel: HomePageViewModel
 
-    private lateinit var binding: HomePageFragmentBinding
-
+    //App nav controller
     private lateinit var navController: NavController
 
+    //Binding for interacting with ui components
+    private lateinit var binding: HomePageFragmentBinding
+
+    //Main ViewModel for the whole app
     private val sharedViewModel: MainActivityViewModel by activityViewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(HomePageViewModel::class.java)
+
+        //Prevent can't find nav controller in onCreate error
         if(sharedViewModel.navController == null) {
             navController = findNavController()
             sharedViewModel.navController = navController
         } else {
             navController = sharedViewModel.navController!!
         }
+
+        //Lock screen to prevent glitches. You should re-simulate them and log what they do
         sharedViewModel.orientation.value = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         sharedViewModel.isLoggedIn.observe(this, Observer {
             if (!it) {

@@ -3,8 +3,8 @@
     <item android:id="@android:id/background">
         <shape>
             <corners android:radius="10dp"/>
-            <solid android:color="@color/colorSecondary"/>
-            <stroke android:color="@color/colorAccent" android:width="@dimen/register_fragment_progress_bar_outer_padding" />
+            <solid android:color="@color/colorPrimary"/>
+            <stroke android:color="@color/colorSecondary" android:width="@dimen/register_fragment_progress_bar_outer_padding" />
         </shape>
     </item>
 
@@ -17,7 +17,7 @@
             <scale android:scaleWidth="100%" >
                 <shape>
                     <corners android:radius="@dimen/register_fragment_progress_bar_corners"/>
-                    <solid android:color="@color/colorPrimary"/>
+                    <solid android:color="@color/colorSecondary"/>
                 </shape>
             </scale>
         </clip>

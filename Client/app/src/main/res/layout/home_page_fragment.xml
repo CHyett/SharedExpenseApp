@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="viewmodel" type="com.example.sharedexpenseapp.HomePageViewModel"/>
+        <variable name="viewmodel" type="com.example.sharedexpenseapp.homepage.HomePageViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,12 +30,10 @@
 
         </androidx.cardview.widget.CardView>
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/home_fragment_pay_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/home_fragment_pay_button"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            style="@style/home_page_fragment_buttons"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/home_fragment_create_group_button"
             app:layout_constraintHorizontal_bias="0.5"
@@ -44,12 +42,10 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.575" />
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/home_fragment_charge_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/home_fragment_charge_button"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            style="@style/home_page_fragment_buttons"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -57,12 +53,10 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.575" />
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/home_fragment_create_group_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/home_fragment_create_group_button"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            style="@style/home_page_fragment_buttons"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/home_fragment_charge_button"
             app:layout_constraintHorizontal_bias="0.5"
@@ -87,13 +81,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/home_fragment_create_group_button" />
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/home_fragment_submit_group_name_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/home_fragment_group_name_form_margin_top"
             android:text="@string/home_fragment_submit_group_name_button"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            style="@style/home_page_fragment_buttons"
             android:visibility="@{viewmodel.showGroupNameForm$app_debug}"
             android:clickable="@{viewmodel.liveIsClickable$app_debug}"
             app:isEnabled="@{viewmodel.liveIsClickable$app_debug}"
@@ -102,15 +94,14 @@
             app:layout_constraintStart_toEndOf="@+id/home_fragment_create_group_edittext"
             app:layout_constraintTop_toBottomOf="@+id/home_fragment_create_group_button" />
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/home_fragment_log_out_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/home_fragment_log_out"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            style="@style/home_page_fragment_buttons"
             android:layout_marginBottom="@dimen/home_fragment_log_out_button_margin_bottom"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

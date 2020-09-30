@@ -1,18 +1,12 @@
-package com.example.sharedexpenseapp
+package com.example.sharedexpenseapp.mainactivity
 
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.gms.tasks.OnSuccessListener
+import com.example.sharedexpenseapp.R
 import com.google.firebase.iid.FirebaseInstanceId
-import com.google.firebase.iid.InstanceIdResult
-import com.google.firebase.messaging.FirebaseMessaging
-import com.loopj.android.http.AsyncHttpClient
-import com.loopj.android.http.AsyncHttpResponseHandler
-import com.loopj.android.http.RequestParams
-import cz.msebera.android.httpclient.Header
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         //observe login status and send firebase token if user is logged in
         viewModel.isLoggedIn.observe(this, Observer {
             if(it)
-                MainActivityViewModel.sendToServer(viewModel.user.value)
+                viewModel.sendToServer()
         })
     }
 

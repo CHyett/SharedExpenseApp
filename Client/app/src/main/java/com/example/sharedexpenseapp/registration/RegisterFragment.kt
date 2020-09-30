@@ -1,8 +1,9 @@
-package com.example.sharedexpenseapp
+package com.example.sharedexpenseapp.registration
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.net.Uri
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.util.Patterns
@@ -19,6 +20,8 @@ import androidx.navigation.Navigation
 import com.basgeekball.awesomevalidation.AwesomeValidation
 import com.basgeekball.awesomevalidation.ValidationStyle
 import com.bumptech.glide.Glide
+import com.example.sharedexpenseapp.R
+import com.example.sharedexpenseapp.RegisterViewModel
 import com.example.sharedexpenseapp.databinding.RegisterFragmentBinding
 
 

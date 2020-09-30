@@ -1,4 +1,4 @@
-package com.example.sharedexpenseapp
+package com.example.sharedexpenseapp.mainactivity
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
