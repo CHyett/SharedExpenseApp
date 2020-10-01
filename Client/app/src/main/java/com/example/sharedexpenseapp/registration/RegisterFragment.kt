@@ -2,9 +2,10 @@ package com.example.sharedexpenseapp.registration
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.GradientDrawable
+import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.method.LinkMovementMethod
 import android.util.Patterns
 import android.view.LayoutInflater
@@ -20,8 +21,9 @@ import androidx.navigation.Navigation
 import com.basgeekball.awesomevalidation.AwesomeValidation
 import com.basgeekball.awesomevalidation.ValidationStyle
 import com.bumptech.glide.Glide
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.example.sharedexpenseapp.R
-import com.example.sharedexpenseapp.RegisterViewModel
 import com.example.sharedexpenseapp.databinding.RegisterFragmentBinding
 
 
@@ -34,9 +36,19 @@ private const val EMAIL_ERROR = "Your eMail is invalid"
 
 class RegisterFragment : Fragment() {
 
+    //DataBinding object
     private lateinit var binding: RegisterFragmentBinding
+
+    //App navcontroller
     private lateinit var navController: NavController
+
+    //Fragment ViewModel
     private lateinit var viewModel: RegisterViewModel
+
+    //Registration regex matching criteria
+    private val usernameRegex = Regex(USERNAME_REGEX)
+    //private val passwordRegex = Regex(PASSWORD_REGEX)
+    private val emailRegex = Patterns.EMAIL_ADDRESS.toRegex()
 
     companion object { fun newInstance() = RegisterFragment() }
 
@@ -70,10 +82,51 @@ class RegisterFragment : Fragment() {
         viewModel.registrationStatus.observe(viewLifecycleOwner, Observer {
             Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
         })
+        viewModel.newUserUsername.observe(viewLifecycleOwner, Observer {
+            val progress = viewModel.liveProgress.value!!
+            val matchStatus = it.matches(usernameRegex)
+            if(matchStatus && viewModel.isInvalidUsername) {
+                viewModel.liveProgress.value = progress + 34
+                viewModel.isInvalidUsername = false
+            } else if(!matchStatus && !viewModel.isInvalidUsername) {
+                viewModel.liveProgress.value = progress - 34
+                viewModel.isInvalidUsername = true
+            }
+        })
+        viewModel.newUserPassword.observe(viewLifecycleOwner, Observer {
+            val progress = viewModel.liveProgress.value!!
+            //val matchStatus = it.matches(PasswordRegex)
+            //This should be deleted when the password regex works
+            val notEmpty = it.isNotEmpty()
+            if(notEmpty && viewModel.isInvalidPassword) {
+                viewModel.liveProgress.value = progress + 33
+                viewModel.isInvalidPassword = false
+            } else if(!notEmpty && !viewModel.isInvalidPassword) {
+                viewModel.liveProgress.value = progress - 33
+                viewModel.isInvalidPassword = true
+            }
+        })
+        viewModel.newUserEmail.observe(viewLifecycleOwner, Observer {
+            val progress = viewModel.liveProgress.value!!
+            val matchStatus = it.matches(emailRegex)
+            if(matchStatus && viewModel.isInvalidEmail) {
+                viewModel.liveProgress.value = progress + 33
+                viewModel.isInvalidEmail = false
+            } else if(!matchStatus && !viewModel.isInvalidEmail) {
+                viewModel.liveProgress.value = progress - 33
+                viewModel.isInvalidEmail = true
+            }
+        })
+        viewModel.liveProgress.observe(viewLifecycleOwner, Observer {
+            if(it == 100) {
+                viewModel.liveProgressAnimatable.value = R.drawable.rocketwithfire
+                YoYo.with(Techniques.Shake).duration(700).playOn(binding.registerFragmentProgressBarRightIcon)
+            }
+        })
 
         //Click listeners
         binding.registerFragmentImage.setOnClickListener {
-            startActivityForResult(Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), RESULT_LOAD_IMAGE)
+            startActivityForResult(Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI), RESULT_LOAD_IMAGE)
         }
         binding.registerFragmentSubmitButton.setOnClickListener {
             if(validation.validate()) {
@@ -85,8 +138,23 @@ class RegisterFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data?.data != null) {
+            viewModel.profilePicturePath = getRealPathFromURI(data.data!!)
             Glide.with(this).load(data.data).into(binding.registerFragmentImage)
         }
+    }
+
+    private fun getRealPathFromURI(contentURI: Uri): String {
+        val result: String
+        val cursor: Cursor? = activity?.contentResolver?.query(contentURI, null, null, null, null)
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.path!!
+        } else {
+            cursor.moveToFirst()
+            val index: Int = cursor.getColumnIndexOrThrow("_data")
+            result = cursor.getString(index)
+            cursor.close()
+        }
+        return result
     }
 
 }

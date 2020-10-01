@@ -4,7 +4,8 @@ enum class Endpoints(val endpoint: String) {
     FIREBASE_TOKEN_ENDPOINT("https://ourapp.live/firebase_token"),
     LOGIN_ENDPOINT("https://ourapp.live/login"),
     REGISTER_ENDPOINT("https://ourapp.live/register"),
-    CREATE_GROUP_ENDPOINT("https://ourapp.live/"),
+    CREATE_GROUP_ENDPOINT("https://ourapp.live/create_group"),
     CLIENT_TOKEN_ENDPOINT("https://ourapp.live/client_token"),
-    CHECKOUT_ENDPOINT("https://ourapp.live/checkout")
+    CHECKOUT_ENDPOINT("https://ourapp.live/checkout"),
+    PROFILE_PIC_ENDPOINT("https://ourapp.live/upload")
 }

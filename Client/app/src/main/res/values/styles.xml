@@ -29,6 +29,7 @@
         <item name="android:layout_width">@dimen/register_fragment_edittext_width</item>
         <item name="android:layout_height">@dimen/edit_text_height</item>
         <item name="android:textColorHint">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorAccent</item>
     </style>
 
     <style name="register_fragment_submit_button">

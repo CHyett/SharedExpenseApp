@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewmodel" type="com.example.sharedexpenseapp.RegisterViewModel" />
+        <variable name="viewmodel" type="com.example.sharedexpenseapp.registration.RegisterViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,7 +38,7 @@
             android:layout_width="@dimen/register_fragment_progress_bar_icon_size"
             android:layout_height="@dimen/register_fragment_progress_bar_icon_size"
             android:layout_marginTop="@dimen/register_fragment_progress_bar_icon_margin_top"
-            android:src="@drawable/ic_fuel"
+            android:src="@drawable/fuel"
             app:layout_constraintEnd_toStartOf="@+id/register_fragment_progress_bar_outer"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +61,7 @@
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:progress="@{viewmodel.progress$app_debug}"
+                android:progress="@{viewmodel.liveProgress$app_debug}"
                 android:progressDrawable="@drawable/progress_bar" />
 
         </androidx.cardview.widget.CardView>
@@ -72,10 +72,12 @@
             android:layout_width="@dimen/register_fragment_progress_bar_icon_size"
             android:layout_height="@dimen/register_fragment_progress_bar_icon_size"
             android:layout_marginTop="@dimen/register_fragment_progress_bar_icon_margin_top"
-            android:src="@drawable/ic_rocketnofire"
+            android:src="@{viewmodel.liveProgressAnimatable$app_debug}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/register_fragment_progress_bar_outer"
             app:layout_constraintTop_toBottomOf="@+id/register_fragment_image_holder" />
+
+        <!-- android:src="@drawable/rocketnofire" -->
 
         <EditText
             android:id="@+id/register_username_edittext"
@@ -142,6 +144,7 @@
     <!--
 
     TODO:
+    Add primary color border around fuel tank
 
 
     -->

@@ -49,7 +49,11 @@ class HomePageViewModel: ViewModel() {
         liveShowGroupNameForm.value = View.VISIBLE
     }
 
-    //TODO:
-    //Make the profile picture functionality work and change LiveData types
+    /*
+    *
+    *TODO:
+    *Make the profile picture functionality work and change LiveData types
+    *
+    */
 
 }

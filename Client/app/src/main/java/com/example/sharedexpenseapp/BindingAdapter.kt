@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
@@ -17,6 +18,10 @@ fun setIsEnabled(button: Button, enabled: Boolean) {
     button.isEnabled = enabled
 }
 
+@BindingAdapter("android:src")
+fun setImageResource(view: ImageView, resource: Int) {
+    view.setImageResource(resource);
+}
 
 
 
