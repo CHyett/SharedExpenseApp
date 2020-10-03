@@ -2,6 +2,9 @@ const express = require('express')
 const database = require('database')
 const util = require('util')
 const firebase = require('./firebase.js')
+const multer = require('multer')
+const path = require('path')
+
 
 const TESTOKEN = 'fZxFKPwkT7GhUkR-W7zUMe:APA91bF8n4F78gn4FjAiomzxthFSu5r4tAKVwQN5aOAnEfWzYF5JE_xETQ77f5sYETTIwR3t1tRr2NPTeno82fn4G5EoNr1ce6OrXIicqXKviMJBgQieVyAS8ce2YTMOQnfv2EhPPf8p'
 
@@ -53,7 +56,7 @@ routes.post('/register',(req,res)=>{
   database.mysqlConnection.query(`INSERT INTO userdb.user (username, email, password) VALUES ('${username}', '${email}','${password}');`,(err,result,fields)=>{
     if(!err){
       res.send("Successfully Registered You Retard")
-      console.log("Row Added")
+      console.log("ROW ADDED")
       console.log(result)
       //console.log("last id is: " + result.insertId)
     }else{
@@ -73,6 +76,26 @@ routes.post('/register',(req,res)=>{
 
 routes.get('/tos',(req,res)=>{
   res.send("This site is still under construction... retard")
+
+
+
+})
+
+const upload = multer({
+  dest: path.join(__dirname,"./uploads")
+})
+
+routes.post('/upload',upload.single('image'),(req,res)=>{
+
+  const tempPath = req.file.tempPath
+  const targetPath = path.join(__dirname,"./uploads/image.png")
+
+  console.log(req.file)
+
+  fs.rename(tempPath,targetPath,err=>{
+    if (err)
+      console.log("There was an error!!")
+  })
 
 
 
@@ -117,30 +140,54 @@ routes.post('/firebase_token',(req,res)=>{
   console.log("token is: " + token)
   console.log("username is: " + username)
 
+  database.mysqlConnection.query(`UPDATE userdb.user SET devToken = '${token}' WHERE username = '${username}';`,(err,result,fields)=>{
+    if(err){
+      console.log("Couldnt update")
+    }else{
+      console.log("updated that bitch")
+      res.status(200)
+      res.send("Updated device token")
+    }
+  })
+
 
 
 })
 
-routes.get('/test',(req,res)=>{
 
-  const message = {
-  data: {
-    topic: 'HEY',
-    amount: '69'
-  },
-  token: TESTOKEN
-  }
 
-  // Send a message to the device corresponding to the provided
-  // registration token.
-  firebase.messaging().send(message)
-    .then((response) => {
-      // Response is a message ID string.
-      console.log('Successfully sent message:', response)
-    })
-    .catch((error) => {
-      console.log('Error sending message:', error)
-    })
+routes.post('/invite',async (req,res)=>{
+  const username = req.body.username
+  //console.log("user to be invited: " + username)
+
+  const userQ = await database.query(`SELECT devToken FROM userdb.user WHERE username = '${username}';`)
+  if(userQ.length == 1){
+    const token = userQ[0].devToken
+    console.log("token is: " + token)
+
+    const message = {
+    data: {
+      topic: 'YOU GOT AN INVITE BITCH',
+      amount: '69'
+    },
+    token: token
+    }
+
+    // Send a message to the device corresponding to the provided
+    // registration token.
+    firebase.messaging().send(message)
+      .then((response) => {
+        // Response is a message ID string.
+        console.log('Successfully sent message:', response)
+      })
+      .catch((error) => {
+        console.log('Error sending message:', error)
+      })
+    }else{
+      console.log("USER DONT EXIST")
+      res.status(404)
+      res.send("user dont exist")
+    }
 
 
 
@@ -201,7 +248,7 @@ routes.post('/create_group', async(req,res)=>{
 
   console.log("username is: " + username)
   console.log("groupname is: " + groupname)
-  //console.log("members to add: " + members[0])
+  console.log("members to add: " + members[0])
 
   const userQ = await database.query(`SELECT id FROM userdb.user WHERE username = '${username}';`)
   const userID = userQ[0].id
@@ -221,8 +268,40 @@ routes.post('/create_group', async(req,res)=>{
     }
   })
 
+/*
+  const userQ = await database.query(`SELECT devToken FROM userdb.user WHERE username = '${username}';`)
+  if(userQ.length == 1){
+    const token = userQ[0].devToken
+    console.log("token is: " + token)
+
+    const message = {
+    data: {
+      topic: 'YOU GOT AN INVITE BITCH',
+      amount: '69'
+    },
+    token: token
+    }
+
+    // Send a message to the device corresponding to the provided
+    // registration token.
+    firebase.messaging().send(message)
+      .then((response) => {
+        // Response is a message ID string.
+        console.log('Successfully sent message:', response)
+      })
+      .catch((error) => {
+        console.log('Error sending message:', error)
+      })
+    }else{
+      console.log("USER DONT EXIST")
+      res.status(404)
+      res.send("user dont exist")
+    }
+*/
 
 })
+
+
 
 
 
