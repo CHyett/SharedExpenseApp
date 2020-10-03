@@ -61,7 +61,6 @@
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:progress="@{viewmodel.liveProgress$app_debug}"
                 android:progressDrawable="@drawable/progress_bar" />
 
         </androidx.cardview.widget.CardView>
@@ -119,6 +118,7 @@
             android:id="@+id/register_fragment_submit_button"
             style="@style/register_fragment_submit_button"
             android:layout_marginTop="@dimen/register_fragment_submit_button_margin_top"
+            app:isEnabled="@{viewmodel.isRegistrationButtonEnabled$app_debug()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/register_email_edittext" />

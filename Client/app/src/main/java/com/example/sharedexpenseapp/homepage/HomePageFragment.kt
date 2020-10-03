@@ -2,7 +2,6 @@ package com.example.sharedexpenseapp.homepage
 
 import android.Manifest
 import android.content.pm.ActivityInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -124,7 +123,6 @@ class HomePageFragment : Fragment() {
         val internetString = Manifest.permission.INTERNET
         val networkString = Manifest.permission.ACCESS_NETWORK_STATE
         val storageReadString = Manifest.permission.READ_EXTERNAL_STORAGE
-        println("Permissions are:\nstorageWrite -> $externalWriteCheck\nstorageRead -> $externalReadCheck\ninternet -> $internetCheck\nnetwork -> $networkStateCheck")
         when((-1 * externalWriteCheck) + (-2 * networkStateCheck) + (-4 * internetCheck) + (-8 * externalReadCheck)) {
             1 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageWriteString), 1)
             2 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(networkString), 2)

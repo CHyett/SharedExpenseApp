@@ -7,16 +7,21 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.method.LinkMovementMethod
+import android.transition.ChangeBounds
+import android.transition.TransitionManager
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.PathInterpolator
+import android.view.animation.Transformation
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.content.ContextCompat
-import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -28,6 +33,7 @@ import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.example.sharedexpenseapp.R
 import com.example.sharedexpenseapp.databinding.RegisterFragmentBinding
+import com.example.sharedexpenseapp.mainactivity.MainActivityViewModel
 
 
 private const val RESULT_LOAD_IMAGE = 20
@@ -36,6 +42,7 @@ private const val USERNAME_ERROR = "Please enter between 7-15 alphanumeric chara
 //private const val PASSWORD_REGEX = """^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[\]:;<>,.?\/~_+\-=|\\\\]).{8,32}$"""
 private const val PASSWORD_ERROR = "Your password must be between 8-15 alphanumeric characters"
 private const val EMAIL_ERROR = "Your eMail is invalid"
+private const val PROGRESS_BAR_ANIMATION_TIME = 750L
 
 class RegisterFragment : Fragment() {
 
@@ -48,16 +55,23 @@ class RegisterFragment : Fragment() {
     //Fragment ViewModel
     private lateinit var viewModel: RegisterViewModel
 
+    //MainActivityViewModel
+    private val sharedViewModel: MainActivityViewModel by activityViewModels()
+
     //Registration regex matching criteria
     private val usernameRegex = Regex(USERNAME_REGEX)
     //private val passwordRegex = Regex(PASSWORD_REGEX)
     private val emailRegex = Patterns.EMAIL_ADDRESS.toRegex()
 
     //Animation ConstraintSets
-    //private val constraintSetHide = ConstraintSet()
-    //private val constraintSetShow = ConstraintSet()
+    private val constraintSetHide = ConstraintSet()
+    private val constraintSetShow = ConstraintSet()
 
-    //private var hasRocketLaunched = false
+    //Boolean to launch rocket only once
+    private var hasRocketLaunched = false
+
+    //Animation for registration ProgressBar
+    private lateinit var progressAnimation: ProgressBarAnimation
 
     companion object { fun newInstance() = RegisterFragment() }
 
@@ -70,6 +84,14 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
+
+        //Initialize progress bar animation
+        progressAnimation = ProgressBarAnimation(binding.registerFragmentProgressBarInner, 0, 0)
+        progressAnimation.duration = PROGRESS_BAR_ANIMATION_TIME
+        binding.registerFragmentProgressBarInner.interpolator = PathInterpolator(0f, 0f, 0.5f, 1f)
+
+        //Make terms of service open in browser
+        binding.registerFragmentAgreementTextview.movementMethod = LinkMovementMethod.getInstance()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -79,11 +101,8 @@ class RegisterFragment : Fragment() {
         binding.lifecycleOwner = this
 
         //Animation initialization
-        //constraintSetHide.clone(binding.registerFragmentRootConstraintLayout)
-        //constraintSetShow.clone(findViewById())
-
-        //Make terms of service open in browser
-        binding.registerFragmentAgreementTextview.movementMethod = LinkMovementMethod.getInstance()
+        constraintSetHide.clone(binding.registerFragmentRootConstraintLayout)
+        constraintSetShow.clone(activity, R.layout.register_fragment_rocket_animation)
 
         //Form validation
         val validation = AwesomeValidation(ValidationStyle.COLORATION)
@@ -131,9 +150,21 @@ class RegisterFragment : Fragment() {
             }
         })
         viewModel.liveProgress.observe(viewLifecycleOwner, Observer {
-            if(it == 100) {
+            progressAnimation.from = progressAnimation.to
+            progressAnimation.to = it
+            binding.registerFragmentProgressBarInner.startAnimation(progressAnimation)
+
+            //Launch rocket only once
+            if(it == 100 && !hasRocketLaunched) {
                 viewModel.liveProgressAnimatable.value = R.drawable.rocketwithfire
-                YoYo.with(Techniques.Shake).duration(700).playOn(binding.registerFragmentProgressBarRightIcon)
+                YoYo.with(Techniques.Shake).duration(700).onEnd {
+                    val t = ChangeBounds()
+                    t.interpolator = PathInterpolator(0.5f,-0.32f,0.9f,0.36f)
+                    t.duration = 750L
+                    TransitionManager.beginDelayedTransition(binding.registerFragmentRootConstraintLayout, t)
+                    constraintSetShow.applyTo(binding.registerFragmentRootConstraintLayout)
+                    hasRocketLaunched = true
+                }.playOn(binding.registerFragmentProgressBarRightIcon)
             }
         })
 
@@ -143,7 +174,12 @@ class RegisterFragment : Fragment() {
         }
         binding.registerFragmentSubmitButton.setOnClickListener {
             if(validation.validate()) {
-                viewModel.register()
+                val username = viewModel.newUserUsername.value
+                viewModel.register {
+                    sharedViewModel.saveLoginStatus(true)
+                    sharedViewModel.saveUsername(username)
+                    navController.popBackStack(R.id.loginFragment, true)
+                }
             }
         }
     }
@@ -180,3 +216,13 @@ class RegisterFragment : Fragment() {
 *  Password should be min: 8 characters and max: 50 characters
 *
 * */
+
+private class ProgressBarAnimation(val progBar: ProgressBar, var from: Int, var to: Int): Animation() {
+
+    override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
+        super.applyTransformation(interpolatedTime, t)
+        val value = from + (to - from) * interpolatedTime
+        progBar.progress = value.toInt()
+    }
+
+}
