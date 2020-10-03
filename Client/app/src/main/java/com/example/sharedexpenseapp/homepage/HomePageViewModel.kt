@@ -52,7 +52,7 @@ class HomePageViewModel: ViewModel() {
     /*
     *
     *TODO:
-    *Make the profile picture functionality work and change LiveData types
+    *   Make the profile picture functionality work and change LiveData types
     *
     */
 

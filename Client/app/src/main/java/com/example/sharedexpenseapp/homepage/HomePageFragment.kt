@@ -1,11 +1,15 @@
 package com.example.sharedexpenseapp.homepage
 
+import android.Manifest
 import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -71,10 +75,12 @@ class HomePageFragment : Fragment() {
 
         //If username is present, unlock screen, otherwise send user to login fragment
         sharedViewModel.user.observe(viewLifecycleOwner, Observer {
-            if(it == null)
+            if(it == null) {
                 navController.navigate(R.id.loginFragment)
-            else
+            } else {
+                askForPermissions()
                 sharedViewModel.orientation.value = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+            }
         })
     }
 
@@ -109,4 +115,46 @@ class HomePageFragment : Fragment() {
 
     }
 
+    private fun askForPermissions() {
+        val externalWriteCheck = ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val networkStateCheck = ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.ACCESS_NETWORK_STATE)
+        val internetCheck = ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.INTERNET)
+        val externalReadCheck = ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.READ_EXTERNAL_STORAGE)
+        val storageWriteString = Manifest.permission.WRITE_EXTERNAL_STORAGE
+        val internetString = Manifest.permission.INTERNET
+        val networkString = Manifest.permission.ACCESS_NETWORK_STATE
+        val storageReadString = Manifest.permission.READ_EXTERNAL_STORAGE
+        println("Permissions are:\nstorageWrite -> $externalWriteCheck\nstorageRead -> $externalReadCheck\ninternet -> $internetCheck\nnetwork -> $networkStateCheck")
+        when((-1 * externalWriteCheck) + (-2 * networkStateCheck) + (-4 * internetCheck) + (-8 * externalReadCheck)) {
+            1 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageWriteString), 1)
+            2 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(networkString), 2)
+            3 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageWriteString, networkString), 3)
+            4 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(internetString), 4)
+            5 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageWriteString, internetString), 5)
+            6 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(networkString, internetString), 6)
+            7 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageWriteString, networkString, internetString), 7)
+            8 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString), 8)
+            9 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, storageWriteString), 9)
+            10 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, networkString), 10)
+            11 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, storageWriteString, networkString), 11)
+            12 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, internetString), 12)
+            13 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, internetString, storageWriteString), 13)
+            14 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, internetString, networkString), 14)
+            15 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, internetString, networkString, storageWriteString), 15)
+        }
+    }
+
+    //Implement what happens if the user rejects any permissions
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+    }
+
 }
+
+/*
+*
+* TODO:
+*  Implement what happens if the user rejects permissions in onRequestPermissionsResult.
+*
+* */

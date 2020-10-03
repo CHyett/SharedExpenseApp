@@ -26,7 +26,7 @@ class LoginViewModel: ViewModel() {
         val params = RequestParams()
         params.put("username", liveUsername.value)
         params.put("password", livePassword.value)
-        client.post(Endpoints.LOGIN_ENDPOINT.endpoint, params, object: AsyncHttpResponseHandler() {
+        client.get(Endpoints.LOGIN_ENDPOINT.endpoint, params, object: AsyncHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
                 responseBody?.let {liveLoginStatus.value = String(responseBody)}
                 if(statusCode == 200) callback(true) else callback(false)

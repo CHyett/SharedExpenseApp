@@ -16,7 +16,7 @@
     <string name="login_edittext_username_hint">Enter your username</string>
     <string name="login_edittext_password_hint">Enter your password</string>
     <string name="login_screen_submit">Submit</string>
-    <string name="login_screen_register">Not a member? <u>Register here</u></string>
+    <string name="login_screen_register">Not a member? <a href="">Register here</a></string>
     <string name="login_screen_username_autofill">Username</string>
     <string name="login_screen_password_autofill">Password</string>
 

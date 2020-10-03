@@ -32,10 +32,19 @@
         <item name="android:textColor">@color/colorAccent</item>
     </style>
 
+    <style name="login_fragment_edittext">
+        <item name="android:layout_width">@dimen/login_fragment_edittext_width</item>
+        <item name="android:layout_height">@dimen/login_fragment_edittext_height</item>
+        <item name="android:background">@drawable/edittext_background</item>
+        <item name="android:textColorHint">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:paddingLeft">@dimen/login_fragment_edittext_padding_left</item>
+    </style>
+
     <style name="register_fragment_submit_button">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:background">@drawable/register_button_bg</item>
+        <item name="android:background">@drawable/primary_button_bg</item>
         <item name="android:text">@string/register_register_button</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
@@ -43,6 +52,7 @@
     <style name="login_fragment_buttons">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
+        <item name="android:background">@drawable/primary_button_bg</item>
     </style>
 
     <style name="home_page_fragment_buttons">

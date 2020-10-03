@@ -79,7 +79,8 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
     }
 
     internal fun saveUsername(username: String?) {
-        liveUser.value = username; username?.let {
+        liveUser.value = username
+        username?.let {
         viewModelScope.launch(Dispatchers.IO) {
             repository.setUsername(Entry(Tags.USERNAME.tag, username, null))
         }
@@ -97,7 +98,8 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
                 }
 
                 override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?, error: Throwable?) {
-                    println("There was an error posting firebase token to server")
+                    println("There was an error posting firebase token to server => error is \n${error?.message}")
+                    println("Stack trace is: \n${error?.printStackTrace()}")
                 }
             })
         }

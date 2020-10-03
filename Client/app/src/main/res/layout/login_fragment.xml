@@ -10,32 +10,29 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/bg"
         tools:context=".login.LoginFragment">
 
         <EditText
             android:id="@+id/login_username_eddittext"
-            style="@style/AppTheme.EditText"
-            android:layout_width="@dimen/login_fragment_edittext_width"
-            android:layout_height="@dimen/login_fragment_edittext_height"
+            style="@style/login_fragment_edittext"
             android:layout_marginTop="@dimen/login_fragment_username_edittext_margin_top"
+            android:autofillHints="@string/login_screen_username_autofill"
             android:hint="@string/login_edittext_username_hint"
             android:inputType="text"
             android:text="@={viewmodel.liveUsername$app_debug}"
-            android:autofillHints="@string/login_screen_username_autofill"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/login_password_edittext"
-            style="@style/AppTheme.EditText"
-            android:layout_width="@dimen/login_fragment_edittext_width"
-            android:layout_height="@dimen/login_fragment_edittext_height"
+            style="@style/login_fragment_edittext"
             android:layout_marginTop="@dimen/login_fragment_password_edittext_margin_top"
+            android:autofillHints="@string/login_screen_password_autofill"
             android:hint="@string/login_edittext_password_hint"
             android:inputType="textPassword"
             android:text="@={viewmodel.livePassword$app_debug}"
-            android:autofillHints="@string/login_screen_password_autofill"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/login_username_eddittext" />
@@ -45,18 +42,22 @@
             android:id="@+id/submit_button"
             style="@style/login_fragment_buttons"
             android:text="@string/login_screen_submit"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/registration_link"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/login_password_edittext"
-            app:layout_constraintVertical_bias="0.2"/>
+            app:layout_constraintVertical_bias="0.2" />
 
-        <Button
+        <TextView
             android:id="@+id/registration_link"
-            style="@style/login_fragment_buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/login_screen_register"
+            android:textColor="@color/colorAccent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/submit_button" />
 
@@ -66,6 +67,6 @@
 <!--
 
 TODO:
-
+    Add a confirm password field.
 
 -->
