@@ -103,6 +103,17 @@
             app:layout_constraintTop_toBottomOf="@+id/register_username_edittext" />
 
         <EditText
+            android:id="@+id/register_confirm_password_edittext"
+            style="@style/register_fragment_edittext"
+            android:autofillHints="@string/register_screen_password_autofill"
+            android:hint="@string/register_confirm_password_edittext_hint"
+            android:inputType="textPassword"
+            android:layout_marginTop="@dimen/register_fragment_password_edittext_margin_top"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/register_password_edittext" />
+
+        <EditText
             android:id="@+id/register_email_edittext"
             style="@style/register_fragment_edittext"
             android:layout_marginTop="@dimen/register_fragment_email_edittext_margin_top"
@@ -112,7 +123,7 @@
             android:text="@={viewmodel.newUserEmail$app_debug}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/register_password_edittext" />
+            app:layout_constraintTop_toBottomOf="@+id/register_confirm_password_edittext" />
 
         <Button
             android:id="@+id/register_fragment_submit_button"

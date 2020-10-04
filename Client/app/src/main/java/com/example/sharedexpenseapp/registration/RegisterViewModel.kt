@@ -3,6 +3,7 @@ package com.example.sharedexpenseapp.registration
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.sharedexpenseapp.R
 import com.example.sharedexpenseapp.enums.Endpoints
 import com.loopj.android.http.AsyncHttpClient
@@ -54,18 +55,19 @@ class RegisterViewModel : ViewModel() {
 
     internal lateinit var profilePicturePath: String
 
-    internal fun register(callback: () -> Unit) {
+    internal fun register(callback: (name: String) -> Unit) {
         liveIsRegistrationButtonEnabled.value = false
+        val username = newUserUsername.value!!
         val params = RequestParams()
         params.put("username", newUserUsername.value)
         params.put("password", newUserPassword.value)
         params.put("email", newUserEmail.value)
-        httpClient.post(Endpoints.REGISTER_ENDPOINT.endpoint, params, object : AsyncHttpResponseHandler() {
+        callback(username)
+        /*httpClient.post(Endpoints.REGISTER_ENDPOINT.endpoint, params, object : AsyncHttpResponseHandler() {
                 override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
                     responseBody?.let { liveRegistrationStatus.value = String(it) }
-                    clearEditTexts()
-                    callback()
-                    uploadProfilePicture()
+                    uploadProfilePicture(username)
+                    viewModelScope.launch { callback(username) }
                 }
 
                 override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?, error: Throwable?) {
@@ -73,21 +75,19 @@ class RegisterViewModel : ViewModel() {
                     responseBody?.let { liveRegistrationStatus.value = "Failed! ${error?.message}" }
                     error?.let { println("Throwable was ${error.message}") }
                 }
-            })
+            })*/
     }
 
     private fun clearEditTexts() {
-        newUserUsername.value = ""
-        newUserPassword.value = ""
-        newUserEmail.value = ""
+        newUserUsername.postValue("")
+        newUserPassword.postValue("")
+        newUserEmail.postValue("")
     }
 
-    private fun uploadProfilePicture() {
+    private fun uploadProfilePicture(username: String) {
         val maxBufferSize = 1024 * 1024
         val sourceFile = File(profilePicturePath)
-
-        //Print profilePictureUri to see what it looks like (delete this code later)
-        println("profilePictureUri is: $profilePicturePath")
+        val fileName = "$username.${profilePicturePath.substringAfterLast('.')}"
 
         //Check if the file is available and then upload picture
         if (!sourceFile.isFile) {
@@ -97,7 +97,6 @@ class RegisterViewModel : ViewModel() {
                 val inStream = FileInputStream(sourceFile)
                 val uploadUrl = java.net.URL(Endpoints.PROFILE_PIC_ENDPOINT.endpoint)
                 val conn = uploadUrl.openConnection() as HttpURLConnection
-                val uploadedFile = "${newUserUsername.value}"
                 conn.doInput = true
                 conn.doOutput = true
                 conn.useCaches = false
@@ -105,13 +104,13 @@ class RegisterViewModel : ViewModel() {
                 conn.setRequestProperty("Connection", "Keep-Alive")
                 conn.setRequestProperty("ENCTYPE", "multipart/form-data")
                 conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=*****")
-                conn.setRequestProperty("uploaded_file", "${newUserUsername.value}")
+                conn.setRequestProperty("uploaded_file", username)
+
                 CoroutineScope(Dispatchers.IO).launch {
                     val dos = DataOutputStream(conn.outputStream)
                     dos.writeBytes("--*****\r\n")
-                    dos.writeBytes("Content-Disposition: form-data; name=image;filename=${uploadedFile}\r\n")
+                    dos.writeBytes("Content-Disposition: form-data; name=image;filename=$fileName\r\n")
                     dos.writeBytes("\r\n")
-
 
                     var bufferSize = inStream.available().coerceAtMost(maxBufferSize)
                     val buffer = ByteArray(bufferSize)
@@ -127,13 +126,16 @@ class RegisterViewModel : ViewModel() {
 
                     // send multipart form data necesssary after file data...
                     dos.writeBytes("\r\n")
+
                     dos.writeBytes("--*****--\r\n")
 
                     println("Uploaded file => HTTP Response is: ${conn.responseMessage}: ${conn.responseCode}")
 
                     inStream.close();
-                    dos.flush();
-                    dos.close();
+                    dos.flush()
+                    dos.close()
+                    conn.disconnect()
+                    clearEditTexts()
                 }
             } catch (error: MalformedURLException) {
                 println("MalformedURLException: ")

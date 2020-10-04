@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.basgeekball.awesomevalidation.AwesomeValidation
@@ -34,6 +35,7 @@ import com.daimajia.androidanimations.library.YoYo
 import com.example.sharedexpenseapp.R
 import com.example.sharedexpenseapp.databinding.RegisterFragmentBinding
 import com.example.sharedexpenseapp.mainactivity.MainActivityViewModel
+import kotlinx.coroutines.*
 
 
 private const val RESULT_LOAD_IMAGE = 20
@@ -41,6 +43,7 @@ private const val USERNAME_REGEX = "^[A-Z0-9a-z]{7,15}$"
 private const val USERNAME_ERROR = "Please enter between 7-15 alphanumeric characters"
 //private const val PASSWORD_REGEX = """^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[\]:;<>,.?\/~_+\-=|\\\\]).{8,32}$"""
 private const val PASSWORD_ERROR = "Your password must be between 8-15 alphanumeric characters"
+private const val CONFIRM_PASSWORD_ERROR = "This must match your password"
 private const val EMAIL_ERROR = "Your eMail is invalid"
 private const val PROGRESS_BAR_ANIMATION_TIME = 750L
 
@@ -108,6 +111,7 @@ class RegisterFragment : Fragment() {
         val validation = AwesomeValidation(ValidationStyle.COLORATION)
         validation.addValidation(binding.registerUsernameEdittext, USERNAME_REGEX, USERNAME_ERROR)
         //validation.addValidation(binding.registerScreenPasswordEdittext, PASSWORD_REGEX, PASSWORD_ERROR)
+        validation.addValidation(binding.registerConfirmPasswordEdittext, { it == viewModel.newUserPassword.value }, CONFIRM_PASSWORD_ERROR)
         validation.addValidation(binding.registerEmailEdittext, Patterns.EMAIL_ADDRESS, EMAIL_ERROR)
 
         //LiveData observers
@@ -174,11 +178,14 @@ class RegisterFragment : Fragment() {
         }
         binding.registerFragmentSubmitButton.setOnClickListener {
             if(validation.validate()) {
-                val username = viewModel.newUserUsername.value
                 viewModel.register {
-                    sharedViewModel.saveLoginStatus(true)
-                    sharedViewModel.saveUsername(username)
-                    navController.popBackStack(R.id.loginFragment, true)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        coroutineScope {
+                            sharedViewModel.saveUsername(it)
+                            sharedViewModel.saveLoginStatus(true)
+                        }
+                        navController.popBackStack(R.id.loginFragment, true)
+                    }
                 }
             }
         }

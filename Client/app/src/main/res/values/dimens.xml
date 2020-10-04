@@ -32,7 +32,7 @@
     <dimen name="register_fragment_progress_bar_outer_padding">2dp</dimen>
     <dimen name="register_fragment_edittext_padding_left">15dp</dimen>
     <dimen name="register_fragment_email_edittext_margin_top">30dp</dimen>
-    <dimen name="register_fragment_submit_button_margin_top">30dp</dimen>
+    <dimen name="register_fragment_submit_button_margin_top">50dp</dimen>
     <dimen name="register_fragment_agreement_text_size">10sp</dimen>
     <dimen name="register_fragment_agreement_margin_bottom">8dp</dimen>
     <dimen name="register_fragment_inner_svg_size">20dp</dimen>

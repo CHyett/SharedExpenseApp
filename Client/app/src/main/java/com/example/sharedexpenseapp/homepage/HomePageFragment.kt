@@ -54,14 +54,6 @@ class HomePageFragment : Fragment() {
 
         //Lock screen to prevent glitches. You should re-simulate them and log what they do
         sharedViewModel.orientation.value = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
-        //LiveData observers
-        sharedViewModel.isLoggedIn.observe(this, Observer {
-            if (!it) {
-                val navOptions = NavOptions.Builder().setPopUpTo(R.id.homePageFragment, false).build()
-                navController.navigate(R.id.loginFragment, null, navOptions)
-            }
-        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -73,8 +65,8 @@ class HomePageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //If username is present, unlock screen, otherwise send user to login fragment
-        sharedViewModel.user.observe(viewLifecycleOwner, Observer {
-            if(it == null) {
+        sharedViewModel.isLoggedIn.observe(viewLifecycleOwner, Observer {
+            if(!it) {
                 navController.navigate(R.id.loginFragment)
             } else {
                 askForPermissions()

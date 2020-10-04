@@ -20,6 +20,7 @@ import com.example.sharedexpenseapp.R
 import com.example.sharedexpenseapp.databinding.LoginFragmentBinding
 import com.google.android.material.snackbar.Snackbar
 import com.example.sharedexpenseapp.mainactivity.MainActivityViewModel
+import kotlinx.coroutines.*
 
 
 private const val USERNAME_REGEX = "^[A-Z0-9a-z]{7,15}$"
@@ -48,9 +49,11 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        CoroutineScope(Dispatchers.IO).launch {
+            sharedViewModel.saveLoginStatus(false)
+        }
         viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
         navController = findNavController()
-        sharedViewModel.saveLoginStatus(false)
         askForPermissions()
     }
 
@@ -75,11 +78,16 @@ class LoginFragment : Fragment() {
             if (validation.validate()) {
                 viewModel.logIn {
                     if(it) {
-                        sharedViewModel.saveUsername(viewModel.liveUsername.value!!)
-                        sharedViewModel.saveLoginStatus(true)
+                        val username = viewModel.liveUsername.value!!
+                        CoroutineScope(Dispatchers.IO).launch {
+                            coroutineScope {
+                                sharedViewModel.saveUsername(username)
+                                sharedViewModel.saveLoginStatus(true)
+                            }
+                            navController.popBackStack()
+                        }
                         viewModel.livePassword.value = ""
                         viewModel.liveUsername.value = ""
-                        navController.popBackStack()
                     }
                 }
             }

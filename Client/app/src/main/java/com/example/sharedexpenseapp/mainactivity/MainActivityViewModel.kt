@@ -64,27 +64,24 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         liveUser.value = null
         liveIsLoggedIn.value = false
         CoroutineScope(Dispatchers.IO).launch {
-            repository.setIsLoggedIn(Entry(Tags.LOGIN.tag, null, false))
             repository.setUsername(Entry(Tags.USERNAME.tag, null, null))
-        }
-        val navOptions = NavOptions.Builder().setPopUpTo(R.id.homePageFragment, true).build()
-        navController!!.navigate(R.id.homePageFragment, null, navOptions)
-    }
-
-    internal fun saveLoginStatus(loginStatus: Boolean) {
-        liveIsLoggedIn.value = loginStatus
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.setIsLoggedIn(Entry(Tags.LOGIN.tag, null, loginStatus))
+            repository.setIsLoggedIn(Entry(Tags.LOGIN.tag, null, false))
         }
     }
 
-    internal fun saveUsername(username: String?) {
-        liveUser.value = username
+    internal suspend fun saveLoginStatus(loginStatus: Boolean) {
+        liveIsLoggedIn.postValue(loginStatus)
+        repository.setIsLoggedIn(Entry(Tags.LOGIN.tag, null, loginStatus))
+        println("login status saved")
+    }
+
+    internal suspend fun saveUsername(username: String?) {
+        liveUser.postValue(username)
         username?.let {
-        viewModelScope.launch(Dispatchers.IO) {
             repository.setUsername(Entry(Tags.USERNAME.tag, username, null))
+            println("username saved")
         }
-    }}
+    }
 
     fun sendToServer() {
         if (firebaseToken != null) {
@@ -106,8 +103,8 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
     }
 
     override fun onCleared() {
-        liveIsLoggedIn.value?.let { saveLoginStatus(it) }
-        liveUser.value?.let { saveUsername(it) }
+        liveIsLoggedIn.value?.let { CoroutineScope(Dispatchers.IO).launch { saveLoginStatus(it) }}
+        liveUser.value?.let { CoroutineScope(Dispatchers.IO).launch { saveUsername(it) }}
         super.onCleared()
     }
 
