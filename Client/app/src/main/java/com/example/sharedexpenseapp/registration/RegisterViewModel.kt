@@ -53,7 +53,7 @@ class RegisterViewModel : ViewModel() {
     internal var isInvalidPassword = true
     internal var isInvalidEmail = true
 
-    internal lateinit var profilePicturePath: String
+    internal var profilePicturePath: String? = null
 
     internal fun register(callback: (name: String) -> Unit) {
         liveIsRegistrationButtonEnabled.value = false
@@ -62,12 +62,11 @@ class RegisterViewModel : ViewModel() {
         params.put("username", newUserUsername.value)
         params.put("password", newUserPassword.value)
         params.put("email", newUserEmail.value)
-        callback(username)
-        /*httpClient.post(Endpoints.REGISTER_ENDPOINT.endpoint, params, object : AsyncHttpResponseHandler() {
+        httpClient.post(Endpoints.REGISTER_ENDPOINT.endpoint, params, object : AsyncHttpResponseHandler() {
                 override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
                     responseBody?.let { liveRegistrationStatus.value = String(it) }
-                    uploadProfilePicture(username)
-                    viewModelScope.launch { callback(username) }
+                    profilePicturePath?.let { uploadProfilePicture(username) }
+                    callback(username)
                 }
 
                 override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?, error: Throwable?) {
@@ -75,7 +74,7 @@ class RegisterViewModel : ViewModel() {
                     responseBody?.let { liveRegistrationStatus.value = "Failed! ${error?.message}" }
                     error?.let { println("Throwable was ${error.message}") }
                 }
-            })*/
+            })
     }
 
     private fun clearEditTexts() {
@@ -87,7 +86,7 @@ class RegisterViewModel : ViewModel() {
     private fun uploadProfilePicture(username: String) {
         val maxBufferSize = 1024 * 1024
         val sourceFile = File(profilePicturePath)
-        val fileName = "$username.${profilePicturePath.substringAfterLast('.')}"
+        val fileName = "$username.${profilePicturePath!!.substringAfterLast('.')}"
 
         //Check if the file is available and then upload picture
         if (!sourceFile.isFile) {

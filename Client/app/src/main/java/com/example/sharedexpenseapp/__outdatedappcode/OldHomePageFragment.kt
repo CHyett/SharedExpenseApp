@@ -1,11 +1,12 @@
-package com.example.sharedexpenseapp.homepage
+package com.example.sharedexpenseapp.__outdatedappcode
 
-import android.Manifest
+/*import android.Manifest
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -14,11 +15,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.sharedexpenseapp.login.LoginFragment
 import com.example.sharedexpenseapp.R
 import com.example.sharedexpenseapp.databinding.HomePageFragmentBinding
 import com.example.sharedexpenseapp.mainactivity.MainActivityViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class HomePageFragment : Fragment() {
 
@@ -78,12 +81,27 @@ class HomePageFragment : Fragment() {
         binding.lifecycleOwner = this
 
         //LiveData observers
-
+        viewModel.liveGroupName.observe(viewLifecycleOwner, Observer {
+            viewModel.liveIsClickable.value = it.isNotEmpty()
+        })
 
         //Click listeners
-        binding.homePageFragmentHamburgerIcon.setOnClickListener {
-            val progress = binding.homePageFragmentHamburgerIcon.progress
-            if(progress == 0.5f) binding.homePageFragmentHamburgerIcon.progress = 1f else binding.homePageFragmentHamburgerIcon.progress = 0.5f
+        binding.homeFragmentCreateGroupButton.setOnClickListener { viewModel.showCreateGroupForm() }
+        binding.homeFragmentSubmitGroupNameButton.setOnClickListener { view ->
+            viewModel.createGroup(sharedViewModel.user.value!!) {
+                Snackbar.make(view, it, Snackbar.LENGTH_LONG).show()
+            }
+        }
+        binding.homeFragmentLogOutButton.setOnClickListener {
+            sharedViewModel.logOut()
+        }
+
+        //Listeners for testing. Should be deleted at some point
+        binding.homeFragmentPayButton.setOnClickListener {
+            Toast.makeText(activity, sharedViewModel.isLoggedIn.value.toString(), Toast.LENGTH_LONG).show()
+        }
+        binding.homeFragmentChargeButton.setOnClickListener {
+            Toast.makeText(activity, sharedViewModel.user.value, Toast.LENGTH_LONG).show()
         }
 
     }
@@ -122,7 +140,7 @@ class HomePageFragment : Fragment() {
 
     }
 
-}
+}*/
 
 /*
 *

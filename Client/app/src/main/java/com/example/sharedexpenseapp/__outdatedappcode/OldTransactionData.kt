@@ -3,7 +3,7 @@
 
 
 
-package com.example.sharedexpenseapp
+package com.example.sharedexpenseapp.__outdatedappcode
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -11,7 +11,7 @@
         android:id="@+id/register_fragment_root_constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg"
+        android:background="@drawable/start_bg"
         tools:context=".login.LoginFragment">
 
         <androidx.cardview.widget.CardView

@@ -41,5 +41,6 @@
     <string name="home_fragment_submit_group_name_button">Submit</string>
     <string name="home_fragment_create_group_name_edittext_autofill">Username</string>
     <string name="home_fragment_log_out">Log out</string>
+    <string name="home_fragment_expenses_message">Here are your expenses:</string>
 
 </resources>
