@@ -2,6 +2,7 @@ package com.example.sharedexpenseapp.mainactivity
 
 import android.app.Application
 import android.content.pm.ActivityInfo
+import android.view.View
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
@@ -29,6 +30,16 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
     private val liveUser = MutableLiveData<String>()
     internal val user: LiveData<String>
         get() = liveUser
+
+    //LiveData to hide toolbar on login
+    private val liveHideToolbar = MutableLiveData<Int>(View.GONE)
+    internal val hideToolbar: LiveData<Int>
+        get() = liveHideToolbar
+
+    //LiveData to lock or unlock nav drawer
+    private val liveShowNavDrawer = MutableLiveData<Boolean>()
+    internal val showNavDrawer: LiveData<Boolean>
+        get() = liveShowNavDrawer
 
     //Screen orientation (forced portrait mode or free to rotate)
     internal val orientation = MutableLiveData<Int>()
@@ -100,6 +111,17 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
                 }
             })
         }
+    }
+
+    fun lockNavDrawer(status: Boolean) {
+        liveShowNavDrawer.value = status
+    }
+
+    fun hideToolbar(status: Boolean) {
+        if(status)
+            liveHideToolbar.value = View.GONE
+        else
+            liveHideToolbar.value = View.VISIBLE
     }
 
     override fun onCleared() {

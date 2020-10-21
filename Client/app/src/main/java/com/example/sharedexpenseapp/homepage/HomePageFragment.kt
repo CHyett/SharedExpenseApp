@@ -15,10 +15,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.example.sharedexpenseapp.login.LoginFragment
 import com.example.sharedexpenseapp.R
 import com.example.sharedexpenseapp.databinding.HomePageFragmentBinding
+import com.example.sharedexpenseapp.login.LoginFragment
 import com.example.sharedexpenseapp.mainactivity.MainActivityViewModel
+
 
 class HomePageFragment : Fragment() {
 
@@ -63,7 +64,7 @@ class HomePageFragment : Fragment() {
 
         //If username is present, unlock screen, otherwise send user to login fragment
         sharedViewModel.isLoggedIn.observe(viewLifecycleOwner, Observer {
-            if(!it) {
+            if (!it) {
                 navController.navigate(R.id.loginFragment)
             } else {
                 askForPermissions()
@@ -76,43 +77,119 @@ class HomePageFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
+        sharedViewModel.lockNavDrawer(false)
+        sharedViewModel.hideToolbar(false)
 
         //LiveData observers
 
 
         //Click listeners
-        binding.homePageFragmentHamburgerIcon.setOnClickListener {
-            val progress = binding.homePageFragmentHamburgerIcon.progress
-            if(progress == 0.5f) binding.homePageFragmentHamburgerIcon.progress = 1f else binding.homePageFragmentHamburgerIcon.progress = 0.5f
-        }
+
 
     }
 
     private fun askForPermissions() {
-        val externalWriteCheck = ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        val networkStateCheck = ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.ACCESS_NETWORK_STATE)
-        val internetCheck = ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.INTERNET)
-        val externalReadCheck = ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.READ_EXTERNAL_STORAGE)
+        val externalWriteCheck = ContextCompat.checkSelfPermission(
+            requireActivity().applicationContext,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        val networkStateCheck = ContextCompat.checkSelfPermission(
+            requireActivity().applicationContext,
+            Manifest.permission.ACCESS_NETWORK_STATE
+        )
+        val internetCheck = ContextCompat.checkSelfPermission(
+            requireActivity().applicationContext,
+            Manifest.permission.INTERNET
+        )
+        val externalReadCheck = ContextCompat.checkSelfPermission(
+            requireActivity().applicationContext,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
         val storageWriteString = Manifest.permission.WRITE_EXTERNAL_STORAGE
         val internetString = Manifest.permission.INTERNET
         val networkString = Manifest.permission.ACCESS_NETWORK_STATE
         val storageReadString = Manifest.permission.READ_EXTERNAL_STORAGE
         when((-1 * externalWriteCheck) + (-2 * networkStateCheck) + (-4 * internetCheck) + (-8 * externalReadCheck)) {
-            1 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageWriteString), 1)
+            1 -> ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(storageWriteString),
+                1
+            )
             2 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(networkString), 2)
-            3 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageWriteString, networkString), 3)
+            3 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageWriteString,
+                    networkString
+                ), 3
+            )
             4 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(internetString), 4)
-            5 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageWriteString, internetString), 5)
-            6 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(networkString, internetString), 6)
-            7 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageWriteString, networkString, internetString), 7)
+            5 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageWriteString,
+                    internetString
+                ), 5
+            )
+            6 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    networkString,
+                    internetString
+                ), 6
+            )
+            7 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageWriteString,
+                    networkString,
+                    internetString
+                ), 7
+            )
             8 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString), 8)
-            9 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, storageWriteString), 9)
-            10 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, networkString), 10)
-            11 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, storageWriteString, networkString), 11)
-            12 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, internetString), 12)
-            13 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, internetString, storageWriteString), 13)
-            14 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, internetString, networkString), 14)
-            15 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, internetString, networkString, storageWriteString), 15)
+            9 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageReadString,
+                    storageWriteString
+                ), 9
+            )
+            10 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageReadString,
+                    networkString
+                ), 10
+            )
+            11 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageReadString,
+                    storageWriteString,
+                    networkString
+                ), 11
+            )
+            12 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageReadString,
+                    internetString
+                ), 12
+            )
+            13 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageReadString,
+                    internetString,
+                    storageWriteString
+                ), 13
+            )
+            14 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageReadString,
+                    internetString,
+                    networkString
+                ), 14
+            )
+            15 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageReadString,
+                    internetString,
+                    networkString,
+                    storageWriteString
+                ), 15
+            )
         }
     }
 

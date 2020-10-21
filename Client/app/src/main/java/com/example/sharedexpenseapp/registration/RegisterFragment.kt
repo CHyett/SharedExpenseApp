@@ -102,6 +102,8 @@ class RegisterFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(RegisterViewModel::class.java)
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
+        sharedViewModel.lockNavDrawer(true)
+        sharedViewModel.hideToolbar(true)
 
         //Animation initialization
         constraintSetHide.clone(binding.registerFragmentRootConstraintLayout)

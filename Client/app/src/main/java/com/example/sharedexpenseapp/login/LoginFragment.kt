@@ -61,6 +61,8 @@ class LoginFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
+        sharedViewModel.lockNavDrawer(true)
+        sharedViewModel.hideToolbar(true)
 
         //Form validation
         val validation = AwesomeValidation(ValidationStyle.COLORATION)

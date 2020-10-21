@@ -2,24 +2,63 @@ package com.example.sharedexpenseapp.mainactivity
 
 
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ListView
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.sharedexpenseapp.R
+import com.example.sharedexpenseapp.databinding.ActivityMainBinding
+import com.example.sharedexpenseapp.navdrawer.CustomDrawerAdapter
+import com.example.sharedexpenseapp.navdrawer.DrawerItem
 import com.google.firebase.iid.FirebaseInstanceId
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainActivityViewModel
 
+    private lateinit var binding: ActivityMainBinding
+
+    //New stuff
+    private lateinit var drawerList: ListView
+    private lateinit var mDrawerToggle: ActionBarDrawerToggle
+
+    private lateinit var adapter: CustomDrawerAdapter
+
+    private lateinit var dataList: List<DrawerItem>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val viewModelFactory = MainActivityViewModelFactory(application)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel::class.java)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        //New stuff
+        dataList = ArrayList()
+        (dataList as ArrayList<DrawerItem>).apply {
+            add(DrawerItem("Charges"))
+            add(DrawerItem("Expenses"))
+        }
+        adapter = CustomDrawerAdapter(this, R.layout.main_activity_custom_nav_item, dataList)
+        binding.list.adapter = adapter
+        binding.list.onItemClickListener = DrawerItemClickListener()
+
+        //LiveData observers
         viewModel.orientation.observe(this, Observer {
             this.requestedOrientation = it
+        })
+        viewModel.showNavDrawer.observe(this, Observer {
+            if (it)
+                binding.mainActivityDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            else
+                binding.mainActivityDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         })
 
         //Set up firebase
@@ -27,9 +66,27 @@ class MainActivity : AppCompatActivity() {
 
         //observe login status and send firebase token if user is logged in
         viewModel.isLoggedIn.observe(this, Observer {
-            if(it)
+            if (it)
                 viewModel.sendToServer()
         })
+    }
+
+    fun selectItem(position: Int) {
+        var fragment: Fragment? = null
+        val args = Bundle()
+        when (position) {
+            0 -> { viewModel.navController?.navigate(R.id.homePageFragment) }
+            1 -> { viewModel.navController?.navigate(R.id.homePageFragment) }
+        }
+        binding.list.setItemChecked(position, true)
+        binding.mainActivityDrawerLayout.closeDrawer(binding.list)
+    }
+
+    private inner class DrawerItemClickListener: AdapterView.OnItemClickListener {
+
+        override fun onItemClick(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+            selectItem(position)
+        }
     }
 
 }

@@ -9,6 +9,11 @@
     <dimen name="custom_edittext_bg_drawable_corners">25dp</dimen>
     <dimen name="custom_edittext_bg_border_width">2dp</dimen>
 
+    <!-- Main activity dimensions -->
+    <dimen name="main_activity_nav_drawer_divider_height">10dp</dimen>
+    <dimen name="main_activity_nav_drawer_width">240dp</dimen>
+    <dimen name="main_activity_nav_drawer_divider_radius">5dp</dimen>
+
     <!-- login screen dimensions -->
     <dimen name="login_password_top_margin">60dp</dimen>
     <dimen name="login_fragment_edittext_height">55dp</dimen>
@@ -46,17 +51,19 @@
     <dimen name="home_fragment_edittetext_width">180dp</dimen>
     <dimen name="home_fragment_edittetext_height">55dp</dimen>
     <dimen name="home_fragment_group_name_form_margin_top">100dp</dimen>
-    <dimen name="home_fragment_log_out_button_margin_bottom">50dp</dimen>
     <dimen name="home_fragment_top_nav_imageview">60dp</dimen>
     <dimen name="home_fragment_top_nav_imageview_padding">20dp</dimen>
     <dimen name="home_fragment_welcome_message_size">35sp</dimen>
     <dimen name="home_fragment_welcome_message_margin_top">20dp</dimen>
     <dimen name="home_fragment_expenses_message_size">30sp</dimen>
     <dimen name="home_fragment_expenses_message_margin_top">40dp</dimen>
-    <dimen name="home_fragment_overall_expenses">300dp</dimen>
-    <dimen name="home_fragment_overall_expenses_text">65sp</dimen>
+    <dimen name="home_fragment_overall_expenses">265dp</dimen>
+    <dimen name="home_fragment_overall_expenses_text">60sp</dimen>
     <dimen name="home_fragment_overall_expenses_background_margin_top">50dp</dimen>
-    <dimen name="home_fragment_horizontal_rule_height">5dp</dimen>
+    <dimen name="home_fragment_horizontal_rule_height">3dp</dimen>
     <dimen name="home_fragment_horizontal_rule_margin">50dp</dimen>
+    <dimen name="home_fragment_dual_button_margin_top">50dp</dimen>
+    <dimen name="home_fragment_dual_button_text_size">20sp</dimen>
+    <dimen name="home_fragment_dual_button_width">275dp</dimen>
 
 </resources>
