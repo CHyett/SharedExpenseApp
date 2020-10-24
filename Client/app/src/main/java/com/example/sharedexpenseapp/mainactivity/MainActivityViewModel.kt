@@ -2,6 +2,7 @@ package com.example.sharedexpenseapp.mainactivity
 
 import android.app.Application
 import android.content.pm.ActivityInfo
+import android.graphics.drawable.Drawable
 import android.view.View
 import androidx.lifecycle.*
 import androidx.navigation.NavController
@@ -40,6 +41,16 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
     private val liveShowNavDrawer = MutableLiveData<Boolean>()
     internal val showNavDrawer: LiveData<Boolean>
         get() = liveShowNavDrawer
+
+    //LiveData for app background
+    private val liveAppBackgroundDrawable = MutableLiveData<Int>()
+    internal val appBackgroundDrawable: LiveData<Int>
+        get() = liveAppBackgroundDrawable
+
+    //LiveData for nav drawer status
+    private val liveIsNavDrawerOpen = MutableLiveData<Boolean>(false)
+    internal val isNavDrawerOpen: LiveData<Boolean>
+        get() = liveIsNavDrawerOpen
 
     //Screen orientation (forced portrait mode or free to rotate)
     internal val orientation = MutableLiveData<Int>()
@@ -122,6 +133,14 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
             liveHideToolbar.value = View.GONE
         else
             liveHideToolbar.value = View.VISIBLE
+    }
+
+    fun setAppBackgroundDrawable(resID: Int) {
+        liveAppBackgroundDrawable.value = resID
+    }
+
+    internal fun setNavDrawerStatus(status: Boolean) {
+        liveIsNavDrawerOpen.value = status
     }
 
     override fun onCleared() {

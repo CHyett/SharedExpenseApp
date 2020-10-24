@@ -2,14 +2,13 @@ package com.example.sharedexpenseapp.mainactivity
 
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ListView
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.sharedexpenseapp.R
@@ -26,10 +25,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    //New stuff
-    private lateinit var drawerList: ListView
-    private lateinit var mDrawerToggle: ActionBarDrawerToggle
-
     private lateinit var adapter: CustomDrawerAdapter
 
     private lateinit var dataList: List<DrawerItem>
@@ -39,47 +34,77 @@ class MainActivity : AppCompatActivity() {
         val viewModelFactory = MainActivityViewModelFactory(application)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel::class.java)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        initNavDrawer()
 
-        //New stuff
+        //LiveData observers
+        //observe login status and send firebase token if user is logged in
+        viewModel.isLoggedIn.observe(this, Observer {
+            if (it)
+                viewModel.sendToServer()
+        })
+        viewModel.orientation.observe(this, Observer {
+            this.requestedOrientation = it
+        })
+        viewModel.showNavDrawer.observe(this, Observer {
+            if(it)
+                binding.mainActivityDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            else
+                binding.mainActivityDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+        })
+        viewModel.appBackgroundDrawable.observe(this, Observer {
+            binding.mainActivityLinearLayout.background = ContextCompat.getDrawable(applicationContext, it)
+        })
+        viewModel.isNavDrawerOpen.observe(this, Observer {
+            if(it)
+                binding.mainActivityToolbarHamburger.setMinAndMaxProgress(0.0f, 0.5f)
+            else
+                binding.mainActivityToolbarHamburger.setMinAndMaxProgress(0.5f, 1.0f)
+            binding.mainActivityToolbarHamburger.playAnimation()
+        })
+
+        //Click listeners
+        binding.mainActivityToolbarHamburger.setOnClickListener {
+            if(viewModel.isNavDrawerOpen.value!!)
+                binding.mainActivityDrawerLayout.closeDrawer(Gravity.RIGHT)
+            else
+                binding.mainActivityDrawerLayout.openDrawer(Gravity.RIGHT)
+        }
+
+        //Set up firebase
+        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this) { MainActivityViewModel.firebaseToken = it?.token }
+
+    }
+
+    private fun selectItem(position: Int) {
+        when (position) {
+            0 -> { viewModel.navController?.navigate(R.id.homePageFragment) }
+            1 -> { viewModel.navController?.navigate(R.id.homePageFragment) }
+        }
+        binding.mainActivityDrawerLayoutList.setItemChecked(position, true)
+        binding.mainActivityDrawerLayout.closeDrawer(binding.mainActivityDrawerLayoutList)
+    }
+
+    private fun initNavDrawer() {
+        binding.mainActivityToolbarHamburger.speed = 2f
+        binding.mainActivityDrawerLayout.setScrimColor(resources.getColor(R.color.transparent))
+        binding.mainActivityDrawerLayout.addDrawerListener(object: DrawerLayout.DrawerListener {
+            override fun onDrawerOpened(drawerView: View) {
+                viewModel.setNavDrawerStatus(!viewModel.isNavDrawerOpen.value!!)
+            }
+            override fun onDrawerClosed(drawerView: View) {
+                viewModel.setNavDrawerStatus(!viewModel.isNavDrawerOpen.value!!)
+            }
+            override fun onDrawerStateChanged(newState: Int) {}
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+        })
         dataList = ArrayList()
         (dataList as ArrayList<DrawerItem>).apply {
             add(DrawerItem("Charges"))
             add(DrawerItem("Expenses"))
         }
         adapter = CustomDrawerAdapter(this, R.layout.main_activity_custom_nav_item, dataList)
-        binding.list.adapter = adapter
-        binding.list.onItemClickListener = DrawerItemClickListener()
-
-        //LiveData observers
-        viewModel.orientation.observe(this, Observer {
-            this.requestedOrientation = it
-        })
-        viewModel.showNavDrawer.observe(this, Observer {
-            if (it)
-                binding.mainActivityDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-            else
-                binding.mainActivityDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-        })
-
-        //Set up firebase
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this) { MainActivityViewModel.firebaseToken = it?.token }
-
-        //observe login status and send firebase token if user is logged in
-        viewModel.isLoggedIn.observe(this, Observer {
-            if (it)
-                viewModel.sendToServer()
-        })
-    }
-
-    fun selectItem(position: Int) {
-        var fragment: Fragment? = null
-        val args = Bundle()
-        when (position) {
-            0 -> { viewModel.navController?.navigate(R.id.homePageFragment) }
-            1 -> { viewModel.navController?.navigate(R.id.homePageFragment) }
-        }
-        binding.list.setItemChecked(position, true)
-        binding.mainActivityDrawerLayout.closeDrawer(binding.list)
+        binding.mainActivityDrawerLayoutList.adapter = adapter
+        binding.mainActivityDrawerLayoutList.onItemClickListener = DrawerItemClickListener()
     }
 
     private inner class DrawerItemClickListener: AdapterView.OnItemClickListener {
@@ -87,6 +112,7 @@ class MainActivity : AppCompatActivity() {
         override fun onItemClick(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
             selectItem(position)
         }
+
     }
 
 }

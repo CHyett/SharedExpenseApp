@@ -5,6 +5,7 @@
     <string name="submit_button_text">Retrieve client token</string>
     <string name="transaction_button_text">Drop-in UI</string>
     <string name="test_string">This is the notification string</string>
+    <string name="content_desc">Paceholder text</string>
 
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>

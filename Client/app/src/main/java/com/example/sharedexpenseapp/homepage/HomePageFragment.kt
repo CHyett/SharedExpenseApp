@@ -2,6 +2,7 @@ package com.example.sharedexpenseapp.homepage
 
 import android.Manifest
 import android.content.pm.ActivityInfo
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +20,10 @@ import com.example.sharedexpenseapp.R
 import com.example.sharedexpenseapp.databinding.HomePageFragmentBinding
 import com.example.sharedexpenseapp.login.LoginFragment
 import com.example.sharedexpenseapp.mainactivity.MainActivityViewModel
+import io.alterac.blurkit.BlurKit
 
+
+private const val BLURKIT_BLUR_RADIUS = 9
 
 class HomePageFragment : Fragment() {
 
@@ -76,12 +80,22 @@ class HomePageFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.viewmodel = viewModel
+        binding.usernameText = "Good evening,\n${sharedViewModel.user.value}"
         binding.lifecycleOwner = this
+        BlurKit.init(context)
+        binding.homePageFragmentBlurLayout.blurRadius = BLURKIT_BLUR_RADIUS
+
+        sharedViewModel.setAppBackgroundDrawable(R.drawable.home_screen_bg)
         sharedViewModel.lockNavDrawer(false)
         sharedViewModel.hideToolbar(false)
 
         //LiveData observers
-
+        sharedViewModel.isNavDrawerOpen.observe(viewLifecycleOwner, Observer {
+            if(it)
+                binding.homePageFragmentBlurLayout.visibility = View.VISIBLE
+            else
+                binding.homePageFragmentBlurLayout.visibility = View.GONE
+        })
 
         //Click listeners
 

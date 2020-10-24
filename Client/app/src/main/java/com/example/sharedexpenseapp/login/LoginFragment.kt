@@ -61,6 +61,7 @@ class LoginFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
+        sharedViewModel.setAppBackgroundDrawable(R.drawable.start_bg)
         sharedViewModel.lockNavDrawer(true)
         sharedViewModel.hideToolbar(true)
 

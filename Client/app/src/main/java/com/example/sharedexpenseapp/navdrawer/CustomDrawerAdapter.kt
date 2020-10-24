@@ -3,17 +3,13 @@ package com.example.sharedexpenseapp.navdrawer
 import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.res.ResourcesCompat
 import com.example.sharedexpenseapp.R
-import org.w3c.dom.Text
 
-class CustomDrawerAdapter(con: Context, private val layoutResourceID: Int, private val listItems: List<DrawerItem>): ArrayAdapter<DrawerItem>(con, layoutResourceID, listItems) {
+class CustomDrawerAdapter(private val con: Context, private val layoutResourceID: Int, private val listItems: List<DrawerItem>): ArrayAdapter<DrawerItem>(con, layoutResourceID, listItems) {
 
     private object DrawerItemHolder {
 
@@ -25,14 +21,15 @@ class CustomDrawerAdapter(con: Context, private val layoutResourceID: Int, priva
         var view = convertView
         val drawerHolder: DrawerItemHolder
 
+
         if (view == null) {
-            val inflater = (context as Activity).layoutInflater
+            val inflater = (con as Activity).layoutInflater
             drawerHolder = DrawerItemHolder
 
             view = inflater.inflate(layoutResourceID, parent, false)
-            drawerHolder.itemName = (view as TextView).findViewById(R.id.drawer_itemName)
+            drawerHolder.itemName = view.findViewById(R.id.nav_drawer_item_text) as TextView
 
-            view.setTag(drawerHolder)
+            view.tag = drawerHolder
 
         } else {
             drawerHolder = view.tag as DrawerItemHolder
@@ -40,7 +37,7 @@ class CustomDrawerAdapter(con: Context, private val layoutResourceID: Int, priva
         val dItem = this.listItems[position]
         drawerHolder.itemName.text = dItem.itemName
 
-        return view;
+        return view!!
     }
 
     fun res(view: View): Resources = view.resources
