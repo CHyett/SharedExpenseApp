@@ -41,8 +41,6 @@ class HomePageViewModel: ViewModel() {
     internal val dualButtonHighlightWidth: LiveData<Int>
         get() = liveDualButtonHighlightWidth
 
-    internal var isExpensesClicked = true
-
     internal fun createGroup(username: String, callback: (status: String) -> Unit) {
         val params = RequestParams()
         params.put("groupname", liveGroupName.value!!.trim())

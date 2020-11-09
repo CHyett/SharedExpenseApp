@@ -1,8 +1,8 @@
 package com.example.sharedexpenseapp.homepage
 
 import android.Manifest
+import android.animation.ObjectAnimator
 import android.content.pm.ActivityInfo
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,10 +20,9 @@ import com.example.sharedexpenseapp.R
 import com.example.sharedexpenseapp.databinding.HomePageFragmentBinding
 import com.example.sharedexpenseapp.login.LoginFragment
 import com.example.sharedexpenseapp.mainactivity.MainActivityViewModel
-import io.alterac.blurkit.BlurKit
+import jp.wasabeef.blurry.Blurry
 
-
-private const val BLURKIT_BLUR_RADIUS = 9
+private const val BLUR_RADIUS = 20
 
 class HomePageFragment : Fragment() {
 
@@ -80,22 +79,29 @@ class HomePageFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.viewmodel = viewModel
-        binding.usernameText = "Good evening,\n${sharedViewModel.user.value}"
         binding.lifecycleOwner = this
-        BlurKit.init(context)
-        binding.homePageFragmentBlurLayout.blurRadius = BLURKIT_BLUR_RADIUS
 
         sharedViewModel.setAppBackgroundDrawable(R.drawable.home_screen_bg)
         sharedViewModel.lockNavDrawer(false)
         sharedViewModel.hideToolbar(false)
+        val textViewFades = applyTextFadeAnimation()
 
         //LiveData observers
         sharedViewModel.isNavDrawerOpen.observe(viewLifecycleOwner, Observer {
-            if(it)
-                binding.homePageFragmentBlurLayout.visibility = View.VISIBLE
-            else
-                binding.homePageFragmentBlurLayout.visibility = View.GONE
+            if(it) {
+                for(animation in textViewFades)
+                    animation.reverse()
+                Blurry.with(requireContext()).radius(BLUR_RADIUS).sampling(2).animate(500).onto(binding.homePageFragmentRootConstraintLayout)
+            } else {
+                for(animation in textViewFades)
+                    animation.start()
+                Blurry.delete(binding.homePageFragmentRootConstraintLayout)
+            }
         })
+        sharedViewModel.user.observe(viewLifecycleOwner, Observer {
+            binding.usernameText = "Good evening,\n$it"
+        })
+
 
         //Click listeners
 
@@ -201,10 +207,17 @@ class HomePageFragment : Fragment() {
                     storageReadString,
                     internetString,
                     networkString,
-                    storageWriteString
-                ), 15
+                    storageWriteString), 15
             )
         }
+    }
+
+    private fun applyTextFadeAnimation(): Array<ObjectAnimator> {
+        val anim1 = ObjectAnimator.ofFloat(binding.homePageFragmentWelcomeMessage, "alpha", 0.0f, 1.0f)
+        anim1.duration = 500
+        val anim2 = ObjectAnimator.ofFloat(binding.homePageFragmentExpensesMessage, "alpha", 0.0f, 1.0f)
+        anim2.duration = 500
+        return arrayOf(anim1, anim2)
     }
 
     //Implement what happens if the user rejects any permissions
@@ -219,5 +232,7 @@ class HomePageFragment : Fragment() {
 *
 * TODO:
 *  Implement what happens if the user rejects permissions in onRequestPermissionsResult.
+*  BlurLayout leaves navdrawer residue behind.
+*  LottieAnimationView and BlurLayout activate only after nav drawer settles. (They should animate in flow with nav drawer)
 *
 * */

@@ -4,6 +4,7 @@ import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -23,9 +24,6 @@ fun setIsEnabled(button: Button, enabled: Boolean) {
 fun setImageResource(view: ImageView, resource: Int) {
     view.setImageResource(resource);
 }
-
-
-
 
 
 

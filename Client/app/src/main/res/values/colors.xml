@@ -6,4 +6,5 @@
     <color name="transparent">#00000000</color>
     <color name="colorGray">#888888</color>
     <color name="blackOverlay">#99000000</color>
+    <color name="colorAccentTranslucent">#BBFFFFFF</color>
 </resources>

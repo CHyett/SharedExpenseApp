@@ -1,6 +1,8 @@
 package com.example.sharedexpenseapp.mainactivity
 
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -16,6 +18,7 @@ import com.example.sharedexpenseapp.databinding.ActivityMainBinding
 import com.example.sharedexpenseapp.navdrawer.CustomDrawerAdapter
 import com.example.sharedexpenseapp.navdrawer.DrawerItem
 import com.google.firebase.iid.FirebaseInstanceId
+import jp.wasabeef.blurry.Blurry
 import java.util.*
 
 
@@ -55,10 +58,11 @@ class MainActivity : AppCompatActivity() {
             binding.mainActivityLinearLayout.background = ContextCompat.getDrawable(applicationContext, it)
         })
         viewModel.isNavDrawerOpen.observe(this, Observer {
-            if(it)
-                binding.mainActivityToolbarHamburger.setMinAndMaxProgress(0.0f, 0.5f)
-            else
-                binding.mainActivityToolbarHamburger.setMinAndMaxProgress(0.5f, 1.0f)
+            if(it) {
+                binding.mainActivityToolbarHamburger.setMinAndMaxProgress(0.25f, 0.34f)
+            } else {
+                binding.mainActivityToolbarHamburger.setMinAndMaxProgress(0.75f, 0.84f)
+            }
             binding.mainActivityToolbarHamburger.playAnimation()
         })
 
@@ -88,13 +92,12 @@ class MainActivity : AppCompatActivity() {
         binding.mainActivityToolbarHamburger.speed = 2f
         binding.mainActivityDrawerLayout.setScrimColor(resources.getColor(R.color.transparent))
         binding.mainActivityDrawerLayout.addDrawerListener(object: DrawerLayout.DrawerListener {
-            override fun onDrawerOpened(drawerView: View) {
-                viewModel.setNavDrawerStatus(!viewModel.isNavDrawerOpen.value!!)
+            override fun onDrawerStateChanged(newState: Int) {
+                if(newState == DrawerLayout.STATE_SETTLING)
+                    viewModel.setNavDrawerStatus(!viewModel.isNavDrawerOpen.value!!)
             }
-            override fun onDrawerClosed(drawerView: View) {
-                viewModel.setNavDrawerStatus(!viewModel.isNavDrawerOpen.value!!)
-            }
-            override fun onDrawerStateChanged(newState: Int) {}
+            override fun onDrawerOpened(drawerView: View) {}
+            override fun onDrawerClosed(drawerView: View) {}
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
         })
         dataList = ArrayList()
