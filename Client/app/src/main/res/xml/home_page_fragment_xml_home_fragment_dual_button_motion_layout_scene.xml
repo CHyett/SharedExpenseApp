@@ -6,11 +6,9 @@
     <Transition
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
-        motion:duration="1000">
+        motion:duration="500">
 
-       <KeyFrameSet></KeyFrameSet>
-
-        <OnClick />
+        <KeyFrameSet />
 
     </Transition>
 
@@ -20,7 +18,7 @@
     <ConstraintSet android:id="@+id/end">
 
         <Constraint
-            android:id="@+id/home_fragment_dual_button_motion_layout_"
+            android:id="@+id/home_fragment_dual_button_highlight"
             android:layout_width="100dp"
             android:layout_height="@dimen/home_fragment_dual_button_frame_layout_height"
             motion:layout_constraintRight_toRightOf="parent"

@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         //LiveData observers
         //observe login status and send firebase token if user is logged in
         viewModel.isLoggedIn.observe(this, Observer {
-            if (it)
+            if(it)
                 viewModel.sendToServer()
         })
         viewModel.orientation.observe(this, Observer {

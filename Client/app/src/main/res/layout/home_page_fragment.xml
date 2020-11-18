@@ -38,19 +38,27 @@
             android:id="@+id/home_page_fragment_expenses_charges_motion_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layoutDescription="@xml/home_page_fragment_scene"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/home_page_fragment_welcome_message"
-            app:layoutDescription="@xml/home_page_fragment_scene">
+            app:layout_constraintTop_toBottomOf="@+id/home_page_fragment_welcome_message">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/home_page_fragment_expenses_charges_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintGuide_percent="0.0"/>
 
             <LinearLayout
                 android:id="@+id/home_page_fragment_expenses_wrapper"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent">
+                app:layout_constraintLeft_toRightOf="@id/home_page_fragment_expenses_charges_guideline"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/home_page_fragment_expenses_message"
@@ -86,54 +94,46 @@
 
             </LinearLayout>
 
-            <FrameLayout
+            <LinearLayout
                 android:id="@+id/home_page_fragment_charges_wrapper"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintRight_toLeftOf="parent">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintRight_toLeftOf="@id/home_page_fragment_expenses_charges_guideline">
 
-                <LinearLayout
-                    android:id="@+id/home_page_fragment_charges_linear_layout"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/home_page_fragment_charges_message"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/home_fragment_expenses_message_margin_top"
+                    android:text="@string/home_fragment_charges_message"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/home_fragment_expenses_message_size" />
+
+                <FrameLayout
+                    android:id="@+id/home_page_fragment_overall_charges_background"
+                    android:layout_width="@dimen/home_fragment_overall_expenses"
+                    android:layout_height="@dimen/home_fragment_overall_expenses"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/home_fragment_overall_expenses_background_margin_top"
+                    android:background="@drawable/home_fragment_overall_expenses">
 
                     <TextView
-                        android:id="@+id/home_page_fragment_charges_message"
+                        android:id="@+id/home_page_fragment_overall_charges"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="@dimen/home_fragment_expenses_message_margin_top"
-                        android:text="@string/home_fragment_expenses_message"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/walkway_oblique_semibold"
+                        android:text="$69.42"
                         android:textAlignment="center"
                         android:textColor="@color/colorAccent"
-                        android:textSize="@dimen/home_fragment_expenses_message_size" />
+                        android:textSize="@dimen/home_fragment_overall_expenses_text" />
 
-                    <FrameLayout
-                        android:id="@+id/home_page_fragment_overall_charges_background"
-                        android:layout_width="@dimen/home_fragment_overall_expenses"
-                        android:layout_height="@dimen/home_fragment_overall_expenses"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="@dimen/home_fragment_overall_expenses_background_margin_top"
-                        android:background="@drawable/home_fragment_overall_expenses">
+                </FrameLayout>
 
-                        <TextView
-                            android:id="@+id/home_page_fragment_overall_charges"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:fontFamily="@font/walkway_oblique_semibold"
-                            android:text="$69.42"
-                            android:textAlignment="center"
-                            android:textColor="@color/colorAccent"
-                            android:textSize="@dimen/home_fragment_overall_expenses_text" />
-
-                    </FrameLayout>
-
-                </LinearLayout>
-
-            </FrameLayout>
+            </LinearLayout>
 
         </androidx.constraintlayout.motion.widget.MotionLayout>
 
@@ -154,7 +154,7 @@
                 app:layoutDescription="@xml/home_page_fragment_xml_home_fragment_dual_button_motion_layout_scene">
 
                 <ImageView
-                    android:id="@+id/home_fragment_dual_button_motion_layout_"
+                    android:id="@+id/home_fragment_dual_button_highlight"
                     android:layout_width="100dp"
                     android:layout_height="@dimen/home_fragment_dual_button_frame_layout_height"
                     android:contentDescription="@string/content_desc"
@@ -175,7 +175,7 @@
                     android:paddingLeft="@dimen/main_activity_top_nav_imageview_padding"
                     android:paddingRight="@dimen/main_activity_top_nav_imageview_padding"
                     android:text="@string/home_fragment_expenses_button"
-                    android:textColor="@{viewmodel.expensesButtonTextColor$app_debug}" />
+                    android:textColor="@color/colorBlack" />
 
                 <TextView
                     android:id="@+id/home_fragment_dual_button_charges"
@@ -184,7 +184,7 @@
                     android:paddingLeft="@dimen/main_activity_top_nav_imageview_padding"
                     android:paddingRight="@dimen/main_activity_top_nav_imageview_padding"
                     android:text="@string/home_fragment_charges_button"
-                    android:textColor="@{viewmodel.chargesButtonTextColor$app_debug}" />
+                    android:textColor="@color/colorAccent" />
 
             </LinearLayout>
 
@@ -207,236 +207,89 @@
 
 </layout>
 
-
-    <!-- <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
-
-        <data>
-
-            <variable name="viewmodel" type="com.example.sharedexpenseapp.homepage.HomePageViewModel" />
-
-        </data>
-
-        <com.discord.panels.OverlappingPanelsLayout
-            android:id="@+id/home_page_fragment_overlapping_panels"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <FrameLayout
-                android:id="@+id/home_page_fragment_start_panel"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="start">
-
-
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/home_page_fragment_center_panel"
+<!--
+<LinearLayout
+                android:id="@+id/home_page_fragment_expenses_wrapper"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/home_page_fragment_center_panel_constraint_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/home_screen_bg">
+                <TextView
+                    android:id="@+id/home_page_fragment_expenses_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/home_fragment_expenses_message_margin_top"
+                    android:text="@string/home_fragment_expenses_message"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/home_fragment_expenses_message_size" />
 
-                    <RelativeLayout
-                        android:id="@+id/home_page_fragment_center_panel_top_nav_bar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <ImageView
-                            android:id="@+id/home_page_fragment_settings_icon"
-                            android:layout_width="@dimen/home_fragment_top_nav_imageview"
-                            android:layout_height="@dimen/home_fragment_top_nav_imageview"
-                            android:paddingStart="@dimen/home_fragment_top_nav_imageview_padding"
-                            android:paddingTop="@dimen/home_fragment_top_nav_imageview_padding"
-                            android:src="@drawable/gear"
-                            android:contentDescription="@string/home_fragment_content_description" />
-
-                        <com.airbnb.lottie.LottieAnimationView
-                            android:id="@+id/home_page_fragment_hamburger_icon"
-                            android:layout_width="@dimen/home_fragment_top_nav_imageview"
-                            android:layout_height="@dimen/home_fragment_top_nav_imageview"
-                            android:layout_alignParentEnd="true"
-                            android:paddingTop="@dimen/home_fragment_top_nav_imageview_padding"
-                            android:paddingEnd="@dimen/home_fragment_top_nav_imageview_padding"
-                            android:scaleType="centerCrop"
-                            app:lottie_rawRes="@raw/menu_animation" />
-
-                    </RelativeLayout>
+                <FrameLayout
+                    android:id="@+id/home_page_fragment_overall_expenses_background"
+                    android:layout_width="@dimen/home_fragment_overall_expenses"
+                    android:layout_height="@dimen/home_fragment_overall_expenses"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/home_fragment_overall_expenses_background_margin_top"
+                    android:background="@drawable/home_fragment_overall_expenses">
 
                     <TextView
-                        android:id="@+id/home_page_fragment_welcome_message"
+                        android:id="@+id/home_page_fragment_overall_expenses"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/home_fragment_welcome_message_margin_top"
-                        android:text="Good evening,\nScotty P"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/walkway_oblique_semibold"
+                        android:text="$420.69"
                         android:textAlignment="center"
                         android:textColor="@color/colorAccent"
-                        android:textSize="@dimen/home_fragment_welcome_message_size"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/home_page_fragment_center_panel_top_nav_bar" />
+                        android:textSize="@dimen/home_fragment_overall_expenses_text" />
 
-                    <LinearLayout
-                        android:id="@+id/home_page_fragment_expenses_wrapper"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layout_constraintTop_toBottomOf="@+id/home_page_fragment_welcome_message">
+                </FrameLayout>
 
-                        <TextView
-                            android:id="@+id/home_page_fragment_expenses_message"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/home_fragment_expenses_message_margin_top"
-                            android:text="@string/home_fragment_expenses_message"
-                            android:textAlignment="center"
-                            android:textColor="@color/colorAccent"
-                            android:textSize="@dimen/home_fragment_expenses_message_size"
-                            android:layout_gravity="center_horizontal"/>
+            </LinearLayout>
 
-                        <FrameLayout
-                            android:id="@+id/home_page_fragment_overall_expenses_background"
-                            android:layout_width="@dimen/home_fragment_overall_expenses"
-                            android:layout_height="@dimen/home_fragment_overall_expenses"
-                            android:layout_marginTop="@dimen/home_fragment_overall_expenses_background_margin_top"
-                            android:background="@drawable/home_fragment_overall_expenses"
-                            android:layout_gravity="center_horizontal">
+            <LinearLayout
+                android:id="@+id/home_page_fragment_charges_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                            <TextView
-                                android:id="@+id/home_page_fragment_overall_expenses"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:fontFamily="@font/walkway_oblique_semibold"
-                                android:text="$420.69"
-                                android:textAlignment="center"
-                                android:textColor="@color/colorAccent"
-                                android:textSize="@dimen/home_fragment_overall_expenses_text"/>
+                <TextView
+                    android:id="@+id/home_page_fragment_charges_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/home_fragment_expenses_message_margin_top"
+                    android:text="Here are your charges:"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/home_fragment_expenses_message_size" />
 
-                        </FrameLayout>
+                <FrameLayout
+                    android:id="@+id/home_page_fragment_overall_charges_background"
+                    android:layout_width="@dimen/home_fragment_overall_expenses"
+                    android:layout_height="@dimen/home_fragment_overall_expenses"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/home_fragment_overall_expenses_background_margin_top"
+                    android:background="@drawable/home_fragment_overall_expenses">
 
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/home_page_fragment_charges_wrapper"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layout_constraintTop_toBottomOf="@+id/home_page_fragment_welcome_message">
-
-                        <TextView
-                            android:id="@+id/home_page_fragment_charges_message"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/home_fragment_expenses_message_margin_top"
-                            android:text="@string/home_fragment_charges_message"
-                            android:textAlignment="center"
-                            android:textColor="@color/colorAccent"
-                            android:textSize="@dimen/home_fragment_expenses_message_size"
-                            android:layout_gravity="center_horizontal"/>
-
-                        <FrameLayout
-                            android:id="@+id/home_page_fragment_overall_charges_background"
-                            android:layout_width="@dimen/home_fragment_overall_expenses"
-                            android:layout_height="@dimen/home_fragment_overall_expenses"
-                            android:layout_marginTop="@dimen/home_fragment_overall_expenses_background_margin_top"
-                            android:background="@drawable/home_fragment_overall_expenses"
-                            android:layout_gravity="center_horizontal">
-
-                            <TextView
-                                android:id="@+id/home_page_fragment_overall_charges"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:fontFamily="@font/walkway_oblique_semibold"
-                                android:text="$420.69"
-                                android:textAlignment="center"
-                                android:textColor="@color/colorAccent"
-                                android:textSize="@dimen/home_fragment_overall_expenses_text"/>
-
-                        </FrameLayout>
-
-                    </LinearLayout>
-
-                    <FrameLayout
-                        android:id="@+id/home_fragment_dual_button_wrapper"
+                    <TextView
+                        android:id="@+id/home_page_fragment_overall_charges"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/home_fragment_dual_button_margin_top"
-                        android:background="@drawable/home_fragment_dual_button_border"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/home_page_fragment_expenses_wrapper">
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/walkway_oblique_semibold"
+                        android:text="$69.42"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/home_fragment_overall_expenses_text" />
 
-                        <ImageView
-                            android:layout_width="@{viewmodel.dualButtonHighlightWidth$app_debug}"
-                            android:layout_height="match_parent"
-                            android:background="@color/colorSecondary"
-                            android:contentDescription="@string/home_fragment_content_description"/>
+                </FrameLayout>
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
-                            android:weightSum="1.0">
-
-                            <TextView
-                                android:id="@+id/home_fragment_dual_button_expenses"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingLeft="@dimen/home_fragment_top_nav_imageview_padding"
-                                android:paddingRight="@dimen/home_fragment_top_nav_imageview_padding"
-                                android:text="@string/home_fragment_expenses_button"
-                                android:textColor="@{viewmodel.expensesButtonTextColor$app_debug}" />
-
-                            <TextView
-                                android:id="@+id/home_fragment_dual_button_charges"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingLeft="@dimen/home_fragment_top_nav_imageview_padding"
-                                android:paddingRight="@dimen/home_fragment_top_nav_imageview_padding"
-                                android:text="@string/home_fragment_charges_button"
-                                android:textColor="@{viewmodel.chargesButtonTextColor$app_debug}" />
-
-                        </LinearLayout>
-
-                    </FrameLayout>
-
-                    <ImageView
-                        android:id="@+id/home_fragment_horizontal_rule"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/home_fragment_horizontal_rule_height"
-                        android:layout_marginLeft="@dimen/home_fragment_horizontal_rule_margin"
-                        android:layout_marginRight="@dimen/home_fragment_horizontal_rule_margin"
-                        android:src="@drawable/home_fragment_horizontal_rule"
-                        android:contentDescription="@string/home_fragment_content_description"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/home_fragment_dual_button_wrapper" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/home_page_fragment_end_panel"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="end">
-
-
-            </FrameLayout>
-
-        </com.discord.panels.OverlappingPanelsLayout>
-
-    </layout> -->
+            </LinearLayout>
+-->

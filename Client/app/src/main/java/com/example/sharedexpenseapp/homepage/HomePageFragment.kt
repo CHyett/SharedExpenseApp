@@ -1,8 +1,10 @@
 package com.example.sharedexpenseapp.homepage
 
 import android.Manifest
+import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.content.pm.ActivityInfo
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +25,7 @@ import com.example.sharedexpenseapp.mainactivity.MainActivityViewModel
 import jp.wasabeef.blurry.Blurry
 
 private const val BLUR_RADIUS = 20
+private const val MOTIONLAYOUT_TRANSISTION_DURATION = 500
 
 class HomePageFragment : Fragment() {
 
@@ -85,6 +88,9 @@ class HomePageFragment : Fragment() {
         sharedViewModel.lockNavDrawer(false)
         sharedViewModel.hideToolbar(false)
         val textViewFades = applyTextFadeAnimation()
+        val dualButtonTextColorAnimations = applyDualButtonTextColorAnimation()
+        binding.homeFragmentDualButtonMotionLayout.setTransitionDuration(MOTIONLAYOUT_TRANSISTION_DURATION)
+        binding.homePageFragmentExpensesChargesMotionLayout.setTransitionDuration(MOTIONLAYOUT_TRANSISTION_DURATION)
 
         //LiveData observers
         sharedViewModel.isNavDrawerOpen.observe(viewLifecycleOwner, Observer {
@@ -104,6 +110,20 @@ class HomePageFragment : Fragment() {
 
 
         //Click listeners
+        binding.homeFragmentDualButtonMotionLayout.setOnClickListener {
+            viewModel.isExpensesClicked = !viewModel.isExpensesClicked
+            if(viewModel.isExpensesClicked) {
+                binding.homePageFragmentExpensesChargesMotionLayout.transitionToStart()
+                binding.homeFragmentDualButtonMotionLayout.transitionToStart()
+                dualButtonTextColorAnimations[0].reverse()
+                dualButtonTextColorAnimations[1].reverse()
+            } else {
+                binding.homePageFragmentExpensesChargesMotionLayout.transitionToEnd()
+                binding.homeFragmentDualButtonMotionLayout.transitionToEnd()
+                dualButtonTextColorAnimations[0].start()
+                dualButtonTextColorAnimations[1].start()
+            }
+        }
 
 
     }
@@ -217,6 +237,16 @@ class HomePageFragment : Fragment() {
         anim1.duration = 500
         val anim2 = ObjectAnimator.ofFloat(binding.homePageFragmentExpensesMessage, "alpha", 0.0f, 1.0f)
         anim2.duration = 500
+        val anim3 = ObjectAnimator.ofFloat(binding.homePageFragmentChargesMessage, "alpha", 0.0f, 1.0f)
+        anim3.duration = 500
+        return arrayOf(anim1, anim2, anim3)
+    }
+
+    private fun applyDualButtonTextColorAnimation(): Array<ObjectAnimator> {
+        val anim1 = ObjectAnimator.ofObject(binding.homeFragmentDualButtonExpenses, "textColor", ArgbEvaluator(), Color.BLACK, Color.WHITE)
+        anim1.duration = MOTIONLAYOUT_TRANSISTION_DURATION.toLong()
+        val anim2 = ObjectAnimator.ofObject(binding.homeFragmentDualButtonCharges, "textColor", ArgbEvaluator(), Color.WHITE, Color.BLACK)
+        anim2.duration = MOTIONLAYOUT_TRANSISTION_DURATION.toLong()
         return arrayOf(anim1, anim2)
     }
 

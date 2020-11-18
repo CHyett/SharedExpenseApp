@@ -14,18 +14,16 @@ import cz.msebera.android.httpclient.Header
 
 class HomePageViewModel: ViewModel() {
 
-    //LiveData to show or contain group creation form
-    private val liveShowGroupNameForm = MutableLiveData<Int>(View.GONE)
-    internal val showGroupNameForm: LiveData<Int>
-        get() = liveShowGroupNameForm
+    private val client = AsyncHttpClient()
 
     //LiveData to handle whether create group button is clickable or not
-    internal val liveIsClickable = MutableLiveData<Boolean>(false)
+    internal var liveIsClickable = MutableLiveData<Boolean>(false)
 
     //LiveData to hold group name in create group form
     internal val liveGroupName = MutableLiveData<String>()
 
-    private val client = AsyncHttpClient()
+    //Boolean to represent state of dual buttton motion layout
+    internal var isExpensesClicked = true
 
     //LiveData to hold expenses button color
     private val liveExpensesButtonTextColor = MutableLiveData(R.color.colorSecondary)
@@ -40,6 +38,11 @@ class HomePageViewModel: ViewModel() {
     private val liveDualButtonHighlightWidth = MutableLiveData<Int>()
     internal val dualButtonHighlightWidth: LiveData<Int>
         get() = liveDualButtonHighlightWidth
+
+    //LiveData to show or contain group creation form
+    private val liveShowGroupNameForm = MutableLiveData<Int>(View.GONE)
+    internal val showGroupNameForm: LiveData<Int>
+        get() = liveShowGroupNameForm
 
     internal fun createGroup(username: String, callback: (status: String) -> Unit) {
         val params = RequestParams()
