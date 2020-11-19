@@ -16,6 +16,9 @@
     <dimen name="main_activity_top_nav_imageview_size">46dp</dimen>
     <dimen name="main_activity_top_nav_imageview_padding">20dp</dimen>
     <dimen name="main_activity_pseudo_toolbar_height">50dp</dimen>
+    <dimen name="main_activity_nav_drawer_group_image_margin_right">20dp</dimen>
+    <dimen name="main_activity_nav_drawer_group_image_height">25dp</dimen>
+    <dimen name="main_activity_nav_drawer_group_image_width">25dp</dimen>
 
     <!-- login screen dimensions -->
     <dimen name="login_password_top_margin">60dp</dimen>

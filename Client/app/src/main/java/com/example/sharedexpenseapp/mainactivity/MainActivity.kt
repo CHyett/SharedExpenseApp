@@ -1,12 +1,10 @@
 package com.example.sharedexpenseapp.mainactivity
 
 
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
-import android.widget.AdapterView
+import android.widget.ExpandableListView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -18,7 +16,6 @@ import com.example.sharedexpenseapp.databinding.ActivityMainBinding
 import com.example.sharedexpenseapp.navdrawer.CustomDrawerAdapter
 import com.example.sharedexpenseapp.navdrawer.DrawerItem
 import com.google.firebase.iid.FirebaseInstanceId
-import jp.wasabeef.blurry.Blurry
 import java.util.*
 
 
@@ -30,7 +27,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var adapter: CustomDrawerAdapter
 
-    private lateinit var dataList: List<DrawerItem>
+    private val headerList = ArrayList<DrawerItem>()
+
+    private val childList = HashMap<DrawerItem, List<DrawerItem>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel::class.java)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         initNavDrawer()
+        populateExpandableList()
 
         //LiveData observers
         //observe login status and send firebase token if user is logged in
@@ -79,17 +79,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun selectItem(position: Int) {
-        when (position) {
-            0 -> { viewModel.navController?.navigate(R.id.homePageFragment) }
-            1 -> { viewModel.navController?.navigate(R.id.homePageFragment) }
-        }
-        binding.mainActivityDrawerLayoutList.setItemChecked(position, true)
-        binding.mainActivityDrawerLayout.closeDrawer(binding.mainActivityDrawerLayoutList)
-    }
-
     private fun initNavDrawer() {
         binding.mainActivityToolbarHamburger.speed = 2f
+        binding.mainActivityDrawerLayoutList.bringToFront()
+        binding.mainActivityDrawerLayout.requestLayout()
         binding.mainActivityDrawerLayout.setScrimColor(resources.getColor(R.color.transparent))
         binding.mainActivityDrawerLayout.addDrawerListener(object: DrawerLayout.DrawerListener {
             override fun onDrawerStateChanged(newState: Int) {
@@ -100,22 +93,33 @@ class MainActivity : AppCompatActivity() {
             override fun onDrawerClosed(drawerView: View) {}
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
         })
-        dataList = ArrayList()
-        (dataList as ArrayList<DrawerItem>).apply {
-            add(DrawerItem("Charges"))
-            add(DrawerItem("Expenses"))
-        }
-        adapter = CustomDrawerAdapter(this, R.layout.main_activity_custom_nav_item, dataList)
-        binding.mainActivityDrawerLayoutList.adapter = adapter
-        binding.mainActivityDrawerLayoutList.onItemClickListener = DrawerItemClickListener()
+        var childModelsList = ArrayList<DrawerItem>()
+        var menuItem = DrawerItem("History", true, false)
+        headerList.add(menuItem)
+        childList[menuItem] = emptyList()
+        menuItem = DrawerItem("Expenses", true, true)
+        headerList.add(menuItem)
+        childModelsList.add(DrawerItem("Groups", false, false))
+        childModelsList.add(DrawerItem("pay", false, false))
+        childList[menuItem] = childModelsList
+        childModelsList = ArrayList()
+        menuItem = DrawerItem("Charges", true, true)
+        headerList.add(menuItem)
+        childModelsList.add(DrawerItem("Groups", false, false))
+        childModelsList.add(DrawerItem("Charge", false, false))
+        childList[menuItem] = childModelsList
+        headerList.add(DrawerItem("Settings", true, false))
+        headerList.add(DrawerItem("Log Out", true, false))
     }
 
-    private inner class DrawerItemClickListener: AdapterView.OnItemClickListener {
-
-        override fun onItemClick(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
-            selectItem(position)
+    private fun populateExpandableList() {
+        adapter = CustomDrawerAdapter(this, headerList, childList)
+        binding.mainActivityDrawerLayoutList.setAdapter(adapter)
+        binding.mainActivityDrawerLayoutList.setOnGroupClickListener { listView, _, groupPosition, _ ->
+            listView?.expandGroup(groupPosition, true)
+            false
         }
-
+        binding.mainActivityDrawerLayoutList.setOnChildClickListener { _, _, _, _, _ -> false }
     }
 
 }

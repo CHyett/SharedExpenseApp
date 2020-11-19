@@ -1,45 +1,60 @@
 package com.example.sharedexpenseapp.navdrawer
 
-import android.app.Activity
 import android.content.Context
-import android.content.res.Resources
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
+import android.widget.BaseExpandableListAdapter
+import android.widget.ImageView
 import android.widget.TextView
 import com.example.sharedexpenseapp.R
 
-class CustomDrawerAdapter(private val con: Context, private val layoutResourceID: Int, private val listItems: List<DrawerItem>): ArrayAdapter<DrawerItem>(con, layoutResourceID, listItems) {
+class CustomDrawerAdapter(private val con: Context, private val listDataHeader: List<DrawerItem>, private val listDataChild: HashMap<DrawerItem, List<DrawerItem>>): BaseExpandableListAdapter() {
 
-    private object DrawerItemHolder {
+    override fun getChild(groupPosition: Int, childPosition: Int): DrawerItem? = this.listDataChild[this.listDataHeader[groupPosition]]?.get(childPosition)
 
-        lateinit var itemName: TextView
+    override fun getChildId(groupPosition: Int, childPosition: Int): Long = childPosition.toLong()
 
+    override fun getGroup(groupPosition: Int): DrawerItem = this.listDataHeader[groupPosition]
+
+    override fun getGroupCount(): Int = this.listDataHeader.size
+
+    override fun getGroupId(groupPosition: Int): Long = groupPosition.toLong()
+
+    override fun hasStableIds(): Boolean = false
+
+    override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean = true
+
+    override fun getChildrenCount(groupPosition: Int): Int {
+        return if(this.listDataChild[this.listDataHeader[groupPosition]] == null)
+            0
+        else
+            this.listDataChild[this.listDataHeader[groupPosition]]!!.size
     }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+    override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup): View {
+        val childText = getChild(groupPosition, childPosition)!!.itemName
         var view = convertView
-        val drawerHolder: DrawerItemHolder
-
-
-        if (view == null) {
-            val inflater = (con as Activity).layoutInflater
-            drawerHolder = DrawerItemHolder
-
-            view = inflater.inflate(layoutResourceID, parent, false)
-            drawerHolder.itemName = view.findViewById(R.id.nav_drawer_item_text) as TextView
-
-            view.tag = drawerHolder
-
-        } else {
-            drawerHolder = view.tag as DrawerItemHolder
+        if(view == null) {
+            val inflater = this.con.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            view = inflater.inflate(R.layout.main_activity_custom_nav_child_item, null)
         }
-        val dItem = this.listItems[position]
-        drawerHolder.itemName.text = dItem.itemName
-
-        return view!!
+        val textListChild = view!!.findViewById(R.id.nav_drawer_child_item_text) as TextView
+        textListChild.text = childText
+        return view
     }
 
-    fun res(view: View): Resources = view.resources
+    override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup?): View {
+        var view = convertView
+        if(view == null) {
+            val inflater = this.con.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            view = inflater.inflate(R.layout.main_activity_custom_nav_group_item, null)
+        }
+        val listHeader = view!!.findViewById(R.id.nav_drawer_group_item_text) as TextView
+        listHeader.text = getGroup(groupPosition).itemName
+        if(!getGroup(groupPosition).hasChildren)
+            (view.findViewById(R.id.nav_drawer_group_item_image) as ImageView).setImageResource(R.color.transparent)
+        return view
+    }
 
 }
