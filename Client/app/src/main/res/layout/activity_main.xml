@@ -64,6 +64,7 @@
                 android:background="@color/transparent"
                 android:choiceMode="singleChoice"
                 android:divider="@drawable/main_activity_nav_drawer_divider"
+                android:childDivider="@drawable/main_activity_nav_drawer_divider"
                 android:dividerHeight="@dimen/main_activity_nav_drawer_divider_height"
                 android:focusable="false"
                 android:focusableInTouchMode="false"/>

@@ -116,10 +116,13 @@ class MainActivity : AppCompatActivity() {
         adapter = CustomDrawerAdapter(this, headerList, childList)
         binding.mainActivityDrawerLayoutList.setAdapter(adapter)
         binding.mainActivityDrawerLayoutList.setOnGroupClickListener { listView, _, groupPosition, _ ->
-            listView?.expandGroup(groupPosition, true)
-            false
+            listView?.let {
+                if(!listView.expandGroup(groupPosition, true))
+                    listView.collapseGroup(groupPosition)
+            }
+            true
         }
-        binding.mainActivityDrawerLayoutList.setOnChildClickListener { _, _, _, _, _ -> false }
+        binding.mainActivityDrawerLayoutList.setOnChildClickListener { _, _, _, _, _ -> true }
     }
 
 }
