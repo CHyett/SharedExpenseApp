@@ -32,7 +32,7 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
     internal val user: LiveData<String>
         get() = liveUser
 
-    //LiveData to hide toolbar on login
+    //LiveData to hide toolbar on login and registration
     private val liveHideToolbar = MutableLiveData<Int>(View.GONE)
     val hideToolbar: LiveData<Int>
         get() = liveHideToolbar
@@ -129,10 +129,11 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
     }
 
     fun hideToolbar(status: Boolean) {
-        if(status)
+        if(status) {
             liveHideToolbar.value = View.GONE
-        else
+        } else {
             liveHideToolbar.value = View.VISIBLE
+        }
     }
 
     fun setAppBackgroundDrawable(resID: Int) {

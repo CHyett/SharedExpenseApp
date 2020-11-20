@@ -36,6 +36,8 @@ class MainActivity : AppCompatActivity() {
         val viewModelFactory = MainActivityViewModelFactory(application)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel::class.java)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.viewmodel = viewModel
+        binding.lifecycleOwner = this
         initNavDrawer()
         populateExpandableList()
 
@@ -57,7 +59,8 @@ class MainActivity : AppCompatActivity() {
         viewModel.appBackgroundDrawable.observe(this, Observer {
             binding.mainActivityLinearLayout.background = ContextCompat.getDrawable(applicationContext, it)
         })
-        viewModel.isNavDrawerOpen.observe(this, Observer {
+        viewModel.isNavDrawerOpen.observe(
+            this, Observer {
             if(it) {
                 binding.mainActivityToolbarHamburger.setMinAndMaxProgress(0.25f, 0.34f)
             } else {
