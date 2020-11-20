@@ -71,7 +71,7 @@
             android:layout_width="@dimen/register_fragment_progress_bar_icon_size"
             android:layout_height="@dimen/register_fragment_progress_bar_icon_size"
             android:layout_marginTop="@dimen/register_fragment_progress_bar_icon_margin_top"
-            android:src="@{viewmodel.liveProgressAnimatable$app_debug}"
+            android:src="@{viewmodel.liveProgressAnimatable}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/register_fragment_progress_bar_outer"
             app:layout_constraintTop_toBottomOf="@+id/register_fragment_image_holder" />
@@ -85,7 +85,7 @@
             android:autofillHints="@string/register_screen_username_autofill"
             android:hint="@string/register_username_edittext_hint"
             android:inputType="text"
-            android:text="@={viewmodel.newUserUsername$app_debug}"
+            android:text="@={viewmodel.newUserUsername}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/register_fragment_progress_bar_outer" />
@@ -97,7 +97,7 @@
             android:autofillHints="@string/register_screen_password_autofill"
             android:hint="@string/login_edittext_password_hint"
             android:inputType="textPassword"
-            android:text="@={viewmodel.newUserPassword$app_debug}"
+            android:text="@={viewmodel.newUserPassword}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/register_username_edittext" />
@@ -120,7 +120,7 @@
             android:autofillHints="@string/register_screen_email_autofill"
             android:hint="@string/register_email_edittext_hint"
             android:inputType="textEmailAddress"
-            android:text="@={viewmodel.newUserEmail$app_debug}"
+            android:text="@={viewmodel.newUserEmail}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/register_confirm_password_edittext" />
@@ -129,7 +129,7 @@
             android:id="@+id/register_fragment_submit_button"
             style="@style/register_fragment_submit_button"
             android:layout_marginTop="@dimen/register_fragment_submit_button_margin_top"
-            app:isEnabled="@{viewmodel.isRegistrationButtonEnabled$app_debug()}"
+            app:isEnabled="@{viewmodel.isRegistrationButtonEnabled}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/register_email_edittext" />

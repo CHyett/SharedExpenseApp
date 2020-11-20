@@ -20,7 +20,7 @@
             android:autofillHints="@string/login_screen_username_autofill"
             android:hint="@string/login_edittext_username_hint"
             android:inputType="text"
-            android:text="@={viewmodel.liveUsername$app_debug}"
+            android:text="@={viewmodel.liveUsername}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -32,7 +32,7 @@
             android:autofillHints="@string/login_screen_password_autofill"
             android:hint="@string/login_edittext_password_hint"
             android:inputType="textPassword"
-            android:text="@={viewmodel.livePassword$app_debug}"
+            android:text="@={viewmodel.livePassword}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/login_username_eddittext" />

@@ -34,7 +34,7 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
 
     //LiveData to hide toolbar on login
     private val liveHideToolbar = MutableLiveData<Int>(View.GONE)
-    internal val hideToolbar: LiveData<Int>
+    val hideToolbar: LiveData<Int>
         get() = liveHideToolbar
 
     //LiveData to lock or unlock nav drawer

@@ -26,6 +26,7 @@ import jp.wasabeef.blurry.Blurry
 
 private const val BLUR_RADIUS = 20
 private const val MOTIONLAYOUT_TRANSISTION_DURATION = 500
+private const val NAV_DRAWER_ANIMATION_DURATION = 500L
 
 class HomePageFragment : Fragment() {
 
@@ -97,7 +98,7 @@ class HomePageFragment : Fragment() {
             if(it) {
                 for(animation in textViewFades)
                     animation.reverse()
-                Blurry.with(requireContext()).radius(BLUR_RADIUS).sampling(2).animate(500).onto(binding.homePageFragmentRootConstraintLayout)
+                Blurry.with(requireContext()).radius(BLUR_RADIUS).sampling(2).animate(NAV_DRAWER_ANIMATION_DURATION.toInt()).onto(binding.homePageFragmentRootConstraintLayout)
             } else {
                 for(animation in textViewFades)
                     animation.start()
@@ -234,12 +235,16 @@ class HomePageFragment : Fragment() {
 
     private fun applyTextFadeAnimation(): Array<ObjectAnimator> {
         val anim1 = ObjectAnimator.ofFloat(binding.homePageFragmentWelcomeMessage, "alpha", 0.0f, 1.0f)
-        anim1.duration = 500
+        anim1.duration = NAV_DRAWER_ANIMATION_DURATION
         val anim2 = ObjectAnimator.ofFloat(binding.homePageFragmentExpensesMessage, "alpha", 0.0f, 1.0f)
-        anim2.duration = 500
+        anim2.duration = NAV_DRAWER_ANIMATION_DURATION
         val anim3 = ObjectAnimator.ofFloat(binding.homePageFragmentChargesMessage, "alpha", 0.0f, 1.0f)
-        anim3.duration = 500
-        return arrayOf(anim1, anim2, anim3)
+        anim3.duration = NAV_DRAWER_ANIMATION_DURATION
+        val anim4 = ObjectAnimator.ofFloat(binding.homeFragmentDualButtonCharges, "alpha", 0.0f, 1.0f)
+        anim4.duration = NAV_DRAWER_ANIMATION_DURATION
+        val anim5 = ObjectAnimator.ofFloat(binding.homeFragmentDualButtonExpenses, "alpha", 0.0f, 1.0f)
+        anim5.duration = NAV_DRAWER_ANIMATION_DURATION
+        return arrayOf(anim1, anim2, anim3, anim4, anim5)
     }
 
     private fun applyDualButtonTextColorAnimation(): Array<ObjectAnimator> {
@@ -264,5 +269,6 @@ class HomePageFragment : Fragment() {
 *  Implement what happens if the user rejects permissions in onRequestPermissionsResult.
 *  BlurLayout leaves navdrawer residue behind.
 *  LottieAnimationView and BlurLayout activate only after nav drawer settles. (They should animate in flow with nav drawer)
+*  Add onSwipe for expenses/charges (In addition to the already existing onClick).
 *
 * */

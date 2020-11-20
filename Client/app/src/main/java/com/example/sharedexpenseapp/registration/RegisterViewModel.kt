@@ -23,19 +23,19 @@ import java.net.MalformedURLException
 class RegisterViewModel : ViewModel() {
 
     //2-way data binding for username EditText
-    internal val newUserUsername = MutableLiveData<String>()
+    val newUserUsername = MutableLiveData<String>()
 
     //2-way data binding for password EditText
-    internal val newUserPassword = MutableLiveData<String>()
+    val newUserPassword = MutableLiveData<String>()
 
     //2-way data binding for email EditText
-    internal val newUserEmail = MutableLiveData<String>()
+    val newUserEmail = MutableLiveData<String>()
 
     //2-way data binding for progress bar
     internal val liveProgress = MutableLiveData(0)
 
     //2-way data binding for rocket ImageView
-    internal val liveProgressAnimatable = MutableLiveData(R.drawable.rocketnofire)
+    val liveProgressAnimatable = MutableLiveData(R.drawable.rocketnofire)
 
     //Registration status LiveData
     private val liveRegistrationStatus = MutableLiveData<String>()
@@ -44,7 +44,7 @@ class RegisterViewModel : ViewModel() {
 
     //LiveData to disable registration button
     private val liveIsRegistrationButtonEnabled = MutableLiveData<Boolean>(true)
-    internal val isRegistrationButtonEnabled: LiveData<Boolean>
+    val isRegistrationButtonEnabled: LiveData<Boolean>
         get() = liveIsRegistrationButtonEnabled
 
     private val httpClient = AsyncHttpClient()

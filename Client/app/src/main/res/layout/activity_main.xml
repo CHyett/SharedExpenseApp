@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/main_activity_pseudo_toolbar_height"
             android:background="@color/transparent"
-            android:visibility="@{viewmodel.hideToolbar$app_debug}">
+            android:visibility="@{viewmodel.hideToolbar}">
 
             <ImageView
                 android:id="@+id/main_activity_toolbar_settings"

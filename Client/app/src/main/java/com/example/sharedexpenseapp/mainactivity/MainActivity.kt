@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
         menuItem = DrawerItem("Expenses", true, true)
         headerList.add(menuItem)
         childModelsList.add(DrawerItem("Groups", false, false))
-        childModelsList.add(DrawerItem("pay", false, false))
+        childModelsList.add(DrawerItem("Pay", false, false))
         childList[menuItem] = childModelsList
         childModelsList = ArrayList()
         menuItem = DrawerItem("Charges", true, true)

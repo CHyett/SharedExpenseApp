@@ -19,6 +19,7 @@
     <dimen name="main_activity_nav_drawer_group_image_margin_right">20dp</dimen>
     <dimen name="main_activity_nav_drawer_group_image_height">25dp</dimen>
     <dimen name="main_activity_nav_drawer_group_image_width">25dp</dimen>
+    <dimen name="main_activity_nav_drawer_child_margin_left">40dp</dimen>
 
     <!-- login screen dimensions -->
     <dimen name="login_password_top_margin">60dp</dimen>
