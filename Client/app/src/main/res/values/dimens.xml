@@ -26,9 +26,12 @@
     <dimen name="login_fragment_edittext_height">55dp</dimen>
     <dimen name="login_fragment_edittext_width">250dp</dimen>
     <dimen name="login_fragment_textview_margin_bottom">30dp</dimen>
-    <dimen name="login_fragment_username_edittext_margin_top">150dp</dimen>
+    <dimen name="login_fragment_username_edittext_margin_top">100dp</dimen>
     <dimen name="login_fragment_password_edittext_margin_top">100dp</dimen>
     <dimen name="login_fragment_edittext_padding_left">15dp</dimen>
+    <dimen name="login_fragment_logo_corner_radius">25dp</dimen>
+    <dimen name="login_fragment_logo_size">120dp</dimen>
+    <dimen name="login_fragment_logo_margin_top">70dp</dimen>
 
     <!-- register screen dimens -->
     <dimen name="register_fragment_username_edittext_margin_top">60dp</dimen>
