@@ -1,13 +1,14 @@
 package com.example.sharedexpenseapp.homepage
 
 import android.Manifest
+import android.animation.ArgbEvaluator
+import android.animation.ObjectAnimator
 import android.content.pm.ActivityInfo
-import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -16,13 +17,16 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import com.example.sharedexpenseapp.login.LoginFragment
 import com.example.sharedexpenseapp.R
 import com.example.sharedexpenseapp.databinding.HomePageFragmentBinding
+import com.example.sharedexpenseapp.login.LoginFragment
 import com.example.sharedexpenseapp.mainactivity.MainActivityViewModel
-import com.google.android.material.snackbar.Snackbar
+import jp.wasabeef.blurry.Blurry
+
+private const val BLUR_RADIUS = 20
+private const val MOTIONLAYOUT_TRANSISTION_DURATION = 500
+private const val NAV_DRAWER_ANIMATION_DURATION = 500L
 
 class HomePageFragment : Fragment() {
 
@@ -55,14 +59,6 @@ class HomePageFragment : Fragment() {
 
         //Lock screen to prevent glitches. You should re-simulate them and log what they do
         sharedViewModel.orientation.value = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
-        //LiveData observers
-        sharedViewModel.isLoggedIn.observe(this, Observer {
-            if (!it) {
-                val navOptions = NavOptions.Builder().setPopUpTo(R.id.homePageFragment, false).build()
-                navController.navigate(R.id.loginFragment, null, navOptions)
-            }
-        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -74,8 +70,8 @@ class HomePageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //If username is present, unlock screen, otherwise send user to login fragment
-        sharedViewModel.user.observe(viewLifecycleOwner, Observer {
-            if(it == null) {
+        sharedViewModel.isLoggedIn.observe(viewLifecycleOwner, Observer {
+            if (!it) {
                 navController.navigate(R.id.loginFragment)
             } else {
                 askForPermissions()
@@ -89,59 +85,174 @@ class HomePageFragment : Fragment() {
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
 
+        sharedViewModel.setAppBackgroundDrawable(R.drawable.home_screen_bg)
+        sharedViewModel.lockNavDrawer(false)
+        sharedViewModel.hideToolbar(false)
+        val textViewFades = applyTextFadeAnimation()
+        val dualButtonTextColorAnimations = applyDualButtonTextColorAnimation()
+        binding.homeFragmentDualButtonMotionLayout.setTransitionDuration(MOTIONLAYOUT_TRANSISTION_DURATION)
+        binding.homePageFragmentExpensesChargesMotionLayout.setTransitionDuration(MOTIONLAYOUT_TRANSISTION_DURATION)
+
         //LiveData observers
-        viewModel.liveGroupName.observe(viewLifecycleOwner, Observer {
-            viewModel.liveIsClickable.value = it.isNotEmpty()
+        sharedViewModel.isNavDrawerOpen.observe(viewLifecycleOwner, Observer {
+            if(it) {
+                for(animation in textViewFades)
+                    animation.reverse()
+                Blurry.with(requireContext()).radius(BLUR_RADIUS).sampling(2).animate(NAV_DRAWER_ANIMATION_DURATION.toInt()).onto(binding.homePageFragmentRootConstraintLayout)
+            } else {
+                for(animation in textViewFades)
+                    animation.start()
+                Blurry.delete(binding.homePageFragmentRootConstraintLayout)
+            }
+        })
+        sharedViewModel.user.observe(viewLifecycleOwner, Observer {
+            binding.usernameText = "Good evening,\n$it"
         })
 
+
         //Click listeners
-        binding.homeFragmentCreateGroupButton.setOnClickListener { viewModel.showCreateGroupForm() }
-        binding.homeFragmentSubmitGroupNameButton.setOnClickListener { view ->
-            viewModel.createGroup(sharedViewModel.user.value!!) {
-                Snackbar.make(view, it, Snackbar.LENGTH_LONG).show()
+        binding.homeFragmentDualButtonMotionLayout.setOnClickListener {
+            viewModel.isExpensesClicked = !viewModel.isExpensesClicked
+            if(viewModel.isExpensesClicked) {
+                binding.homePageFragmentExpensesChargesMotionLayout.transitionToStart()
+                binding.homeFragmentDualButtonMotionLayout.transitionToStart()
+                dualButtonTextColorAnimations[0].reverse()
+                dualButtonTextColorAnimations[1].reverse()
+            } else {
+                binding.homePageFragmentExpensesChargesMotionLayout.transitionToEnd()
+                binding.homeFragmentDualButtonMotionLayout.transitionToEnd()
+                dualButtonTextColorAnimations[0].start()
+                dualButtonTextColorAnimations[1].start()
             }
         }
-        binding.homeFragmentLogOutButton.setOnClickListener {
-            sharedViewModel.logOut()
-        }
 
-        //Listeners for testing. Should be deleted at some point
-        binding.homeFragmentPayButton.setOnClickListener {
-            Toast.makeText(activity, sharedViewModel.isLoggedIn.value.toString(), Toast.LENGTH_LONG).show()
-        }
-        binding.homeFragmentChargeButton.setOnClickListener {
-            Toast.makeText(activity, sharedViewModel.user.value, Toast.LENGTH_LONG).show()
-        }
 
     }
 
     private fun askForPermissions() {
-        val externalWriteCheck = ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        val networkStateCheck = ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.ACCESS_NETWORK_STATE)
-        val internetCheck = ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.INTERNET)
-        val externalReadCheck = ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.READ_EXTERNAL_STORAGE)
+        val externalWriteCheck = ContextCompat.checkSelfPermission(
+            requireActivity().applicationContext,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        val networkStateCheck = ContextCompat.checkSelfPermission(
+            requireActivity().applicationContext,
+            Manifest.permission.ACCESS_NETWORK_STATE
+        )
+        val internetCheck = ContextCompat.checkSelfPermission(
+            requireActivity().applicationContext,
+            Manifest.permission.INTERNET
+        )
+        val externalReadCheck = ContextCompat.checkSelfPermission(
+            requireActivity().applicationContext,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
         val storageWriteString = Manifest.permission.WRITE_EXTERNAL_STORAGE
         val internetString = Manifest.permission.INTERNET
         val networkString = Manifest.permission.ACCESS_NETWORK_STATE
         val storageReadString = Manifest.permission.READ_EXTERNAL_STORAGE
-        println("Permissions are:\nstorageWrite -> $externalWriteCheck\nstorageRead -> $externalReadCheck\ninternet -> $internetCheck\nnetwork -> $networkStateCheck")
         when((-1 * externalWriteCheck) + (-2 * networkStateCheck) + (-4 * internetCheck) + (-8 * externalReadCheck)) {
-            1 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageWriteString), 1)
+            1 -> ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(storageWriteString),
+                1
+            )
             2 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(networkString), 2)
-            3 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageWriteString, networkString), 3)
+            3 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageWriteString,
+                    networkString
+                ), 3
+            )
             4 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(internetString), 4)
-            5 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageWriteString, internetString), 5)
-            6 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(networkString, internetString), 6)
-            7 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageWriteString, networkString, internetString), 7)
+            5 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageWriteString,
+                    internetString
+                ), 5
+            )
+            6 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    networkString,
+                    internetString
+                ), 6
+            )
+            7 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageWriteString,
+                    networkString,
+                    internetString
+                ), 7
+            )
             8 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString), 8)
-            9 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, storageWriteString), 9)
-            10 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, networkString), 10)
-            11 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, storageWriteString, networkString), 11)
-            12 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, internetString), 12)
-            13 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, internetString, storageWriteString), 13)
-            14 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, internetString, networkString), 14)
-            15 -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(storageReadString, internetString, networkString, storageWriteString), 15)
+            9 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageReadString,
+                    storageWriteString
+                ), 9
+            )
+            10 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageReadString,
+                    networkString
+                ), 10
+            )
+            11 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageReadString,
+                    storageWriteString,
+                    networkString
+                ), 11
+            )
+            12 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageReadString,
+                    internetString
+                ), 12
+            )
+            13 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageReadString,
+                    internetString,
+                    storageWriteString
+                ), 13
+            )
+            14 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageReadString,
+                    internetString,
+                    networkString
+                ), 14
+            )
+            15 -> ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(
+                    storageReadString,
+                    internetString,
+                    networkString,
+                    storageWriteString), 15
+            )
         }
+    }
+
+    private fun applyTextFadeAnimation(): Array<ObjectAnimator> {
+        val anim1 = ObjectAnimator.ofFloat(binding.homePageFragmentWelcomeMessage, "alpha", 0.0f, 1.0f)
+        anim1.duration = NAV_DRAWER_ANIMATION_DURATION
+        val anim2 = ObjectAnimator.ofFloat(binding.homePageFragmentExpensesMessage, "alpha", 0.0f, 1.0f)
+        anim2.duration = NAV_DRAWER_ANIMATION_DURATION
+        val anim3 = ObjectAnimator.ofFloat(binding.homePageFragmentChargesMessage, "alpha", 0.0f, 1.0f)
+        anim3.duration = NAV_DRAWER_ANIMATION_DURATION
+        val anim4 = ObjectAnimator.ofFloat(binding.homeFragmentDualButtonCharges, "alpha", 0.0f, 1.0f)
+        anim4.duration = NAV_DRAWER_ANIMATION_DURATION
+        val anim5 = ObjectAnimator.ofFloat(binding.homeFragmentDualButtonExpenses, "alpha", 0.0f, 1.0f)
+        anim5.duration = NAV_DRAWER_ANIMATION_DURATION
+        return arrayOf(anim1, anim2, anim3, anim4, anim5)
+    }
+
+    private fun applyDualButtonTextColorAnimation(): Array<ObjectAnimator> {
+        val anim1 = ObjectAnimator.ofObject(binding.homeFragmentDualButtonExpenses, "textColor", ArgbEvaluator(), Color.BLACK, Color.WHITE)
+        anim1.duration = MOTIONLAYOUT_TRANSISTION_DURATION.toLong()
+        val anim2 = ObjectAnimator.ofObject(binding.homeFragmentDualButtonCharges, "textColor", ArgbEvaluator(), Color.WHITE, Color.BLACK)
+        anim2.duration = MOTIONLAYOUT_TRANSISTION_DURATION.toLong()
+        return arrayOf(anim1, anim2)
     }
 
     //Implement what happens if the user rejects any permissions
@@ -156,5 +267,8 @@ class HomePageFragment : Fragment() {
 *
 * TODO:
 *  Implement what happens if the user rejects permissions in onRequestPermissionsResult.
+*  BlurLayout leaves navdrawer residue behind.
+*  LottieAnimationView and BlurLayout activate only after nav drawer settles. (They should animate in flow with nav drawer)
+*  Add onSwipe for expenses/charges (In addition to the already existing onClick).
 *
 * */

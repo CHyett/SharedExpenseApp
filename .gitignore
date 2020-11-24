@@ -1,6 +1,8 @@
 *.pem
 *.jpg
 *.png
+*.jks
 braintreeCerts.json
 keey.json
 firebaseServiceAccountKey.json
+logos

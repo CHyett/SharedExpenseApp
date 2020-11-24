@@ -5,6 +5,7 @@
     <string name="submit_button_text">Retrieve client token</string>
     <string name="transaction_button_text">Drop-in UI</string>
     <string name="test_string">This is the notification string</string>
+    <string name="content_desc">Paceholder text</string>
 
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -21,7 +22,7 @@
     <string name="login_screen_password_autofill">Password</string>
 
     <!-- Strings used for register fragment -->
-    <string name="register_fragment_title">Register Here!</string>
+    <string name="register_confirm_password_edittext_hint">Confirm password</string>
     <string name="register_username_edittext_hint">Enter your username</string>
     <string name="register_password_edittext_hint">Enter your password</string>
     <string name="register_email_edittext_hint">Enter your email</string>
@@ -33,13 +34,17 @@
     <string name="register_screen_agreement_text">By tapping submit you agree to our <a href="https://ourapp.live/tos">terms of service</a> and that you are over 18 years of age.</string>
 
     <!-- Strings used for home fragment -->
-    <string name="home_fragment_charge_button">Charge</string>
-    <string name="home_fragment_pay_button">Pay</string>
     <string name="home_fragment_image_description">Profile picture</string>
     <string name="home_fragment_create_group_button">Create group</string>
     <string name="home_fragment_create_group_edittext_hint">Group name</string>
     <string name="home_fragment_submit_group_name_button">Submit</string>
     <string name="home_fragment_create_group_name_edittext_autofill">Username</string>
     <string name="home_fragment_log_out">Log out</string>
+    <string name="home_fragment_expenses_message">Here are your expenses:</string>
+    <string name="home_fragment_charges_message">Here are your charges:</string>
+    <string name="home_fragment_expenses_button">Expenses</string>
+    <string name="home_fragment_charges_button">Charges</string>
+    <string name="home_fragment_content_description">0</string>
+
 
 </resources>

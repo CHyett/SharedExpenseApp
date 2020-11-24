@@ -3,4 +3,8 @@
     <color name="colorPrimary">#01021E</color>
     <color name="colorSecondary">#40E0D0</color>
     <color name="colorAccent">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
+    <color name="colorGray">#888888</color>
+    <color name="blackOverlay">#99000000</color>
+    <color name="colorAccentTranslucent">#BBFFFFFF</color>
 </resources>

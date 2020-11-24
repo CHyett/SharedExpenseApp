@@ -2,6 +2,8 @@ package com.example.sharedexpenseapp.mainactivity
 
 import android.app.Application
 import android.content.pm.ActivityInfo
+import android.graphics.drawable.Drawable
+import android.view.View
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
@@ -29,6 +31,26 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
     private val liveUser = MutableLiveData<String>()
     internal val user: LiveData<String>
         get() = liveUser
+
+    //LiveData to hide toolbar on login and registration
+    private val liveHideToolbar = MutableLiveData<Int>(View.GONE)
+    val hideToolbar: LiveData<Int>
+        get() = liveHideToolbar
+
+    //LiveData to lock or unlock nav drawer
+    private val liveShowNavDrawer = MutableLiveData<Boolean>()
+    internal val showNavDrawer: LiveData<Boolean>
+        get() = liveShowNavDrawer
+
+    //LiveData for app background
+    private val liveAppBackgroundDrawable = MutableLiveData<Int>()
+    internal val appBackgroundDrawable: LiveData<Int>
+        get() = liveAppBackgroundDrawable
+
+    //LiveData for nav drawer status
+    private val liveIsNavDrawerOpen = MutableLiveData<Boolean>(false)
+    internal val isNavDrawerOpen: LiveData<Boolean>
+        get() = liveIsNavDrawerOpen
 
     //Screen orientation (forced portrait mode or free to rotate)
     internal val orientation = MutableLiveData<Int>()
@@ -64,27 +86,24 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         liveUser.value = null
         liveIsLoggedIn.value = false
         CoroutineScope(Dispatchers.IO).launch {
-            repository.setIsLoggedIn(Entry(Tags.LOGIN.tag, null, false))
             repository.setUsername(Entry(Tags.USERNAME.tag, null, null))
-        }
-        val navOptions = NavOptions.Builder().setPopUpTo(R.id.homePageFragment, true).build()
-        navController!!.navigate(R.id.homePageFragment, null, navOptions)
-    }
-
-    internal fun saveLoginStatus(loginStatus: Boolean) {
-        liveIsLoggedIn.value = loginStatus
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.setIsLoggedIn(Entry(Tags.LOGIN.tag, null, loginStatus))
+            repository.setIsLoggedIn(Entry(Tags.LOGIN.tag, null, false))
         }
     }
 
-    internal fun saveUsername(username: String?) {
-        liveUser.value = username
+    internal suspend fun saveLoginStatus(loginStatus: Boolean) {
+        liveIsLoggedIn.postValue(loginStatus)
+        repository.setIsLoggedIn(Entry(Tags.LOGIN.tag, null, loginStatus))
+        println("login status saved")
+    }
+
+    internal suspend fun saveUsername(username: String?) {
+        liveUser.postValue(username)
         username?.let {
-        viewModelScope.launch(Dispatchers.IO) {
             repository.setUsername(Entry(Tags.USERNAME.tag, username, null))
+            println("username saved")
         }
-    }}
+    }
 
     fun sendToServer() {
         if (firebaseToken != null) {
@@ -105,9 +124,29 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         }
     }
 
+    fun lockNavDrawer(status: Boolean) {
+        liveShowNavDrawer.value = status
+    }
+
+    fun hideToolbar(status: Boolean) {
+        if(status) {
+            liveHideToolbar.value = View.GONE
+        } else {
+            liveHideToolbar.value = View.VISIBLE
+        }
+    }
+
+    fun setAppBackgroundDrawable(resID: Int) {
+        liveAppBackgroundDrawable.value = resID
+    }
+
+    internal fun setNavDrawerStatus(status: Boolean) {
+        liveIsNavDrawerOpen.value = status
+    }
+
     override fun onCleared() {
-        liveIsLoggedIn.value?.let { saveLoginStatus(it) }
-        liveUser.value?.let { saveUsername(it) }
+        liveIsLoggedIn.value?.let { CoroutineScope(Dispatchers.IO).launch { saveLoginStatus(it) }}
+        liveUser.value?.let { CoroutineScope(Dispatchers.IO).launch { saveUsername(it) }}
         super.onCleared()
     }
 

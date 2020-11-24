@@ -1,107 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewmodel" type="com.example.sharedexpenseapp.homepage.HomePageViewModel"/>
+
+        <variable
+            name="viewmodel"
+            type="com.example.sharedexpenseapp.homepage.HomePageViewModel" />
+
+        <variable
+            name="usernameText"
+            type="String" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/home_page_fragment_root_constraint_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        tools:background="@drawable/home_screen_bg">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/profile_picture_cardview"
+        <TextView
+            android:id="@+id/home_page_fragment_welcome_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/home_fragment_imageview_margin_top"
-            app:cardCornerRadius="@dimen/home_fragment_profile_picture_radius"
+            android:text="@{usernameText}"
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/home_fragment_welcome_message_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/home_fragment_profile_picture"
-                android:layout_width="@dimen/home_fragment_imageview_dimens"
-                android:layout_height="@dimen/home_fragment_imageview_dimens"
-                android:contentDescription="@string/home_fragment_image_description"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_launcher_background" />
+        <androidx.constraintlayout.motion.widget.MotionLayout
+            android:id="@+id/home_page_fragment_expenses_charges_motion_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutDescription="@xml/home_page_fragment_scene"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/home_page_fragment_welcome_message">
 
-        </androidx.cardview.widget.CardView>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/home_page_fragment_expenses_charges_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintGuide_percent="0.0"/>
 
-        <Button
-            android:id="@+id/home_fragment_pay_button"
-            android:text="@string/home_fragment_pay_button"
-            style="@style/home_page_fragment_buttons"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/home_fragment_create_group_button"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="spread"
+            <LinearLayout
+                android:id="@+id/home_page_fragment_expenses_wrapper"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toRightOf="@id/home_page_fragment_expenses_charges_guideline"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/home_page_fragment_expenses_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/home_fragment_expenses_message_margin_top"
+                    android:text="@string/home_fragment_expenses_message"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/home_fragment_expenses_message_size" />
+
+                <FrameLayout
+                    android:id="@+id/home_page_fragment_overall_expenses_background"
+                    android:layout_width="@dimen/home_fragment_overall_expenses"
+                    android:layout_height="@dimen/home_fragment_overall_expenses"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/home_fragment_overall_expenses_background_margin_top"
+                    android:background="@drawable/home_fragment_overall_expenses">
+
+                    <TextView
+                        android:id="@+id/home_page_fragment_overall_expenses"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/walkway_oblique_semibold"
+                        android:text="$420.69"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/home_fragment_overall_expenses_text" />
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/home_page_fragment_charges_wrapper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintRight_toLeftOf="@id/home_page_fragment_expenses_charges_guideline">
+
+                <TextView
+                    android:id="@+id/home_page_fragment_charges_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/home_fragment_expenses_message_margin_top"
+                    android:text="@string/home_fragment_charges_message"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/home_fragment_expenses_message_size" />
+
+                <FrameLayout
+                    android:id="@+id/home_page_fragment_overall_charges_background"
+                    android:layout_width="@dimen/home_fragment_overall_expenses"
+                    android:layout_height="@dimen/home_fragment_overall_expenses"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/home_fragment_overall_expenses_background_margin_top"
+                    android:background="@drawable/home_fragment_overall_expenses">
+
+                    <TextView
+                        android:id="@+id/home_page_fragment_overall_charges"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/walkway_oblique_semibold"
+                        android:text="$69.42"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/home_fragment_overall_expenses_text" />
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.motion.widget.MotionLayout>
+
+        <FrameLayout
+            android:id="@+id/home_fragment_dual_button_wrapper"
+            android:layout_width="@dimen/home_fragment_dual_button_width"
+            android:layout_height="@dimen/home_fragment_dual_button_frame_layout_height"
+            android:layout_marginTop="@dimen/home_fragment_dual_button_margin_top"
+            android:background="@drawable/home_fragment_dual_button_border"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.575" />
+            app:layout_constraintTop_toBottomOf="@+id/home_page_fragment_expenses_charges_motion_layout">
 
-        <Button
-            android:id="@+id/home_fragment_charge_button"
-            android:text="@string/home_fragment_charge_button"
-            style="@style/home_page_fragment_buttons"
+            <androidx.constraintlayout.motion.widget.MotionLayout
+                android:id="@+id/home_fragment_dual_button_motion_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutDescription="@xml/home_page_fragment_xml_home_fragment_dual_button_motion_layout_scene">
+
+                <ImageView
+                    android:id="@+id/home_fragment_dual_button_highlight"
+                    android:layout_width="100dp"
+                    android:layout_height="@dimen/home_fragment_dual_button_frame_layout_height"
+                    android:contentDescription="@string/content_desc"
+                    android:src="@drawable/home_fragment_switch_text_dual_button" />
+
+            </androidx.constraintlayout.motion.widget.MotionLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="1.0">
+
+                <TextView
+                    android:id="@+id/home_fragment_dual_button_expenses"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/home_fragment_dual_button_text_size"
+                    android:paddingLeft="@dimen/main_activity_top_nav_imageview_padding"
+                    android:paddingRight="@dimen/main_activity_top_nav_imageview_padding"
+                    android:text="@string/home_fragment_expenses_button"
+                    android:textColor="@color/colorBlack" />
+
+                <TextView
+                    android:id="@+id/home_fragment_dual_button_charges"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/main_activity_top_nav_imageview_padding"
+                    android:paddingRight="@dimen/main_activity_top_nav_imageview_padding"
+                    android:text="@string/home_fragment_charges_button"
+                    android:textColor="@color/colorAccent" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/home_fragment_horizontal_rule"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/home_fragment_horizontal_rule_height"
+            android:layout_marginLeft="@dimen/home_fragment_horizontal_rule_margin"
+            android:layout_marginRight="@dimen/home_fragment_horizontal_rule_margin"
+            android:contentDescription="@string/home_fragment_content_description"
+            android:src="@drawable/home_fragment_horizontal_rule"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/home_fragment_create_group_button"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.575" />
-
-        <Button
-            android:id="@+id/home_fragment_create_group_button"
-            android:text="@string/home_fragment_create_group_button"
-            style="@style/home_page_fragment_buttons"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/home_fragment_charge_button"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/home_fragment_pay_button"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.575" />
-
-        <EditText
-            android:id="@+id/home_fragment_create_group_edittext"
-            style="@style/AppTheme.EditText"
-            android:layout_width="@dimen/home_fragment_edittetext_width"
-            android:layout_height="@dimen/home_fragment_edittetext_height"
-            android:layout_marginTop="@dimen/home_fragment_group_name_form_margin_top"
-            android:hint="@string/home_fragment_create_group_edittext_hint"
-            android:visibility="@{viewmodel.showGroupNameForm$app_debug}"
-            android:text="@={viewmodel.liveGroupName$app_debug}"
-            android:autofillHints="@string/home_fragment_create_group_name_edittext_autofill"
-            android:inputType="text"
-            app:layout_constraintEnd_toStartOf="@+id/home_fragment_submit_group_name_button"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/home_fragment_create_group_button" />
-
-        <Button
-            android:id="@+id/home_fragment_submit_group_name_button"
-            android:layout_marginTop="@dimen/home_fragment_group_name_form_margin_top"
-            android:text="@string/home_fragment_submit_group_name_button"
-            style="@style/home_page_fragment_buttons"
-            android:visibility="@{viewmodel.showGroupNameForm$app_debug}"
-            android:clickable="@{viewmodel.liveIsClickable$app_debug}"
-            app:isEnabled="@{viewmodel.liveIsClickable$app_debug}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/home_fragment_create_group_edittext"
-            app:layout_constraintTop_toBottomOf="@+id/home_fragment_create_group_button" />
-
-        <Button
-            android:id="@+id/home_fragment_log_out_button"
-            android:text="@string/home_fragment_log_out"
-            style="@style/home_page_fragment_buttons"
-            android:layout_marginBottom="@dimen/home_fragment_log_out_button_margin_bottom"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/home_fragment_dual_button_wrapper" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

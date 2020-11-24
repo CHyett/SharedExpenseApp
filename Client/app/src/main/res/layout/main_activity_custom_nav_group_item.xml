@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/itemLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:orientation="vertical"
+        android:layout_marginTop="0dp"
+        android:background="?android:attr/activatedBackgroundIndicator">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="55dp">
+
+            <TextView
+                android:id="@+id/nav_drawer_group_item_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/colorWhite" />
+
+            <ImageView
+                android:id="@+id/nav_drawer_group_item_image"
+                android:layout_width="@dimen/main_activity_nav_drawer_group_image_width"
+                android:layout_height="@dimen/main_activity_nav_drawer_group_image_width"
+                android:layout_marginRight="@dimen/main_activity_nav_drawer_group_image_margin_right"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/drop_down_icon"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

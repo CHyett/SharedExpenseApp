@@ -16,9 +16,9 @@ class LoginViewModel: ViewModel() {
     internal val loginStatus: LiveData<String>
         get() = liveLoginStatus
 
-    internal val liveUsername = MutableLiveData<String>()
+    val liveUsername = MutableLiveData<String>()
 
-    internal val livePassword = MutableLiveData<String>()
+    val livePassword = MutableLiveData<String>()
 
     private val client = AsyncHttpClient()
 
