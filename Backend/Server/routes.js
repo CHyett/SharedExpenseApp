@@ -4,6 +4,7 @@ const util = require('util')
 const firebase = require('./firebase.js')
 const multer = require('multer')
 const path = require('path')
+const fs = require('fs')
 
 
 const TESTOKEN = 'fZxFKPwkT7GhUkR-W7zUMe:APA91bF8n4F78gn4FjAiomzxthFSu5r4tAKVwQN5aOAnEfWzYF5JE_xETQ77f5sYETTIwR3t1tRr2NPTeno82fn4G5EoNr1ce6OrXIicqXKviMJBgQieVyAS8ce2YTMOQnfv2EhPPf8p'
@@ -61,11 +62,13 @@ routes.post('/register',(req,res)=>{
       //console.log("last id is: " + result.insertId)
     }else{
       if(err.errno == 1062){
+        res.status(401)
         res.send("You're already registered dumbass.")
-        console.log("Error Adding Row")
-        //console.log(err.errno)
+        console.log("Error Adding Row: Duplicate user")
+        console.log(err)
         //throw err
       }else{
+        res.status(400)
         res.send("Couldn't register you for whatever goddamn reason I don't really care.")
         console.log("Error adding row")
       }
@@ -86,16 +89,26 @@ const upload = multer({
 })
 
 routes.post('/upload',upload.single('image'),(req,res)=>{
+  const username = req.body.username
+  const tempPath = req.file.path
+  const ext = req.file.originalname
+  console.log("filename is: " + ext)
+  //console.log("username is: " + username)
+  //console.log(tempPath)
+  const targetPath = path.join(__dirname,`./uploads/${ext}`)
 
-  const tempPath = req.file.tempPath
-  const targetPath = path.join(__dirname,"./uploads/image.png")
-
-  console.log(req.file)
+  //console.log(req.file)
 
   fs.rename(tempPath,targetPath,err=>{
-    if (err)
+    if (err){
       console.log("There was an error!!")
+    }else{
+      res.status(200)
+      res.send("Successfully uploaded yo ugly ass mug.")
+      console.log("image upload successful!")
+    }
   })
+
 
 
 
@@ -132,7 +145,7 @@ routes.get('/login',(req,res)=>{
 
 })
 
-
+//Fix this shit
 routes.post('/firebase_token',(req,res)=>{
   const token = req.body.token
   const username = req.body.username
@@ -156,19 +169,28 @@ routes.post('/firebase_token',(req,res)=>{
 
 
 
-routes.post('/invite',async (req,res)=>{
-  const username = req.body.username
-  //console.log("user to be invited: " + username)
+routes.post('/group_invite',async (req,res)=>{
+  const userFrom = req.body.userFrom
+  const userTo = req.body.userTo
+  const group = req.body.group
+  const token = req.body.token
+  console.log("user to be invited: " + userTo)
+  console.log("group to be invited: " + group)
+  console.log("token is: " + token)
 
-  const userQ = await database.query(`SELECT devToken FROM userdb.user WHERE username = '${username}';`)
+  const userQ = await database.query(`SELECT devToken FROM userdb.user WHERE username = '${userTo}';`)
   if(userQ.length == 1){
     const token = userQ[0].devToken
-    console.log("token is: " + token)
+    //console.log("token is: " + token)
 
     const message = {
     data: {
-      topic: 'YOU GOT AN INVITE BITCH',
-      amount: '69'
+      type: '0',
+      title: 'Group Invite',
+      text: `SOME RETARD, ${userFrom}, INVITED YOU TO JOIN THE GROUP, ${group}, BITCH!`,
+      userFrom: `${userFrom}`,
+      userTo: `${userTo}`,
+      group: `${group}`
     },
     token: token
     }
@@ -179,6 +201,8 @@ routes.post('/invite',async (req,res)=>{
       .then((response) => {
         // Response is a message ID string.
         console.log('Successfully sent message:', response)
+        res.status(200)
+        res.send("invite sent")
       })
       .catch((error) => {
         console.log('Error sending message:', error)
@@ -193,53 +217,42 @@ routes.post('/invite',async (req,res)=>{
 
 })
 
-/*
-routes.post('/create_group',async(req,res)=>{
-  let userID
-  let groupID
-  const groupname = req.body.groupname
+routes.post('/accept_group_inv', async(req,res)=>{
   const username = req.body.username
-  console.log("username is: " + username)
-  console.log("groupname is: " + groupname)
+  const group = req.body.group
 
-  const test1 = await database.mysqlConnection.query(`SELECT id FROM userdb.user WHERE username = '${username}';`,async (err,rows,fields)=>{
-    userID = rows[0].id
-    console.log("userID in function: " + userID)
-    return userID
-  })
-
-  const test2 = await database.mysqlConnection.query(`INSERT INTO userdb.group (name) VALUES ('${groupname}');`,(err,results,fields)=>{
-    groupID = results.insertId
-    console.log("groupID in function: " + groupID)
-    if(!err){
-      res.send("Successfully Created Group Retard")
-      console.log("Row Added to Group Table")
-      return groupID
-    }else{
-        res.send("Couldn't create group for some stupid reason I don't know.")
-        console.log("Error Adding Row")
-        return 0
-    }
-
-
-  })
-
-  console.log("userID is: " + test1)
-  console.log("groupID is: " + test2)
-  database.mysqlConnection.query(`INSERT INTO userdb.user2group (userID,groupID) VALUES ('${userID}','${groupID}');`,(err,results,fields)=>{
-    if(!err){
-      console.log("added to user2group table")
-    }else{
-      console.log("Couldnt add to user2group")
+  const userQ = await database.query(`SELECT id FROM userdb.user WHERE username = '${username}';`,(err)=>{
+    if(err){
       console.log(err)
+    } else{
+      console.log("User found!")
     }
+  })
+  const userID = userQ[0].id
 
+  const groupQ = await database.query(`SELECT id FROM userdb.user WHERE username = '${username}';`,(err)=>{
+    if(err){
+      console.log(err)
+    } else{
+      console.log("Group found!")
+    }
+  })
+  const groupID = groupQ[0].id
 
+  const user2groupQ = database.query(`INSERT INTO userdb.user2group (userID,groupID) VALUES ('${userID}','${groupID}');`,(err,results,fields)=>{
+    if(!err){
+      console.log("User added to group.")
+      res.send("Added yo bitchass to the group")
+    }else{
+      console.log("could not add use to group")
+      res.send("Couldn't add yo bitchass to the group!")
+    }
   })
 
 
 })
-*/
+
+
 
 routes.post('/create_group', async(req,res)=>{
   const members = req.body.members
@@ -408,6 +421,7 @@ routes.get('/emily',(req,res) => {
 })
 
 routes.get('*',(req,res)=>{
+  console.log("BAD REQUEST")
   res.status(404)
   res.send("This Shit don't exist yo!\nAlso, where's ma foty thousan?!")
 })
