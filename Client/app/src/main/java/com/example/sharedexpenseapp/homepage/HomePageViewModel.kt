@@ -44,7 +44,8 @@ class HomePageViewModel: ViewModel() {
     internal val showGroupNameForm: LiveData<Int>
         get() = liveShowGroupNameForm
 
-    internal fun createGroup(username: String, callback: (status: String) -> Unit) {
+    //Old code from create group testing (might be able to salvage)
+    /*internal fun createGroup(username: String, callback: (status: String) -> Unit) {
         val params = RequestParams()
         params.put("groupname", liveGroupName.value!!.trim())
         params.put("username", username)
@@ -64,7 +65,7 @@ class HomePageViewModel: ViewModel() {
 
     internal fun showCreateGroupForm() {
         liveShowGroupNameForm.value = View.VISIBLE
-    }
+    }*/
 
     /*
     *

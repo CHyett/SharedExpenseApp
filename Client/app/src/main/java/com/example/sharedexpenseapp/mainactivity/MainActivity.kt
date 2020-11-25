@@ -1,16 +1,18 @@
 package com.example.sharedexpenseapp.mainactivity
 
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
-import android.widget.ExpandableListView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.example.sharedexpenseapp.R
 import com.example.sharedexpenseapp.databinding.ActivityMainBinding
 import com.example.sharedexpenseapp.navdrawer.CustomDrawerAdapter
@@ -31,6 +33,17 @@ class MainActivity : AppCompatActivity() {
 
     private val childList = HashMap<DrawerItem, List<DrawerItem>>()
 
+    private val notificationChannelMappings = HashMap<String, String>()
+
+    private val notificationChannelList = arrayOf("Group invitations", "Friend requests", "Group members", "Finance notifications")
+
+    init {
+
+        for(i in 0..3)
+            notificationChannelMappings[i.toString()] = notificationChannelList[i]
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val viewModelFactory = MainActivityViewModelFactory(application)
@@ -40,6 +53,11 @@ class MainActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         initNavDrawer()
         populateExpandableList()
+        for((i, notificationChannelName) in notificationChannelList.withIndex()) {
+            val channel = NotificationChannel(i.toString(), notificationChannelName, NotificationManager.IMPORTANCE_HIGH)
+            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
 
         //LiveData observers
         //observe login status and send firebase token if user is logged in
@@ -111,8 +129,12 @@ class MainActivity : AppCompatActivity() {
         childModelsList.add(DrawerItem("Groups", false, false))
         childModelsList.add(DrawerItem("Charge", false, false))
         childList[menuItem] = childModelsList
-        headerList.add(DrawerItem("Settings", true, false))
-        headerList.add(DrawerItem("Log Out", true, false))
+        menuItem = DrawerItem("Settings", true, false)
+        headerList.add(menuItem)
+        childList[menuItem] = emptyList()
+        menuItem = DrawerItem("Log Out", true, false)
+        headerList.add(menuItem)
+        childList[menuItem] = emptyList()
     }
 
     private fun populateExpandableList() {
@@ -125,7 +147,11 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-        binding.mainActivityDrawerLayoutList.setOnChildClickListener { _, _, _, _, _ -> true }
+        binding.mainActivityDrawerLayoutList.setOnChildClickListener { parent, view, groupPosition, childPosition, id ->
+            if(childList[headerList[groupPosition]]?.get(childPosition)?.itemName == "Groups")
+                findNavController(R.id.nav_host_fragment_container_view).navigate(R.id.testGroupFragment)
+            true
+        }
     }
 
 }

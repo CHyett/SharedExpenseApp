@@ -10,9 +10,11 @@
         android:name="com.example.sharedexpenseapp.login.LoginFragment"
         android:label="LoginFragment"
         tools:layout="@layout/login_fragment">
+
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment" />
+
     </fragment>
 
     <fragment
@@ -20,14 +22,23 @@
         android:name="com.example.sharedexpenseapp.registration.RegisterFragment"
         android:label="RegisterFragment"
         tools:layout="@layout/register_fragment">
+
         <action
             android:id="@+id/action_registerFragment_to_homePageFragment"
             app:destination="@id/homePageFragment" />
+
     </fragment>
+
     <fragment
         android:id="@+id/homePageFragment"
         android:name="com.example.sharedexpenseapp.homepage.HomePageFragment"
         android:label="HomePageFragment"
         tools:layout="@layout/home_page_fragment" />
+
+    <fragment
+        android:id="@+id/testGroupFragment"
+        android:name="com.example.sharedexpenseapp.testgroupfragment.TestGroupFragment"
+        android:label="TestGroupFragment"
+        tools:layout=""/>
 
 </navigation>

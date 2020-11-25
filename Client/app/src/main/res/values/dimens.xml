@@ -77,4 +77,10 @@
     <dimen name="home_fragment_dual_button_frame_layout_height">23dp</dimen>
     <dimen name="home_fragment_motion_layout_animation_duration">500</dimen>
 
+    <!-- test group fragment dimens -->
+    <dimen name="test_group_fragment_instruction_text_size">20sp</dimen>
+    <dimen name="test_group_fragment_instructions_margin_top">50dp</dimen>
+    <dimen name="test_group_fragment_edit_text_height">50dp</dimen>
+    <dimen name="test_group_fragment_edit_text_width">250dp</dimen>
+
 </resources>

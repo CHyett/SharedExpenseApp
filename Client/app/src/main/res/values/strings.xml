@@ -7,6 +7,14 @@
     <string name="test_string">This is the notification string</string>
     <string name="content_desc">Paceholder text</string>
 
+    <!-- Notification channel names -->
+    <string name="group_invitation_notification_channel">Group invitations</string>
+    <string name="group_joined_notification_channel">New group members</string>
+    <string name="group_left_notification_channel">User left group</string>
+    <string name="expenses_deadline_notification_channel">Upcoming charge</string>
+    <string name="expenses_notification_channel">Paid charges</string>
+    <string name="payments_notification_channel">Funds received</string>
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -46,5 +54,10 @@
     <string name="home_fragment_charges_button">Charges</string>
     <string name="home_fragment_content_description">0</string>
 
+    <!-- String used for test group fragment -->
+    <string name="test_group_fragment_instructions">Enter a user here</string>
+    <string name="test_group_fragment_target_user_edit_text_hint">Enter a user by username</string>
+    <string name="test_group_fragment_group_name_edit_text_hint">Enter your group name</string>
+    <string name="test_group_fragment_submit_button_text">Submit</string>
 
 </resources>

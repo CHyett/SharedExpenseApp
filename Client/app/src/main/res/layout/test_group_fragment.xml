@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable name="viewmodel" type="com.example.sharedexpenseapp.testgroupfragment.TestGroupFragmentViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:background="@drawable/home_screen_bg">
+
+        <TextView
+            android:id="@+id/test_group_fragment_instruction_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/test_group_fragment_instructions_margin_top"
+            android:fontFamily="@font/walkway_oblique_black"
+            android:text="@string/test_group_fragment_instructions"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/test_group_fragment_instruction_text_size"
+            app:layout_constraintBottom_toTopOf="@+id/test_group_fragment_target_user_edit_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/test_group_fragment_target_user_edit_text"
+            android:layout_width="@dimen/test_group_fragment_edit_text_width"
+            android:layout_height="@dimen/test_group_fragment_edit_text_height"
+            android:autofillHints=""
+            android:background="@drawable/edittext_background"
+            android:hint="@string/test_group_fragment_target_user_edit_text_hint"
+            android:inputType="text"
+            android:paddingLeft="20dp"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/colorAccent"
+            android:text="@={viewmodel.liveTargetUserName}"
+            app:layout_constraintBottom_toTopOf="@+id/test_group_fragment_group_name_edit_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/test_group_fragment_instruction_text_view" />
+
+        <EditText
+            android:id="@+id/test_group_fragment_group_name_edit_text"
+            android:layout_width="@dimen/test_group_fragment_edit_text_width"
+            android:layout_height="@dimen/test_group_fragment_edit_text_height"
+            android:autofillHints=""
+            android:background="@drawable/edittext_background"
+            android:hint="@string/test_group_fragment_group_name_edit_text_hint"
+            android:inputType="text"
+            android:paddingLeft="20dp"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/colorAccent"
+            android:text="@={viewmodel.liveGroupName}"
+            app:layout_constraintBottom_toTopOf="@+id/test_group_fragment_submit_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/test_group_fragment_target_user_edit_text" />
+
+        <Button
+            android:id="@+id/test_group_fragment_submit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/primary_button_bg"
+            android:text="@string/test_group_fragment_submit_button_text"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/test_group_fragment_group_name_edit_text" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

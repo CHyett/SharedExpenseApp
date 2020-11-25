@@ -2,11 +2,9 @@ package com.example.sharedexpenseapp.mainactivity
 
 import android.app.Application
 import android.content.pm.ActivityInfo
-import android.graphics.drawable.Drawable
 import android.view.View
 import androidx.lifecycle.*
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import com.example.sharedexpenseapp.ApplicationRepository
 import com.example.sharedexpenseapp.enums.Endpoints
 import com.example.sharedexpenseapp.database.ApplicationDatabase
@@ -16,7 +14,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler
 import com.loopj.android.http.RequestParams
 import cz.msebera.android.httpclient.Header
 import kotlinx.coroutines.*
-import com.example.sharedexpenseapp.R
 import com.example.sharedexpenseapp.enums.Tags
 
 
