@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
 
         //LiveData observers
         //observe login status and send firebase token if user is logged in
-        viewModel.isLoggedIn.observe(this, Observer {
+        MainActivityViewModel.isLoggedIn.observe(this, Observer {
             if(it)
                 viewModel.sendToServer()
         })
@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-        binding.mainActivityDrawerLayoutList.setOnChildClickListener { parent, view, groupPosition, childPosition, id ->
+        binding.mainActivityDrawerLayoutList.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
             if(childList[headerList[groupPosition]]?.get(childPosition)?.itemName == "Groups")
                 findNavController(R.id.nav_host_fragment_container_view).navigate(R.id.testGroupFragment)
             true

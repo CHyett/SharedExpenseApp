@@ -19,16 +19,6 @@ import com.example.sharedexpenseapp.enums.Tags
 
 class MainActivityViewModel(application: Application): AndroidViewModel(application) {
 
-    //LiveData for whether the user is logged in or not
-    private val liveIsLoggedIn = MutableLiveData<Boolean>()
-    internal val isLoggedIn: LiveData<Boolean>
-        get() = liveIsLoggedIn
-
-    //LiveData for current user username
-    private val liveUser = MutableLiveData<String>()
-    internal val user: LiveData<String>
-        get() = liveUser
-
     //LiveData to hide toolbar on login and registration
     private val liveHideToolbar = MutableLiveData<Int>(View.GONE)
     val hideToolbar: LiveData<Int>
@@ -74,7 +64,17 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
     companion object {
 
         //Firebase token for push notifications
-        internal var firebaseToken: String? = null
+        var firebaseToken: String? = null
+
+        //LiveData for whether the user is logged in or not
+        private val liveIsLoggedIn = MutableLiveData<Boolean>()
+        internal val isLoggedIn: LiveData<Boolean>
+            get() = liveIsLoggedIn
+
+        //LiveData for current user username
+        private val liveUser = MutableLiveData<String>()
+        internal val user: LiveData<String>
+            get() = liveUser
 
     }
 

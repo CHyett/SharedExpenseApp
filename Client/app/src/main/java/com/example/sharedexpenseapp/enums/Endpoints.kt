@@ -7,5 +7,6 @@ enum class Endpoints(val endpoint: String) {
     CLIENT_TOKEN_ENDPOINT("https://ourapp.live/client_token"),
     CHECKOUT_ENDPOINT("https://ourapp.live/checkout"),
     PROFILE_PIC_ENDPOINT("https://ourapp.live/upload"),
-    GROUP_INVITATION_ENDOINT("https://ourapp.live/group_invite")
+    GROUP_INVITATION_ENDOINT("https://ourapp.live/group_invite"),
+    GROUP_INVITATION_REPLY("https://ourapp.live/reply_group_inv")
 }

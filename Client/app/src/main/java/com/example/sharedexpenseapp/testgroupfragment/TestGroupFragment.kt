@@ -44,7 +44,7 @@ class TestGroupFragment : Fragment() {
 
         //Click listeners
         binding.testGroupFragmentSubmitButton.setOnClickListener {
-            viewModel.submitGroupInfo(sharedViewModel.user.value!!) { failure, message ->
+            viewModel.submitGroupInfo(MainActivityViewModel.user.value!!) { failure, message ->
                 if(failure)
                     Toast.makeText(requireActivity(), "onFailure was called", Toast.LENGTH_LONG).show()
                 else

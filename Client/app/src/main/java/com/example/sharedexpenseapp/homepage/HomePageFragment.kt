@@ -70,7 +70,7 @@ class HomePageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //If username is present, unlock screen, otherwise send user to login fragment
-        sharedViewModel.isLoggedIn.observe(viewLifecycleOwner, Observer {
+        MainActivityViewModel.isLoggedIn.observe(viewLifecycleOwner, Observer {
             if (!it) {
                 navController.navigate(R.id.loginFragment)
             } else {
@@ -105,7 +105,7 @@ class HomePageFragment : Fragment() {
                 Blurry.delete(binding.homePageFragmentRootConstraintLayout)
             }
         })
-        sharedViewModel.user.observe(viewLifecycleOwner, Observer {
+        MainActivityViewModel.user.observe(viewLifecycleOwner, Observer {
             binding.usernameText = "Good evening,\n$it"
         })
 
