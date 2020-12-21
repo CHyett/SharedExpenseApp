@@ -25,7 +25,7 @@ class TestGroupFragmentViewModel: ViewModel() {
         params.put("userTo", liveTargetUserName.value?.trim())
         params.put("group", liveGroupName.value?.trim())
         params.put("token", MainActivityViewModel.firebaseToken)
-        HTTPClient.post(Endpoints.GROUP_INVITATION_ENDOINT.endpoint, params, object: AsyncHttpResponseHandler() {
+        HTTPClient.post(Endpoints.GROUP_INVITATION_ENDPOINT.endpoint, params, object: AsyncHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
                 responseBody?.let { callback(false, String(it)) }
             }

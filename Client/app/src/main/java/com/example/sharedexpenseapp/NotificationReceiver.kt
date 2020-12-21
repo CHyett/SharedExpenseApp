@@ -16,11 +16,13 @@ class NotificationReceiver: BroadcastReceiver() {
         val params = RequestParams()
         params.put("userFrom", intent!!.getStringExtra("userFrom"))
         params.put("userTo", intent.getStringExtra("userTo"))
-        params.put("reply", intent.getBooleanExtra("reply", true))
         params.put("group", intent.getStringExtra("group"))
+        when(intent.action) {
+            "accept" -> params.put("response", true)
+            "decline" -> params.put("response", false)
+        }
         client.post(Endpoints.GROUP_INVITATION_REPLY.endpoint, params, object: AsyncHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
-                println("reply is skjfsikfvb")
                 println("Group reply success! Response is ${String(responseBody!!)}")
             }
 
