@@ -100,6 +100,19 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    //If user is logged in, make network calls to cache critical data.
+    //Maybe use  a timestamp to only make requests once after a set amount of time has passed.
+    override fun onResume() {
+        super.onResume()
+        println("onResume was called.")
+    }
+
+    //Free system resources here when the app is no longer in the foreground.
+    override fun onPause() {
+        super.onPause()
+        println("onPause was called.")
+    }
+
     private fun initNavDrawer() {
         binding.mainActivityToolbarHamburger.speed = 2f
         binding.mainActivityDrawerLayoutList.bringToFront()
@@ -141,10 +154,10 @@ class MainActivity : AppCompatActivity() {
         adapter = CustomDrawerAdapter(this, headerList, childList)
         binding.mainActivityDrawerLayoutList.setAdapter(adapter)
         binding.mainActivityDrawerLayoutList.setOnGroupClickListener { listView, _, groupPosition, _ ->
-            listView?.let {
-                if(!listView.expandGroup(groupPosition, true))
-                    listView.collapseGroup(groupPosition)
-            }
+            if(groupPosition == 4)
+                viewModel.logOut()
+            if(!listView.expandGroup(groupPosition, true))
+                listView.collapseGroup(groupPosition)
             true
         }
         binding.mainActivityDrawerLayoutList.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
@@ -161,3 +174,10 @@ class MainActivity : AppCompatActivity() {
     Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
         .setAction("Action", null).show()
 }*/
+
+/*
+*
+* TODO:
+*  Data cache critical data: List of groups user is a member of, charges/expenses of these groups, list of friends (names only). (That's it for now)
+*
+* */

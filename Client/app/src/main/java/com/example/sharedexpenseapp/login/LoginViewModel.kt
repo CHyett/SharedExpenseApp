@@ -28,7 +28,7 @@ class LoginViewModel: ViewModel() {
         params.put("password", livePassword.value)
         client.get(Endpoints.LOGIN_ENDPOINT.endpoint, params, object: AsyncHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
-                responseBody?.let {liveLoginStatus.value = String(responseBody)}
+                responseBody?.let { liveLoginStatus.value = String(responseBody) }
                 if(statusCode == 200) callback(true) else callback(false)
             }
 

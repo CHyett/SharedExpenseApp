@@ -25,7 +25,7 @@ import com.example.sharedexpenseapp.mainactivity.MainActivityViewModel
 import jp.wasabeef.blurry.Blurry
 
 private const val BLUR_RADIUS = 20
-private const val MOTIONLAYOUT_TRANSISTION_DURATION = 500
+private const val MOTIONLAYOUT_TRANSITION_DURATION = 500
 private const val NAV_DRAWER_ANIMATION_DURATION = 500L
 
 class HomePageFragment : Fragment() {
@@ -90,8 +90,8 @@ class HomePageFragment : Fragment() {
         sharedViewModel.hideToolbar(false)
         val textViewFades = applyTextFadeAnimation()
         val dualButtonTextColorAnimations = applyDualButtonTextColorAnimation()
-        binding.homeFragmentDualButtonMotionLayout.setTransitionDuration(MOTIONLAYOUT_TRANSISTION_DURATION)
-        binding.homePageFragmentExpensesChargesMotionLayout.setTransitionDuration(MOTIONLAYOUT_TRANSISTION_DURATION)
+        binding.homeFragmentDualButtonMotionLayout.setTransitionDuration(MOTIONLAYOUT_TRANSITION_DURATION)
+        binding.homePageFragmentExpensesChargesMotionLayout.setTransitionDuration(MOTIONLAYOUT_TRANSITION_DURATION)
 
         //LiveData observers
         sharedViewModel.isNavDrawerOpen.observe(viewLifecycleOwner, Observer {
@@ -249,9 +249,9 @@ class HomePageFragment : Fragment() {
 
     private fun applyDualButtonTextColorAnimation(): Array<ObjectAnimator> {
         val anim1 = ObjectAnimator.ofObject(binding.homeFragmentDualButtonExpenses, "textColor", ArgbEvaluator(), Color.BLACK, Color.WHITE)
-        anim1.duration = MOTIONLAYOUT_TRANSISTION_DURATION.toLong()
+        anim1.duration = MOTIONLAYOUT_TRANSITION_DURATION.toLong()
         val anim2 = ObjectAnimator.ofObject(binding.homeFragmentDualButtonCharges, "textColor", ArgbEvaluator(), Color.WHITE, Color.BLACK)
-        anim2.duration = MOTIONLAYOUT_TRANSISTION_DURATION.toLong()
+        anim2.duration = MOTIONLAYOUT_TRANSITION_DURATION.toLong()
         return arrayOf(anim1, anim2)
     }
 
