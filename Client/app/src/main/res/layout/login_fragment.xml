@@ -11,82 +11,199 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
+        android:id="@+id/login_fragment_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/start_bg"
+        android:layout_marginRight="@dimen/login_fragment_margin_sides"
+        android:layout_marginLeft="@dimen/login_fragment_margin_sides"
+        android:orientation="vertical"
+        android:weightSum="100"
+        tools:background="@color/colorSecondary"
         tools:context=".login.LoginFragment">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/login_fragment_logo_wrapper"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/login_fragment_logo_margin_top"
-            app:cardCornerRadius="@dimen/login_fragment_logo_corner_radius"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"/>
 
-            <ImageView
-                android:id="@+id/login_fragment_logo"
-                android:layout_width="@dimen/login_fragment_logo_size"
-                android:layout_height="@dimen/login_fragment_logo_size"
-                android:background="@drawable/partem_logo"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/login_fragment_logo_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="20">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/login_fragment_partem_logo_card_view_holder"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:cardCornerRadius="@dimen/partem_logo_card_view_corners"
+                app:layout_constraintDimensionRatio="w,1:1"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/partem_logo"
+                    android:contentDescription="@string/autofill_hints"/>
+
+            </androidx.cardview.widget.CardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/login_fragment_title_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="15">
+
+            <TextView
+                android:id="@+id/login_fragment_welcome_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_fragment_welcome_title"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/login_fragment_welcome_text_title_size"
+                app:layout_constraintBottom_toTopOf="@+id/login_fragment_welcome_info"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/login_fragment_welcome_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/login_fragment_welcome_info_padding_sides"
+                android:paddingRight="@dimen/login_fragment_welcome_info_padding_sides"
+                android:text="@string/login_fragment_welcome_info"
+                android:textAlignment="center"
+                android:textColor="@color/colorGray"
+                android:textSize="@dimen/login_fragment_welcome_text_info_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_fragment_welcome_title" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/login_fragment_form"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="15">
+
+            <EditText
+                android:id="@+id/login_fragment_email_input"
+                style="@style/login_fragment_edittext"
+                android:hint="@string/login_fragment_email_input_hint"
+                android:importantForAutofill="no"
+                android:inputType="textEmailAddress"
+                app:layout_constraintBottom_toTopOf="@+id/login_fragment_password_input"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/login_fragment_password_input"
+                style="@style/login_fragment_edittext"
+                android:hint="@string/login_fragment_password_input_hint"
+                android:importantForAutofill="no"
+                android:inputType="textPassword"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_fragment_email_input"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/login_fragment_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="30">
+
+            <Button
+                android:id="@+id/login_fragment_sign_in_button"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_fragment_button_height"
+                android:background="@drawable/primary_button_bg"
+                android:text="@string/login_fragment_sign_in"
+                android:textColor="@color/colorAccent"
+                app:layout_constraintBottom_toTopOf="@+id/login_fragment_join_button_text"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="spread" />
+
+            <Button
+                android:id="@+id/login_fragment_sign_up_button"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_fragment_button_height"
+                android:background="@drawable/primary_button_bg"
+                android:text="@string/login_fragment_sign_up"
+                android:textColor="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_fragment_join_button_text" />
+
+            <TextView
+                android:id="@+id/login_fragment_join_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_fragment_button_join_text"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/login_fragment_button_join_text_size"
+                app:layout_constraintBottom_toTopOf="@+id/login_fragment_sign_up_button"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_fragment_sign_in_button" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/login_fragment_policy_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5">
+
+            <TextView
+                android:id="@+id/login_fragment_policy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_fragment_policy"
+                android:textColor="@color/colorGray"
+                android:textSize="@dimen/login_fragment_policy"
+                android:textAlignment="center"
+                android:textColorLink="@color/colorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-        </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <EditText
-            android:id="@+id/login_username_eddittext"
-            style="@style/login_fragment_edittext"
-            android:layout_marginTop="@dimen/login_fragment_username_edittext_margin_top"
-            android:autofillHints="@string/login_screen_username_autofill"
-            android:hint="@string/login_edittext_username_hint"
-            android:inputType="text"
-            android:text="@={viewmodel.liveUsername}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/login_fragment_logo_wrapper" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
-        <EditText
-            android:id="@+id/login_password_edittext"
-            style="@style/login_fragment_edittext"
-            android:layout_marginTop="@dimen/login_fragment_password_edittext_margin_top"
-            android:autofillHints="@string/login_screen_password_autofill"
-            android:hint="@string/login_edittext_password_hint"
-            android:inputType="textPassword"
-            android:text="@={viewmodel.livePassword}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/login_username_eddittext" />
+    </LinearLayout>
 
-
-        <Button
-            android:id="@+id/submit_button"
-            style="@style/login_fragment_buttons"
-            android:text="@string/login_screen_submit"
-            app:layout_constraintBottom_toTopOf="@+id/registration_link"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/login_password_edittext"
-            app:layout_constraintVertical_bias="0.2" />
-
-        <TextView
-            android:id="@+id/registration_link"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/login_screen_register"
-            android:textColor="@color/colorAccent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/submit_button" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
 
     <!--

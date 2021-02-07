@@ -1,5 +1,5 @@
-<vector android:height="@dimen/login_fragment_logo_size" android:viewportHeight="640"
-    android:viewportWidth="640" android:width="@dimen/login_fragment_logo_size" xmlns:android="http://schemas.android.com/apk/res/android">
+<vector android:height="@dimen/partem_logo_size" android:viewportHeight="640"
+    android:viewportWidth="640" android:width="@dimen/partem_logo_size" xmlns:android="http://schemas.android.com/apk/res/android">
     <path android:fillColor="#ffffff" android:pathData="M0,598.95L47,637.95L582,637.95L640,598.95L640,42.2L582,0L47,0L0,42.2L0,598.95Z"/>
     <path android:fillAlpha="0" android:fillColor="#FF000000"
         android:pathData="M0,598.95L47,637.95L582,637.95L640,598.95L640,42.2L582,0L47,0L0,42.2L0,598.95Z"

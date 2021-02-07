@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.sharedexpenseapp.R
 import com.example.sharedexpenseapp.databinding.TestGroupFragmentBinding
 import com.example.sharedexpenseapp.mainactivity.MainActivityViewModel
+import com.example.sharedexpenseapp.util.isConnected
 
 class TestGroupFragment : Fragment() {
 
@@ -26,7 +28,7 @@ class TestGroupFragment : Fragment() {
     //MainActivityViewModel
     private val sharedViewModel: MainActivityViewModel by activityViewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.test_group_fragment, container, false)
         return binding.root
     }
@@ -36,19 +38,23 @@ class TestGroupFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(TestGroupFragmentViewModel::class.java)
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
-        sharedViewModel.setAppBackgroundDrawable(R.drawable.home_screen_bg)
+        sharedViewModel.setAppBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.home_screen_bg)!!)
         sharedViewModel.lockNavDrawer(false)
 
         //LiveData observers
 
 
         //Click listeners
-        binding.testGroupFragmentSubmitButton.setOnClickListener {
-            viewModel.submitGroupInfo(MainActivityViewModel.user.value!!) { failure, message ->
-                if(failure)
-                    Toast.makeText(requireActivity(), "onFailure was called", Toast.LENGTH_LONG).show()
-                else
-                    Toast.makeText(requireActivity(), message, Toast.LENGTH_LONG).show()
+        binding.testGroupFragmentSubmitButton.setOnClickListener { _ ->
+            if(activity?.application?.let { it -> isConnected(it) } == true) {
+                viewModel.submitGroupInfo(MainActivityViewModel.user.value!!) { failure, message ->
+                    if (failure)
+                        Toast.makeText(requireActivity(), "onFailure was called", Toast.LENGTH_LONG).show()
+                    else
+                        Toast.makeText(requireActivity(), message, Toast.LENGTH_LONG).show()
+                }
+            } else {
+                Toast.makeText(context, com.example.sharedexpenseapp.util.NOT_CONNECTED_MESSAGE, Toast.LENGTH_SHORT).show()
             }
         }
 

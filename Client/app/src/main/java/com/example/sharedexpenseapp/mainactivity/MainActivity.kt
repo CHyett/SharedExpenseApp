@@ -3,6 +3,7 @@ package com.example.sharedexpenseapp.mainactivity
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -10,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.sharedexpenseapp.R
@@ -19,6 +19,7 @@ import com.example.sharedexpenseapp.navdrawer.CustomDrawerAdapter
 import com.example.sharedexpenseapp.navdrawer.DrawerItem
 import com.google.firebase.iid.FirebaseInstanceId
 import java.util.*
+import com.example.sharedexpenseapp.util.isConnected
 
 
 class MainActivity : AppCompatActivity() {
@@ -61,24 +62,19 @@ class MainActivity : AppCompatActivity() {
 
         //LiveData observers
         //observe login status and send firebase token if user is logged in
-        MainActivityViewModel.isLoggedIn.observe(this, Observer {
-            if(it)
+        MainActivityViewModel.isLoggedIn.observe(this, {
+            if(it && isConnected(application))
                 viewModel.sendToServer()
         })
-        viewModel.orientation.observe(this, Observer {
-            this.requestedOrientation = it
-        })
-        viewModel.showNavDrawer.observe(this, Observer {
+        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        viewModel.showNavDrawer.observe(this, {
             if(it)
                 binding.mainActivityDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             else
                 binding.mainActivityDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         })
-        viewModel.appBackgroundDrawable.observe(this, Observer {
-            binding.mainActivityLinearLayout.background = ContextCompat.getDrawable(applicationContext, it)
-        })
         viewModel.isNavDrawerOpen.observe(
-            this, Observer {
+            this, {
             if(it) {
                 binding.mainActivityToolbarHamburger.setMinAndMaxProgress(0.25f, 0.34f)
             } else {
@@ -100,24 +96,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    //If user is logged in, make network calls to cache critical data.
-    //Maybe use  a timestamp to only make requests once after a set amount of time has passed.
-    override fun onResume() {
-        super.onResume()
-        println("onResume was called.")
-    }
-
-    //Free system resources here when the app is no longer in the foreground.
-    override fun onPause() {
-        super.onPause()
-        println("onPause was called.")
-    }
-
     private fun initNavDrawer() {
         binding.mainActivityToolbarHamburger.speed = 2f
         binding.mainActivityDrawerLayoutList.bringToFront()
         binding.mainActivityDrawerLayout.requestLayout()
-        binding.mainActivityDrawerLayout.setScrimColor(resources.getColor(R.color.transparent))
+        binding.mainActivityDrawerLayout.setScrimColor(ContextCompat.getColor(this, R.color.transparent))
         binding.mainActivityDrawerLayout.addDrawerListener(object: DrawerLayout.DrawerListener {
             override fun onDrawerStateChanged(newState: Int) {
                 if(newState == DrawerLayout.STATE_SETTLING)
@@ -161,8 +144,11 @@ class MainActivity : AppCompatActivity() {
             true
         }
         binding.mainActivityDrawerLayoutList.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
-            if(childList[headerList[groupPosition]]?.get(childPosition)?.itemName == "Groups")
-                findNavController(R.id.nav_host_fragment_container_view).navigate(R.id.testGroupFragment)
+            when (childList[headerList[groupPosition]]?.get(childPosition)?.itemName) {
+                "Groups" -> findNavController(R.id.nav_host_fragment_container_view).navigate(R.id.testGroupFragment)
+                "Pay" -> findNavController(R.id.nav_host_fragment_container_view).navigate(R.id.testPayingFragment)
+                "Charge" -> findNavController(R.id.nav_host_fragment_container_view).navigate(R.id.testChargingFragment)
+            }
             true
         }
     }

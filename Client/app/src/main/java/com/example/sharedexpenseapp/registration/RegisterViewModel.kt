@@ -85,7 +85,7 @@ class RegisterViewModel : ViewModel() {
 
     private fun uploadProfilePicture(username: String) {
         val maxBufferSize = 1024 * 1024
-        val sourceFile = File(profilePicturePath)
+        val sourceFile = File(profilePicturePath!! )
         val fileName = "$username.${profilePicturePath!!.substringAfterLast('.')}"
 
         //Check if the file is available and then upload picture
@@ -140,7 +140,7 @@ class RegisterViewModel : ViewModel() {
                 println("MalformedURLException: ")
                 error.printStackTrace()
             } catch (error: Exception) {
-                println("Other extraneous error:")
+                println("Other extraneous error: ")
                 error.printStackTrace()
             }
         }

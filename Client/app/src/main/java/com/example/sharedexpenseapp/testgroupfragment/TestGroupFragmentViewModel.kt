@@ -17,7 +17,7 @@ class TestGroupFragmentViewModel: ViewModel() {
     //LiveData to hold the name of the group
     val liveGroupName = MutableLiveData<String>()
 
-    private val HTTPClient = AsyncHttpClient()
+    private val client = AsyncHttpClient()
 
     internal inline fun submitGroupInfo(userFrom: String, crossinline callback: (failure: Boolean, message: String) -> Unit) {
         val params = RequestParams()
@@ -25,7 +25,7 @@ class TestGroupFragmentViewModel: ViewModel() {
         params.put("userTo", liveTargetUserName.value?.trim())
         params.put("group", liveGroupName.value?.trim())
         params.put("token", MainActivityViewModel.firebaseToken)
-        HTTPClient.post(Endpoints.GROUP_INVITATION_ENDPOINT.endpoint, params, object: AsyncHttpResponseHandler() {
+        client.post(Endpoints.GROUP_INVITATION_ENDPOINT.endpoint, params, object: AsyncHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
                 responseBody?.let { callback(false, String(it)) }
             }

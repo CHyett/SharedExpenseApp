@@ -1,7 +1,8 @@
 package com.example.sharedexpenseapp.mainactivity
 
 import android.app.Application
-import android.content.pm.ActivityInfo
+import android.content.res.Resources
+import android.graphics.drawable.Drawable
 import android.view.View
 import androidx.lifecycle.*
 import androidx.navigation.NavController
@@ -15,12 +16,14 @@ import com.loopj.android.http.RequestParams
 import cz.msebera.android.httpclient.Header
 import kotlinx.coroutines.*
 import com.example.sharedexpenseapp.enums.Tags
+import java.time.LocalDateTime
 
+private const val REFRESH_GROUPS_THRESHOLD = 5L
 
 class MainActivityViewModel(application: Application): AndroidViewModel(application) {
 
     //LiveData to hide toolbar on login and registration
-    private val liveHideToolbar = MutableLiveData<Int>(View.GONE)
+    private val liveHideToolbar = MutableLiveData(View.GONE)
     val hideToolbar: LiveData<Int>
         get() = liveHideToolbar
 
@@ -30,17 +33,14 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         get() = liveShowNavDrawer
 
     //LiveData for app background
-    private val liveAppBackgroundDrawable = MutableLiveData<Int>()
-    internal val appBackgroundDrawable: LiveData<Int>
+    private val liveAppBackgroundDrawable = MutableLiveData<Drawable>()
+    val appBackgroundDrawable: LiveData<Drawable>
         get() = liveAppBackgroundDrawable
 
     //LiveData for nav drawer status
-    private val liveIsNavDrawerOpen = MutableLiveData<Boolean>(false)
+    private val liveIsNavDrawerOpen = MutableLiveData(false)
     internal val isNavDrawerOpen: LiveData<Boolean>
         get() = liveIsNavDrawerOpen
-
-    //Screen orientation (forced portrait mode or free to rotate)
-    internal val orientation = MutableLiveData<Int>()
 
     //App nav controller
     internal var navController: NavController? = null
@@ -51,13 +51,33 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
     //HttpClient for this ViewModel
     private val client = AsyncHttpClient()
 
+    //Array of groups that the user is a part of
+    val userGroups = HashMap<String, Int>()
+
+    //Time stamp for data caching
+    private val timeStamp = LocalDateTime.now().minusMinutes(5L)
+
+    //Boolean to indicate whether username gas been loaded from local database
+    var isDatabaseLoaded = false
+
+    //List of callbacks fired after database fetches complete
+    private val onDatabaseLoadedListeners = arrayListOf<() -> Unit>()
+
     init {
-        runBlocking {
-            val job = CoroutineScope(Dispatchers.IO).launch {
-                liveIsLoggedIn.postValue(repository.getIsLoggedIn())
-                liveUser.postValue(repository.getUsername())
+        var loginStatus = false
+        var name: String? = ""
+        CoroutineScope(Dispatchers.IO).launch {
+            coroutineScope {
+                launch { loginStatus = repository.getIsLoggedIn() }
+                launch { name = repository.getUsername() }
             }
-            job.join()
+            withContext(Dispatchers.Main) {
+                liveIsLoggedIn.value = loginStatus
+                liveUser.value = name
+                isDatabaseLoaded = true
+                for (listener in onDatabaseLoadedListeners)
+                    listener()
+            }
         }
     }
 
@@ -72,14 +92,23 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
             get() = liveIsLoggedIn
 
         //LiveData for current user username
-        private val liveUser = MutableLiveData<String>()
-        internal val user: LiveData<String>
+        private val liveUser = MutableLiveData<String?>()
+        internal val user: LiveData<String?>
             get() = liveUser
 
     }
 
+    fun addOnDatabaseLoadedListener(callback: () -> Unit) = onDatabaseLoadedListeners.add(callback)
+
+    fun lockNavDrawer(status: Boolean) { liveShowNavDrawer.value = status }
+
+    fun hideToolbar(status: Boolean) { if(status) liveHideToolbar.value = View.GONE else liveHideToolbar.value = View.VISIBLE }
+
+    fun setAppBackgroundDrawable(drawable: Drawable) { liveAppBackgroundDrawable.value = drawable }
+
+    internal fun setNavDrawerStatus(status: Boolean) { liveIsNavDrawerOpen.value = status }
+
     internal fun logOut() {
-        orientation.value = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         liveUser.value = null
         liveIsLoggedIn.value = false
         CoroutineScope(Dispatchers.IO).launch {
@@ -102,6 +131,35 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         }
     }
 
+    fun cacheUserGroups() {
+        println("Request made and username is $isDatabaseLoaded")
+        /*if(ChronoUnit.MINUTES.between(timeStamp, LocalDateTime.now()) >= REFRESH_GROUPS_THRESHOLD) {
+            for(group in TEST_DATA)
+                userGroups[group.getString("name")] = group.getInt("id")
+            timeStamp = LocalDateTime.now()
+        }*/
+
+        //Use this code in production
+        /*val params = RequestParams()
+        params.add("username", user.value)
+        if(user.value != "") {
+            client.get(Endpoints.USER_GROUP_LIST.endpoint, params, object: JsonHttpResponseHandler() {
+                override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: JSONArray) {
+                    for(i in 0 until responseBody.length()) {
+                        val item = responseBody.getJSONObject(i)
+                        userGroups[item.getString("name")] = item.getInt("id")
+                    }
+                    println("Response is: $responseBody")
+                }
+
+                override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
+                    super.onFailure(statusCode, headers, responseString, throwable)
+                    println("Error was: ${throwable.toString()}\nResponse string was: $responseString")
+                }
+            })
+        }*/
+    }
+
     fun sendToServer() {
         if (firebaseToken != null) {
             val params = RequestParams()
@@ -121,26 +179,6 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         }
     }
 
-    fun lockNavDrawer(status: Boolean) {
-        liveShowNavDrawer.value = status
-    }
-
-    fun hideToolbar(status: Boolean) {
-        if(status) {
-            liveHideToolbar.value = View.GONE
-        } else {
-            liveHideToolbar.value = View.VISIBLE
-        }
-    }
-
-    fun setAppBackgroundDrawable(resID: Int) {
-        liveAppBackgroundDrawable.value = resID
-    }
-
-    internal fun setNavDrawerStatus(status: Boolean) {
-        liveIsNavDrawerOpen.value = status
-    }
-
     override fun onCleared() {
         liveIsLoggedIn.value?.let { CoroutineScope(Dispatchers.IO).launch { saveLoginStatus(it) }}
         liveUser.value?.let { CoroutineScope(Dispatchers.IO).launch { saveUsername(it) }}
@@ -152,6 +190,6 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
 /*
 *
 * TODO:
-*
+*   group list cache in sending requests with no username present on init. Possibly because it hasn't been read from the database yet.
 *
 * */

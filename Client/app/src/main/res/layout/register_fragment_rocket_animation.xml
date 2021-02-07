@@ -94,7 +94,7 @@
             style="@style/register_fragment_edittext"
             android:layout_marginTop="@dimen/register_fragment_email_edittext_margin_top"
             android:autofillHints="@string/register_screen_password_autofill"
-            android:hint="@string/login_edittext_password_hint"
+            android:hint=""
             android:inputType="textPassword"
             android:text="@={viewmodel.newUserPassword}"
             app:layout_constraintEnd_toEndOf="parent"

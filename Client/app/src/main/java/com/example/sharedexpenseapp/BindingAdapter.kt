@@ -2,11 +2,12 @@ package com.example.sharedexpenseapp
 
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.databinding.BindingAdapter
 
 
-@BindingAdapter("app:isEnabled")
+@BindingAdapter("isEnabled")
 fun setIsEnabled(button: Button, enabled: Boolean) {
     button.isEnabled = enabled
 }

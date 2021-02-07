@@ -1,6 +1,7 @@
 package com.example.sharedexpenseapp.registration
 
 import android.app.Activity.RESULT_OK
+import android.app.Application
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
@@ -18,13 +19,12 @@ import android.view.animation.PathInterpolator
 import android.view.animation.Transformation
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.basgeekball.awesomevalidation.AwesomeValidation
@@ -36,6 +36,7 @@ import com.example.sharedexpenseapp.R
 import com.example.sharedexpenseapp.databinding.RegisterFragmentBinding
 import com.example.sharedexpenseapp.mainactivity.MainActivityViewModel
 import kotlinx.coroutines.*
+import com.example.sharedexpenseapp.util.isConnected
 
 
 private const val RESULT_LOAD_IMAGE = 20
@@ -79,7 +80,7 @@ class RegisterFragment : Fragment() {
     companion object { fun newInstance() = RegisterFragment() }
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.register_fragment, container, false)
         return binding.root
     }
@@ -102,7 +103,7 @@ class RegisterFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(RegisterViewModel::class.java)
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
-        sharedViewModel.setAppBackgroundDrawable(R.drawable.start_bg)
+        sharedViewModel.setAppBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.start_bg)!!)
         sharedViewModel.lockNavDrawer(true)
         sharedViewModel.hideToolbar(true)
 
@@ -118,10 +119,10 @@ class RegisterFragment : Fragment() {
         validation.addValidation(binding.registerEmailEdittext, Patterns.EMAIL_ADDRESS, EMAIL_ERROR)
 
         //LiveData observers
-        viewModel.registrationStatus.observe(viewLifecycleOwner, Observer {
+        viewModel.registrationStatus.observe(viewLifecycleOwner, {
             Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
         })
-        viewModel.newUserUsername.observe(viewLifecycleOwner, Observer {
+        viewModel.newUserUsername.observe(viewLifecycleOwner, {
             val progress = viewModel.liveProgress.value!!
             val matchStatus = it.matches(usernameRegex)
             if(matchStatus && viewModel.isInvalidUsername) {
@@ -132,7 +133,7 @@ class RegisterFragment : Fragment() {
                 viewModel.isInvalidUsername = true
             }
         })
-        viewModel.newUserPassword.observe(viewLifecycleOwner, Observer {
+        viewModel.newUserPassword.observe(viewLifecycleOwner, {
             val progress = viewModel.liveProgress.value!!
             //val matchStatus = it.matches(PasswordRegex)
             //This should be deleted when the password regex works
@@ -145,7 +146,7 @@ class RegisterFragment : Fragment() {
                 viewModel.isInvalidPassword = true
             }
         })
-        viewModel.newUserEmail.observe(viewLifecycleOwner, Observer {
+        viewModel.newUserEmail.observe(viewLifecycleOwner, {
             val progress = viewModel.liveProgress.value!!
             val matchStatus = it.matches(emailRegex)
             if(matchStatus && viewModel.isInvalidEmail) {
@@ -156,7 +157,7 @@ class RegisterFragment : Fragment() {
                 viewModel.isInvalidEmail = true
             }
         })
-        viewModel.liveProgress.observe(viewLifecycleOwner, Observer {
+        viewModel.liveProgress.observe(viewLifecycleOwner, {
             progressAnimation.from = progressAnimation.to
             progressAnimation.to = it
             binding.registerFragmentProgressBarInner.startAnimation(progressAnimation)
@@ -181,14 +182,18 @@ class RegisterFragment : Fragment() {
         }
         binding.registerFragmentSubmitButton.setOnClickListener {
             if(validation.validate()) {
-                viewModel.register {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        coroutineScope {
-                            sharedViewModel.saveUsername(it)
-                            sharedViewModel.saveLoginStatus(true)
+                if(isConnected(context as Application)) {
+                    viewModel.register {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            coroutineScope {
+                                sharedViewModel.saveUsername(it)
+                                sharedViewModel.saveLoginStatus(true)
+                            }
+                            navController.popBackStack(R.id.loginFragment, true)
                         }
-                        navController.popBackStack(R.id.loginFragment, true)
                     }
+                } else {
+                    Toast.makeText(context, com.example.sharedexpenseapp.util.NOT_CONNECTED_MESSAGE, Toast.LENGTH_SHORT).show()
                 }
             }
         }

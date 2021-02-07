@@ -1,6 +1,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <corners android:radius="@dimen/custom_edittext_bg_drawable_corners"/>
-    <solid android:color="@color/colorSecondary"/>
+    <corners android:radius="@dimen/primary_button_bg_drawable_corners"/>
+    <solid android:color="@color/colorPrimary"/>
 
 </shape>

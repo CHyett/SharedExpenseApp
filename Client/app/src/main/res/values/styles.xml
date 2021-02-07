@@ -33,12 +33,11 @@
     </style>
 
     <style name="login_fragment_edittext">
-        <item name="android:layout_width">@dimen/login_fragment_edittext_width</item>
-        <item name="android:layout_height">@dimen/login_fragment_edittext_height</item>
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/edit_text_height</item>
         <item name="android:background">@drawable/edittext_background</item>
-        <item name="android:textColorHint">@color/colorAccent</item>
-        <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:paddingLeft">@dimen/login_fragment_edittext_padding_left</item>
+        <item name="android:paddingLeft">@dimen/login_fragment_input_padding_left</item>
     </style>
 
     <style name="register_fragment_submit_button">

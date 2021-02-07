@@ -39,6 +39,18 @@
         android:id="@+id/testGroupFragment"
         android:name="com.example.sharedexpenseapp.testgroupfragment.TestGroupFragment"
         android:label="TestGroupFragment"
-        tools:layout=""/>
+        tools:layout="@layout/test_group_fragment"/>
+
+    <fragment
+        android:id="@+id/testPayingFragment"
+        android:name="com.example.sharedexpenseapp.testpayingfragment.TestPayingFragment"
+        android:label="TestPayingFragment"
+        tools:layout="@layout/test_paying_fragment"/>
+
+    <fragment
+        android:id="@+id/testChargingFragment"
+        android:name="com.example.sharedexpenseapp.testchargingfragment.TestChargingFragment"
+        android:label="TestChargingFragment"
+        tools:layout="@layout/test_charging_fragment"/>
 
 </navigation>

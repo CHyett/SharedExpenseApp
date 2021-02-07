@@ -7,7 +7,6 @@ import com.example.sharedexpenseapp.enums.Endpoints
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
 import com.loopj.android.http.RequestParams
-import com.loopj.android.http.TextHttpResponseHandler
 import cz.msebera.android.httpclient.Header
 
 class LoginViewModel: ViewModel() {

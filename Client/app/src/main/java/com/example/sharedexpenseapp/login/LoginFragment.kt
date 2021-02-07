@@ -1,16 +1,19 @@
 package com.example.sharedexpenseapp.login
 
 import android.Manifest
+import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
+import com.example.sharedexpenseapp.util.isConnected
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -41,8 +44,7 @@ class LoginFragment : Fragment() {
 
     private lateinit var viewModel: LoginViewModel
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.login_fragment, container, false)
         return binding.root
     }
@@ -61,37 +63,41 @@ class LoginFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
-        sharedViewModel.setAppBackgroundDrawable(R.drawable.start_bg)
+        sharedViewModel.setAppBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.color.colorSecondary)!!)
         sharedViewModel.lockNavDrawer(true)
         sharedViewModel.hideToolbar(true)
 
         //Form validation
         val validation = AwesomeValidation(ValidationStyle.COLORATION)
-        validation.addValidation(binding.loginUsernameEddittext, USERNAME_REGEX, USERNAME_ERROR)
+        validation.addValidation(binding.loginFragmentEmailInput, USERNAME_REGEX, USERNAME_ERROR)
         //validation.addValidation(binding.loginPasswordEdittext, PASSWORD_REGEX, PASSWORD_ERROR)
 
         //LiveData observers
-        viewModel.loginStatus.observe(viewLifecycleOwner, Observer {
-                Snackbar.make(binding.submitButton, it, Snackbar.LENGTH_LONG).setAction("Action", null).show()
+        viewModel.loginStatus.observe(viewLifecycleOwner, {
+                Snackbar.make(binding.loginFragmentSignInButton, it, Snackbar.LENGTH_LONG).setAction("Action", null).show()
         })
 
         //Click listeners
-        binding.registrationLink.setOnClickListener { navController.navigate(R.id.action_loginFragment_to_registerFragment) }
-        binding.submitButton.setOnClickListener {
+        binding.loginFragmentSignUpButton.setOnClickListener { navController.navigate(R.id.action_loginFragment_to_registerFragment) }
+        binding.loginFragmentSignInButton.setOnClickListener {
             if (validation.validate()) {
-                viewModel.logIn {
-                    if(it) {
-                        val username = viewModel.liveUsername.value!!
-                        CoroutineScope(Dispatchers.IO).launch {
-                            coroutineScope {
-                                sharedViewModel.saveUsername(username)
-                                sharedViewModel.saveLoginStatus(true)
+                if(isConnected(context as Application)) {
+                    viewModel.logIn {
+                        if(it) {
+                            val username = viewModel.liveUsername.value!!
+                            CoroutineScope(Dispatchers.IO).launch {
+                                coroutineScope {
+                                    sharedViewModel.saveUsername(username)
+                                    sharedViewModel.saveLoginStatus(true)
+                                }
+                                navController.popBackStack()
                             }
-                            navController.popBackStack()
+                            viewModel.livePassword.value = ""
+                            viewModel.liveUsername.value = ""
                         }
-                        viewModel.livePassword.value = ""
-                        viewModel.liveUsername.value = ""
                     }
+                } else {
+                    Toast.makeText(context, com.example.sharedexpenseapp.util.NOT_CONNECTED_MESSAGE, Toast.LENGTH_SHORT).show()
                 }
             }
         }

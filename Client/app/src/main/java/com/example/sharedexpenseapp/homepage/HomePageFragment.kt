@@ -3,18 +3,17 @@ package com.example.sharedexpenseapp.homepage
 import android.Manifest
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
-import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -28,7 +27,7 @@ private const val BLUR_RADIUS = 20
 private const val MOTIONLAYOUT_TRANSITION_DURATION = 500
 private const val NAV_DRAWER_ANIMATION_DURATION = 500L
 
-class HomePageFragment : Fragment() {
+class HomePageFragment: Fragment() {
 
     companion object { fun newInstance() = LoginFragment() }
 
@@ -56,12 +55,13 @@ class HomePageFragment : Fragment() {
         } else {
             navController = sharedViewModel.navController!!
         }
-
-        //Lock screen to prevent glitches. You should re-simulate them and log what they do
-        sharedViewModel.orientation.value = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        if (sharedViewModel.isDatabaseLoaded)
+            sharedViewModel.cacheUserGroups()
+        else
+            sharedViewModel.addOnDatabaseLoadedListener { sharedViewModel.cacheUserGroups() }
         binding = DataBindingUtil.inflate(inflater, R.layout.home_page_fragment, container, false)
         return binding.root
     }
@@ -70,12 +70,11 @@ class HomePageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //If username is present, unlock screen, otherwise send user to login fragment
-        MainActivityViewModel.isLoggedIn.observe(viewLifecycleOwner, Observer {
+        MainActivityViewModel.isLoggedIn.observe(viewLifecycleOwner, {
             if (!it) {
                 navController.navigate(R.id.loginFragment)
             } else {
                 askForPermissions()
-                sharedViewModel.orientation.value = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
             }
         })
     }
@@ -85,7 +84,7 @@ class HomePageFragment : Fragment() {
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
 
-        sharedViewModel.setAppBackgroundDrawable(R.drawable.home_screen_bg)
+        sharedViewModel.setAppBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.home_screen_bg)!!)
         sharedViewModel.lockNavDrawer(false)
         sharedViewModel.hideToolbar(false)
         val textViewFades = applyTextFadeAnimation()
@@ -94,7 +93,7 @@ class HomePageFragment : Fragment() {
         binding.homePageFragmentExpensesChargesMotionLayout.setTransitionDuration(MOTIONLAYOUT_TRANSITION_DURATION)
 
         //LiveData observers
-        sharedViewModel.isNavDrawerOpen.observe(viewLifecycleOwner, Observer {
+        sharedViewModel.isNavDrawerOpen.observe(viewLifecycleOwner, {
             if(it) {
                 for(animation in textViewFades)
                     animation.reverse()
@@ -105,10 +104,9 @@ class HomePageFragment : Fragment() {
                 Blurry.delete(binding.homePageFragmentRootConstraintLayout)
             }
         })
-        MainActivityViewModel.user.observe(viewLifecycleOwner, Observer {
+        MainActivityViewModel.user.observe(viewLifecycleOwner, {
             binding.usernameText = "Good evening,\n$it"
         })
-
 
         //Click listeners
         binding.homeFragmentDualButtonMotionLayout.setOnClickListener {

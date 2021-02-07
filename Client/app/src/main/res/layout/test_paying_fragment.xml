@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable name="viewmodel" type="com.example.sharedexpenseapp.testpayingfragment.TestPayingFragmentViewModel"/>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/test_paying_fragment_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/test_charging_fragment_title_text_margin_top"
+            android:textSize="@dimen/test_charging_fragment_title_text_size"
+            android:text="@string/test_paying_fragment_title"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <EditText
+            android:id="@+id/test_paying_fragment_group_name_edit_text"
+            android:layout_width="@dimen/test_paying_fragment_edit_text_width"
+            android:layout_height="@dimen/edit_text_height"
+            android:hint="@string/test_paying_fragment_group_target_hint"
+            android:text="@={viewmodel.liveGroupName}"
+            android:inputType="text"
+            android:layout_marginTop="@dimen/test_paying_fragment_edit_text_margin_top"
+            app:layout_constraintTop_toBottomOf="@+id/test_paying_fragment_title"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:autofillHints="" />
+
+        <EditText
+            android:id="@+id/test_paying_fragment_group_amount_edit_text"
+            android:layout_width="@dimen/test_paying_fragment_edit_text_width"
+            android:layout_height="@dimen/edit_text_height"
+            android:layout_marginTop="@dimen/test_paying_fragment_edit_text_margin_top"
+            android:hint="@string/test_paying_fragment_group_amount_hint"
+            android:text="@={viewmodel.liveGroupAmount}"
+            android:inputType="numberDecimal"
+            app:layout_constraintTop_toBottomOf="@+id/test_paying_fragment_group_name_edit_text"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <Button
+            android:id="@+id/test_paying_fragment_submit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/test_paying_fragment_submit_button_margin_top"
+            android:text="@string/submit_button_text"
+            android:background="@drawable/primary_button_bg"
+            android:textColor="@color/colorAccent"
+            android:paddingLeft="@dimen/test_paying_fragment_submit_button_side_padding"
+            android:paddingRight="@dimen/test_paying_fragment_submit_button_side_padding"
+            app:layout_constraintTop_toBottomOf="@+id/test_paying_fragment_group_amount_edit_text"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
