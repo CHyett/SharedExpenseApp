@@ -1,9 +1,6 @@
 package com.example.sharedexpenseapp.homepage
 
 import android.Manifest
-import android.animation.ArgbEvaluator
-import android.animation.ObjectAnimator
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,11 +14,15 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.sharedexpenseapp.R
 import com.example.sharedexpenseapp.databinding.HomePageFragmentBinding
 import com.example.sharedexpenseapp.login.LoginFragment
 import com.example.sharedexpenseapp.mainactivity.MainActivityViewModel
 import jp.wasabeef.blurry.Blurry
+import com.example.sharedexpenseapp.enums.RECYCLER_DATA
 
 private const val BLUR_RADIUS = 20
 private const val MOTIONLAYOUT_TRANSITION_DURATION = 500
@@ -43,6 +44,8 @@ class HomePageFragment: Fragment() {
     //Main ViewModel for the whole app
     private val sharedViewModel: MainActivityViewModel by activityViewModels()
 
+    private lateinit var groupAdapter: GroupRecyclerAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +66,8 @@ class HomePageFragment: Fragment() {
         else
             sharedViewModel.addOnDatabaseLoadedListener { sharedViewModel.cacheUserGroups() }
         binding = DataBindingUtil.inflate(inflater, R.layout.home_page_fragment, container, false)
+        initRecyclerView()
+        addDataSet()
         return binding.root
     }
 
@@ -84,16 +89,13 @@ class HomePageFragment: Fragment() {
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
 
-        sharedViewModel.setAppBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.home_screen_bg)!!)
+        sharedViewModel.setAppBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.color.colorSecondary)!!)
         sharedViewModel.lockNavDrawer(false)
         sharedViewModel.hideToolbar(false)
-        val textViewFades = applyTextFadeAnimation()
-        val dualButtonTextColorAnimations = applyDualButtonTextColorAnimation()
-        binding.homeFragmentDualButtonMotionLayout.setTransitionDuration(MOTIONLAYOUT_TRANSITION_DURATION)
-        binding.homePageFragmentExpensesChargesMotionLayout.setTransitionDuration(MOTIONLAYOUT_TRANSITION_DURATION)
+        //val textViewFades = applyTextFadeAnimation()
 
         //LiveData observers
-        sharedViewModel.isNavDrawerOpen.observe(viewLifecycleOwner, {
+        /*sharedViewModel.isNavDrawerOpen.observe(viewLifecycleOwner, {
             if(it) {
                 for(animation in textViewFades)
                     animation.reverse()
@@ -103,26 +105,10 @@ class HomePageFragment: Fragment() {
                     animation.start()
                 Blurry.delete(binding.homePageFragmentRootConstraintLayout)
             }
-        })
-        MainActivityViewModel.user.observe(viewLifecycleOwner, {
-            binding.usernameText = "Good evening,\n$it"
-        })
+        })*/
 
         //Click listeners
-        binding.homeFragmentDualButtonMotionLayout.setOnClickListener {
-            viewModel.isExpensesClicked = !viewModel.isExpensesClicked
-            if(viewModel.isExpensesClicked) {
-                binding.homePageFragmentExpensesChargesMotionLayout.transitionToStart()
-                binding.homeFragmentDualButtonMotionLayout.transitionToStart()
-                dualButtonTextColorAnimations[0].reverse()
-                dualButtonTextColorAnimations[1].reverse()
-            } else {
-                binding.homePageFragmentExpensesChargesMotionLayout.transitionToEnd()
-                binding.homeFragmentDualButtonMotionLayout.transitionToEnd()
-                dualButtonTextColorAnimations[0].start()
-                dualButtonTextColorAnimations[1].start()
-            }
-        }
+
 
 
     }
@@ -231,7 +217,7 @@ class HomePageFragment: Fragment() {
         }
     }
 
-    private fun applyTextFadeAnimation(): Array<ObjectAnimator> {
+    /*private fun applyTextFadeAnimation(): Array<ObjectAnimator> {
         val anim1 = ObjectAnimator.ofFloat(binding.homePageFragmentWelcomeMessage, "alpha", 0.0f, 1.0f)
         anim1.duration = NAV_DRAWER_ANIMATION_DURATION
         val anim2 = ObjectAnimator.ofFloat(binding.homePageFragmentExpensesMessage, "alpha", 0.0f, 1.0f)
@@ -243,14 +229,22 @@ class HomePageFragment: Fragment() {
         val anim5 = ObjectAnimator.ofFloat(binding.homeFragmentDualButtonExpenses, "alpha", 0.0f, 1.0f)
         anim5.duration = NAV_DRAWER_ANIMATION_DURATION
         return arrayOf(anim1, anim2, anim3, anim4, anim5)
+    }*/
+
+    private fun initRecyclerView() {
+        binding.homeFragmentGroupsList.layoutManager = object: LinearLayoutManager(requireContext()) {
+            override fun checkLayoutParams(lp: RecyclerView.LayoutParams?): Boolean {
+                lp?.height = binding.homeFragmentRoot.height / 10
+                return true
+            }
+        }
+        binding.homeFragmentGroupsList.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICALr))
+        groupAdapter = GroupRecyclerAdapter()
+        binding.homeFragmentGroupsList.adapter = groupAdapter
     }
 
-    private fun applyDualButtonTextColorAnimation(): Array<ObjectAnimator> {
-        val anim1 = ObjectAnimator.ofObject(binding.homeFragmentDualButtonExpenses, "textColor", ArgbEvaluator(), Color.BLACK, Color.WHITE)
-        anim1.duration = MOTIONLAYOUT_TRANSITION_DURATION.toLong()
-        val anim2 = ObjectAnimator.ofObject(binding.homeFragmentDualButtonCharges, "textColor", ArgbEvaluator(), Color.WHITE, Color.BLACK)
-        anim2.duration = MOTIONLAYOUT_TRANSITION_DURATION.toLong()
-        return arrayOf(anim1, anim2)
+    private fun addDataSet() {
+        groupAdapter.submitList(RECYCLER_DATA)
     }
 
     //Implement what happens if the user rejects any permissions

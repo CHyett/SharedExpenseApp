@@ -65,7 +65,16 @@
 
 
     <!-- home screen dimens -->
+    <dimen name="home_fragment_root_margin">30dp</dimen>
+    <dimen name="home_fragment_add_group_text">20sp</dimen>
+    <dimen name="home_fragment_add_group_text_left_margin">30dp</dimen>
+    <dimen name="home_fragment_placeholder_text">20sp</dimen>
 
+    <!--  home screen RecyclerView dimens  -->
+    <dimen name="home_fragment_recycler_image_vert_margins">15dp</dimen>
+    <dimen name="home_fragment_recycler_group_name_text">25sp</dimen>
+    <dimen name="home_fragment_recycler_group_info_margin_left">15dp</dimen>
+    <dimen name="home_fragment_recycler_group_details_text">17sp</dimen>
 
     <!-- test group fragment dimens -->
     <dimen name="test_group_fragment_instruction_text_size">20sp</dimen>

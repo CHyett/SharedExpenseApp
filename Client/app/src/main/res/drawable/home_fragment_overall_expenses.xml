@@ -3,8 +3,8 @@
     android:shape="oval">
 
     <size
-        android:width="@dimen/home_fragment_overall_expenses"
-        android:height="@dimen/home_fragment_overall_expenses"/>
+        android:width="50dp"
+        android:height="50dp"/>
 
     <stroke
         android:width="0.5dp"

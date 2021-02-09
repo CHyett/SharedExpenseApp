@@ -23,7 +23,7 @@
             android:id="@+id/main_activity_toolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/main_activity_pseudo_toolbar_height"
-            android:background="@color/transparent"
+            android:background="@color/colorPrimary"
             android:visibility="@{viewmodel.hideToolbar}">
 
             <ImageView
