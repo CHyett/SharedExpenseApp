@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -17,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.sharedexpenseapp.R
 import com.example.sharedexpenseapp.databinding.HomePageFragmentBinding
 import com.example.sharedexpenseapp.login.LoginFragment
@@ -28,7 +30,7 @@ private const val BLUR_RADIUS = 20
 private const val MOTIONLAYOUT_TRANSITION_DURATION = 500
 private const val NAV_DRAWER_ANIMATION_DURATION = 500L
 
-class HomePageFragment: Fragment() {
+class HomePageFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     companion object { fun newInstance() = LoginFragment() }
 
@@ -68,6 +70,7 @@ class HomePageFragment: Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.home_page_fragment, container, false)
         initRecyclerView()
         addDataSet()
+        binding.homeFragmentSwipeRefreshRoot.setOnRefreshListener(this)
         return binding.root
     }
 
@@ -234,17 +237,23 @@ class HomePageFragment: Fragment() {
     private fun initRecyclerView() {
         binding.homeFragmentGroupsList.layoutManager = object: LinearLayoutManager(requireContext()) {
             override fun checkLayoutParams(lp: RecyclerView.LayoutParams?): Boolean {
-                lp?.height = binding.homeFragmentRoot.height / 10
+                lp?.height = binding.homeFragmentRootLinearLayout.height / 10
                 return true
             }
         }
-        binding.homeFragmentGroupsList.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICALr))
+        binding.homeFragmentGroupsList.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
         groupAdapter = GroupRecyclerAdapter()
         binding.homeFragmentGroupsList.adapter = groupAdapter
     }
 
     private fun addDataSet() {
         groupAdapter.submitList(RECYCLER_DATA)
+    }
+
+    //SwipeRefreshLayout onRefresh interface listener
+    override fun onRefresh() {
+        Toast.makeText(context, "You refreshed the page!", Toast.LENGTH_SHORT).show()
+        binding.homeFragmentSwipeRefreshRoot.isRefreshing = false
     }
 
     //Implement what happens if the user rejects any permissions
