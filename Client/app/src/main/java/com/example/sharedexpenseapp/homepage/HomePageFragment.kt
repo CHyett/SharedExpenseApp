@@ -238,7 +238,7 @@ class HomePageFragment: Fragment() {
                 return true
             }
         }
-        binding.homeFragmentGroupsList.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICALr))
+        binding.homeFragmentGroupsList.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
         groupAdapter = GroupRecyclerAdapter()
         binding.homeFragmentGroupsList.adapter = groupAdapter
     }
