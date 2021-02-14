@@ -1,13 +1,16 @@
 package com.example.sharedexpenseapp.mainactivity
 
 
+import android.animation.ObjectAnimator
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
@@ -17,9 +20,11 @@ import com.example.sharedexpenseapp.R
 import com.example.sharedexpenseapp.databinding.ActivityMainBinding
 import com.example.sharedexpenseapp.navdrawer.CustomDrawerAdapter
 import com.example.sharedexpenseapp.navdrawer.DrawerItem
+import com.example.sharedexpenseapp.util.BlurController
 import com.google.firebase.iid.FirebaseInstanceId
 import java.util.*
 import com.example.sharedexpenseapp.util.isConnected
+import jp.wasabeef.blurry.Blurry
 
 
 class MainActivity : AppCompatActivity() {
@@ -47,9 +52,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         val viewModelFactory = MainActivityViewModelFactory(application)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel::class.java)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        BlurController.context = this
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
         initNavDrawer()
@@ -66,19 +73,19 @@ class MainActivity : AppCompatActivity() {
             if(it && isConnected(application))
                 viewModel.sendToServer()
         })
-        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         viewModel.showNavDrawer.observe(this, {
             if(it)
                 binding.mainActivityDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             else
                 binding.mainActivityDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         })
-        viewModel.isNavDrawerOpen.observe(
-            this, {
+        viewModel.isNavDrawerOpen.observe(this, {
             if(it) {
                 binding.mainActivityToolbarHamburger.setMinAndMaxProgress(0.25f, 0.34f)
+                BlurController.blurScreen()
             } else {
                 binding.mainActivityToolbarHamburger.setMinAndMaxProgress(0.75f, 0.84f)
+                BlurController.clearBlur()
             }
             binding.mainActivityToolbarHamburger.playAnimation()
         })
@@ -137,7 +144,9 @@ class MainActivity : AppCompatActivity() {
         adapter = CustomDrawerAdapter(this, headerList, childList)
         binding.mainActivityDrawerLayoutList.setAdapter(adapter)
         binding.mainActivityDrawerLayoutList.setOnGroupClickListener { listView, _, groupPosition, _ ->
-            if(groupPosition == 4)
+            if(groupPosition == 0)
+                findNavController(R.id.nav_host_fragment_container_view).navigate(R.id.splashScreen)
+            else if(groupPosition == 4)
                 viewModel.logOut()
             if(!listView.expandGroup(groupPosition, true))
                 listView.collapseGroup(groupPosition)

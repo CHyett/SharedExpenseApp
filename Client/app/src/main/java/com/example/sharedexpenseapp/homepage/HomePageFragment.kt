@@ -25,6 +25,7 @@ import com.example.sharedexpenseapp.login.LoginFragment
 import com.example.sharedexpenseapp.mainactivity.MainActivityViewModel
 import jp.wasabeef.blurry.Blurry
 import com.example.sharedexpenseapp.enums.RECYCLER_DATA
+import com.example.sharedexpenseapp.util.BlurController
 
 private const val BLUR_RADIUS = 20
 private const val MOTIONLAYOUT_TRANSITION_DURATION = 500
@@ -46,6 +47,7 @@ class HomePageFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener {
     //Main ViewModel for the whole app
     private val sharedViewModel: MainActivityViewModel by activityViewModels()
 
+    //Home fragment recycler view adapter
     private lateinit var groupAdapter: GroupRecyclerAdapter
 
 
@@ -68,6 +70,7 @@ class HomePageFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener {
         else
             sharedViewModel.addOnDatabaseLoadedListener { sharedViewModel.cacheUserGroups() }
         binding = DataBindingUtil.inflate(inflater, R.layout.home_page_fragment, container, false)
+        BlurController.subjectView = binding.homeFragmentRootLinearLayout
         initRecyclerView()
         addDataSet()
         binding.homeFragmentSwipeRefreshRoot.setOnRefreshListener(this)

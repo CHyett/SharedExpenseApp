@@ -31,6 +31,7 @@
                 android:layout_width="@dimen/main_activity_top_nav_imageview_size"
                 android:layout_height="@dimen/main_activity_top_nav_imageview_size"
                 android:gravity="center_vertical"
+                android:layout_alignParentLeft="true"
                 android:contentDescription="@string/content_desc"
                 android:paddingLeft="@dimen/main_activity_top_nav_imageview_padding"
                 android:src="@drawable/gear"/>
@@ -52,22 +53,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <FrameLayout
-                android:id="@+id/main_activity_drawer_layout_content_frame"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
             <ExpandableListView
                 android:id="@+id/main_activity_drawer_layout_list"
                 android:layout_width="@dimen/main_activity_nav_drawer_width"
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
-                android:background="@color/transparent"
+                android:background="@drawable/nav_drawer_bg"
                 android:choiceMode="singleChoice"
                 android:divider="@drawable/main_activity_nav_drawer_divider"
                 android:childDivider="@drawable/main_activity_nav_drawer_divider"
                 android:dividerHeight="@dimen/main_activity_nav_drawer_divider_height"
                 android:focusable="false"
+                android:groupIndicator="@null"
                 android:focusableInTouchMode="false"/>
 
             <androidx.fragment.app.FragmentContainerView

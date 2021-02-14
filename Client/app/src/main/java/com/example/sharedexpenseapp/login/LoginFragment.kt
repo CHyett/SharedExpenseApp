@@ -28,7 +28,7 @@ import kotlinx.coroutines.*
 
 private const val USERNAME_REGEX = "^[A-Z0-9a-z]{7,15}$"
 private const val USERNAME_ERROR = "Please enter between 7-15 alphanumeric characters"
-//private const val PASSWORD_REGEX = """^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[\]:;<>,.?\/~_+\-=|\\\\]).{8,32}$"""
+private const val PASSWORD_REGEX = """^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$"""
 private const val PASSWORD_ERROR = "Your password must be between 8-15 alphanumeric characters"
 
 
@@ -70,7 +70,7 @@ class LoginFragment : Fragment() {
         //Form validation
         val validation = AwesomeValidation(ValidationStyle.COLORATION)
         validation.addValidation(binding.loginFragmentEmailInput, USERNAME_REGEX, USERNAME_ERROR)
-        //validation.addValidation(binding.loginPasswordEdittext, PASSWORD_REGEX, PASSWORD_ERROR)
+        validation.addValidation(binding.loginFragmentPasswordInput, PASSWORD_REGEX, PASSWORD_ERROR)
 
         //LiveData observers
         viewModel.loginStatus.observe(viewLifecycleOwner, {
