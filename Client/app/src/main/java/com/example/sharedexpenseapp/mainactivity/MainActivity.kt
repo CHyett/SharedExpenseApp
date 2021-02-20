@@ -1,16 +1,13 @@
 package com.example.sharedexpenseapp.mainactivity
 
 
-import android.animation.ObjectAnimator
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
@@ -24,7 +21,6 @@ import com.example.sharedexpenseapp.util.BlurController
 import com.google.firebase.iid.FirebaseInstanceId
 import java.util.*
 import com.example.sharedexpenseapp.util.isConnected
-import jp.wasabeef.blurry.Blurry
 
 
 class MainActivity : AppCompatActivity() {
@@ -66,7 +62,7 @@ class MainActivity : AppCompatActivity() {
             val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
-
+        
         //LiveData observers
         //observe login status and send firebase token if user is logged in
         MainActivityViewModel.isLoggedIn.observe(this, {
@@ -96,6 +92,7 @@ class MainActivity : AppCompatActivity() {
                 binding.mainActivityDrawerLayout.closeDrawer(Gravity.RIGHT)
             else
                 binding.mainActivityDrawerLayout.openDrawer(Gravity.RIGHT)
+            viewModel.setNavDrawerStatus(!viewModel.isNavDrawerOpen.value!!)
         }
 
         //Set up firebase
@@ -108,15 +105,6 @@ class MainActivity : AppCompatActivity() {
         binding.mainActivityDrawerLayoutList.bringToFront()
         binding.mainActivityDrawerLayout.requestLayout()
         binding.mainActivityDrawerLayout.setScrimColor(ContextCompat.getColor(this, R.color.transparent))
-        binding.mainActivityDrawerLayout.addDrawerListener(object: DrawerLayout.DrawerListener {
-            override fun onDrawerStateChanged(newState: Int) {
-                if(newState == DrawerLayout.STATE_SETTLING)
-                    viewModel.setNavDrawerStatus(!viewModel.isNavDrawerOpen.value!!)
-            }
-            override fun onDrawerOpened(drawerView: View) {}
-            override fun onDrawerClosed(drawerView: View) {}
-            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
-        })
         var childModelsList = ArrayList<DrawerItem>()
         var menuItem = DrawerItem("History", true, false)
         headerList.add(menuItem)
