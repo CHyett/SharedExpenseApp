@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.airbnb.lottie.LottieAnimationView
 import com.example.sharedexpenseapp.R
 import com.example.sharedexpenseapp.databinding.ActivityMainBinding
 import com.example.sharedexpenseapp.navdrawer.CustomDrawerAdapter
@@ -21,6 +22,8 @@ import com.example.sharedexpenseapp.util.BlurController
 import com.google.firebase.iid.FirebaseInstanceId
 import java.util.*
 import com.example.sharedexpenseapp.util.isConnected
+import kotlinx.android.synthetic.main.home_page_fragment.view.*
+import android.view.DragEvent as DragEvent
 
 
 class MainActivity : AppCompatActivity() {
@@ -88,6 +91,7 @@ class MainActivity : AppCompatActivity() {
 
         //Click listeners
         binding.mainActivityToolbarHamburger.setOnClickListener {
+            PartemDrawerListener.toolbarClicked = true
             if(viewModel.isNavDrawerOpen.value!!)
                 binding.mainActivityDrawerLayout.closeDrawer(Gravity.RIGHT)
             else
@@ -101,10 +105,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initNavDrawer() {
+        PartemDrawerListener.drawerButton = binding.mainActivityToolbarHamburger
+        PartemDrawerListener.viewModel = viewModel
+        PartemDrawerListener.drawerButtonListener = {
+            PartemDrawerListener.toolbarClicked = true
+            if(viewModel.isNavDrawerOpen.value!!)
+                binding.mainActivityDrawerLayout.closeDrawer(Gravity.RIGHT)
+            else
+                binding.mainActivityDrawerLayout.openDrawer(Gravity.RIGHT)
+            viewModel.setNavDrawerStatus(!viewModel.isNavDrawerOpen.value!!)
+        }
         binding.mainActivityToolbarHamburger.speed = 2f
         binding.mainActivityDrawerLayoutList.bringToFront()
         binding.mainActivityDrawerLayout.requestLayout()
         binding.mainActivityDrawerLayout.setScrimColor(ContextCompat.getColor(this, R.color.transparent))
+        binding.mainActivityDrawerLayout.addDrawerListener(PartemDrawerListener)
         var childModelsList = ArrayList<DrawerItem>()
         var menuItem = DrawerItem("History", true, false)
         headerList.add(menuItem)
@@ -147,6 +162,36 @@ class MainActivity : AppCompatActivity() {
                 "Charge" -> findNavController(R.id.nav_host_fragment_container_view).navigate(R.id.testChargingFragment)
             }
             true
+        }
+    }
+
+    private object PartemDrawerListener: DrawerLayout.DrawerListener {
+        lateinit var viewModel: MainActivityViewModel
+        lateinit var drawerButton: LottieAnimationView
+        lateinit var drawerButtonListener: (View) -> Unit
+        private var isDrawerButtonListenerPresent = true
+        private var isDrawerDragging = false
+        var toolbarClicked = false
+        override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+        override fun onDrawerOpened(drawerView: View) = handleDrawerMovement()
+        override fun onDrawerClosed(drawerView: View) = handleDrawerMovement()
+        override fun onDrawerStateChanged(newState: Int) {
+            if(newState == DrawerLayout.STATE_DRAGGING) {
+                isDrawerDragging = true
+                drawerButton.setOnClickListener {}
+                isDrawerButtonListenerPresent = false
+            }
+        }
+        private fun handleDrawerMovement() {
+            if(isDrawerDragging || !toolbarClicked) {
+                viewModel.setNavDrawerStatus(!viewModel.isNavDrawerOpen.value!!)
+                isDrawerDragging = false
+            }
+            if(toolbarClicked) toolbarClicked = false
+            if(!isDrawerButtonListenerPresent) {
+                isDrawerButtonListenerPresent = true
+                drawerButton.setOnClickListener(drawerButtonListener)
+            }
         }
     }
 

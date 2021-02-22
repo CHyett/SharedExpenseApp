@@ -103,7 +103,7 @@ class RegisterFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(RegisterViewModel::class.java)
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
-        sharedViewModel.setAppBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.start_bg)!!)
+        sharedViewModel.setAppBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.color.colorSecondary)!!)
         sharedViewModel.lockNavDrawer(true)
         sharedViewModel.hideToolbar(true)
 
