@@ -54,6 +54,12 @@ class CustomDrawerAdapter(private val con: Context, private val listDataHeader: 
         listHeader.text = getGroup(groupPosition).itemName
         if(!getGroup(groupPosition).hasChildren)
             (view.findViewById(R.id.nav_drawer_group_item_image) as ImageView).setImageResource(R.color.transparent)
+        else {
+            if(isExpanded)
+                view.findViewById<ImageView>(R.id.nav_drawer_group_item_image).setImageResource(R.drawable.down_arrow)
+            else
+                view.findViewById<ImageView>(R.id.nav_drawer_group_item_image).setImageResource(R.drawable.forward_arrow)
+        }
         return view
     }
 

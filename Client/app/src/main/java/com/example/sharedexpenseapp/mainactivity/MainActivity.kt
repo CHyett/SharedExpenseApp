@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -146,7 +147,7 @@ class MainActivity : AppCompatActivity() {
     private fun populateExpandableList() {
         adapter = CustomDrawerAdapter(this, headerList, childList)
         binding.mainActivityDrawerLayoutList.setAdapter(adapter)
-        binding.mainActivityDrawerLayoutList.setOnGroupClickListener { listView, _, groupPosition, _ ->
+        binding.mainActivityDrawerLayoutList.setOnGroupClickListener { listView, view, groupPosition, _ ->
             if(groupPosition == 0)
                 findNavController(R.id.nav_host_fragment_container_view).navigate(R.id.splashScreen)
             else if(groupPosition == 4)
