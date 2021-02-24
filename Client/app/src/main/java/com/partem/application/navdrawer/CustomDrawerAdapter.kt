@@ -8,8 +8,9 @@ import android.widget.BaseExpandableListAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.partem.application.R
+import com.partem.widget.AnimatedExpandableListAdapter
 
-class CustomDrawerAdapter(private val con: Context, private val listDataHeader: List<DrawerItem>, private val listDataChild: HashMap<DrawerItem, List<DrawerItem>>): BaseExpandableListAdapter() {
+class CustomDrawerAdapter(private val con: Context, private val listDataHeader: List<DrawerItem>, private val listDataChild: HashMap<DrawerItem, List<DrawerItem>>): AnimatedExpandableListAdapter() {
 
     override fun getChild(groupPosition: Int, childPosition: Int): DrawerItem? = this.listDataChild[this.listDataHeader[groupPosition]]?.get(childPosition)
 
@@ -25,14 +26,7 @@ class CustomDrawerAdapter(private val con: Context, private val listDataHeader: 
 
     override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean = true
 
-    override fun getChildrenCount(groupPosition: Int): Int {
-        return if(this.listDataChild[this.listDataHeader[groupPosition]] == null)
-            0
-        else
-            this.listDataChild[this.listDataHeader[groupPosition]]!!.size
-    }
-
-    override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup): View {
+    override fun getRealChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
         val childText = getChild(groupPosition, childPosition)!!.itemName
         var view = convertView
         if(view == null) {
@@ -42,6 +36,13 @@ class CustomDrawerAdapter(private val con: Context, private val listDataHeader: 
         val textListChild = view!!.findViewById(R.id.nav_drawer_child_item_text) as TextView
         textListChild.text = childText
         return view
+    }
+
+    override fun getRealChildrenCount(groupPosition: Int): Int {
+        return if(this.listDataChild[this.listDataHeader[groupPosition]] == null)
+            0
+        else
+            this.listDataChild[this.listDataHeader[groupPosition]]!!.size
     }
 
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup?): View {

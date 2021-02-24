@@ -14,14 +14,14 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.airbnb.lottie.LottieAnimationView
+import com.google.firebase.iid.FirebaseInstanceId
 import com.partem.application.R
 import com.partem.application.databinding.ActivityMainBinding
 import com.partem.application.navdrawer.CustomDrawerAdapter
 import com.partem.application.navdrawer.DrawerItem
 import com.partem.application.util.BlurController
-import com.google.firebase.iid.FirebaseInstanceId
-import java.util.*
 import com.partem.application.util.isConnected
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -32,13 +32,20 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var adapter: CustomDrawerAdapter
 
+    private var lastExpandedPosition = -1
+
     private val headerList = ArrayList<DrawerItem>()
 
     private val childList = HashMap<DrawerItem, List<DrawerItem>>()
 
     private val notificationChannelMappings = HashMap<String, String>()
 
-    private val notificationChannelList = arrayOf("Group invitations", "Friend requests", "Group members", "Finance notifications")
+    private val notificationChannelList = arrayOf(
+        "Group invitations",
+        "Friend requests",
+        "Group members",
+        "Finance notifications"
+    )
 
     init {
 
@@ -59,7 +66,11 @@ class MainActivity : AppCompatActivity() {
         initNavDrawer()
         populateExpandableList()
         for((i, notificationChannelName) in notificationChannelList.withIndex()) {
-            val channel = NotificationChannel(i.toString(), notificationChannelName, NotificationManager.IMPORTANCE_HIGH)
+            val channel = NotificationChannel(
+                i.toString(),
+                notificationChannelName,
+                NotificationManager.IMPORTANCE_HIGH
+            )
             val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
@@ -67,17 +78,17 @@ class MainActivity : AppCompatActivity() {
         //LiveData observers
         //observe login status and send firebase token if user is logged in
         MainActivityViewModel.isLoggedIn.observe(this, {
-            if(it && isConnected(application))
+            if (it && isConnected(application))
                 viewModel.sendToServer()
         })
         viewModel.showNavDrawer.observe(this, {
-            if(it)
+            if (it)
                 binding.mainActivityDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             else
                 binding.mainActivityDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         })
         viewModel.isNavDrawerOpen.observe(this, {
-            if(it) {
+            if (it) {
                 binding.mainActivityToolbarHamburger.setMinAndMaxProgress(0.25f, 0.34f)
                 BlurController.blurScreen()
             } else {
@@ -116,7 +127,12 @@ class MainActivity : AppCompatActivity() {
         binding.mainActivityToolbarHamburger.speed = 2f
         binding.mainActivityDrawerLayoutList.bringToFront()
         binding.mainActivityDrawerLayout.requestLayout()
-        binding.mainActivityDrawerLayout.setScrimColor(ContextCompat.getColor(this, R.color.transparent))
+        binding.mainActivityDrawerLayout.setScrimColor(
+            ContextCompat.getColor(
+                this,
+                R.color.transparent
+            )
+        )
         binding.mainActivityDrawerLayout.addDrawerListener(PartemDrawerListener)
         var childModelsList = ArrayList<DrawerItem>()
         var menuItem = DrawerItem("History", true, false)
@@ -144,13 +160,16 @@ class MainActivity : AppCompatActivity() {
     private fun populateExpandableList() {
         adapter = CustomDrawerAdapter(this, headerList, childList)
         binding.mainActivityDrawerLayoutList.setAdapter(adapter)
-        binding.mainActivityDrawerLayoutList.setOnGroupClickListener { listView, _, groupPosition, _ ->
+        binding.mainActivityDrawerLayoutList.setOnGroupClickListener { _, _, groupPosition, _ ->
             if(groupPosition == 0)
                 findNavController(R.id.nav_host_fragment_container_view).navigate(R.id.splashScreen)
             else if(groupPosition == 4)
                 viewModel.logOut()
-            if(!listView.expandGroup(groupPosition, true))
-                listView.collapseGroup(groupPosition)
+            if (binding.mainActivityDrawerLayoutList.isGroupExpanded(groupPosition)) {
+                binding.mainActivityDrawerLayoutList.collapseGroupWithAnimation(groupPosition)
+            } else {
+                binding.mainActivityDrawerLayoutList.expandGroupWithAnimation(groupPosition)
+            }
             true
         }
         binding.mainActivityDrawerLayoutList.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
@@ -160,6 +179,12 @@ class MainActivity : AppCompatActivity() {
                 "Charge" -> findNavController(R.id.nav_host_fragment_container_view).navigate(R.id.testChargingFragment)
             }
             true
+        }
+        binding.mainActivityDrawerLayoutList.setOnGroupExpandListener {
+            if (lastExpandedPosition != -1 && it != lastExpandedPosition) {
+                binding.mainActivityDrawerLayoutList.collapseGroup(lastExpandedPosition)
+            }
+            lastExpandedPosition = it
         }
     }
 

@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ExpandableListView
+            <com.partem.widget.AnimatedExpandableListView
                 android:id="@+id/main_activity_drawer_layout_list"
                 android:layout_width="@dimen/main_activity_nav_drawer_width"
                 android:layout_height="match_parent"

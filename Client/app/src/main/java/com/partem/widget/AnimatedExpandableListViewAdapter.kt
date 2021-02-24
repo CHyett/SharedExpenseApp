@@ -101,7 +101,7 @@ abstract class AnimatedExpandableListAdapter : BaseExpandableListAdapter() {
     /**
      * Override [.getChildView] instead.
      */
-    override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View, parent: ViewGroup): View {
+    override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup): View {
         val info: GroupInfo = getGroupInfo(groupPosition)
         return if (info.animating) {
             handleIfAnimating(info, groupPosition, convertView, childPosition)
@@ -110,7 +110,7 @@ abstract class AnimatedExpandableListAdapter : BaseExpandableListAdapter() {
         }
     }
 
-    private fun handleIfAnimating(info: GroupInfo, groupPosition: Int, view: View, childPosition: Int): View {
+    private fun handleIfAnimating(info: GroupInfo, groupPosition: Int, view: View?, childPosition: Int): View {
         // If this group is animating, return the a DummyView...
         var tempView = view
         if (tempView !is DummyView) {
@@ -159,11 +159,11 @@ abstract class AnimatedExpandableListAdapter : BaseExpandableListAdapter() {
         val len = getRealChildrenCount(groupPosition)
         for (i in info.firstChildPosition until len) {
             val childView = getRealChildView(groupPosition, i, i == len - 1, null, parent)
-            val p = childView.layoutParams as AbsListView.LayoutParams
-            /*if (p == null) {
+            var p = childView.layoutParams as? AbsListView.LayoutParams
+            if (p == null) {
                 p = generateDefaultLayoutParams() as AbsListView.LayoutParams
                 childView.layoutParams = p
-            }*/
+            }
             val lpHeight = p.height
             val childHeightSpec = if (lpHeight > 0) {
                 View.MeasureSpec.makeMeasureSpec(lpHeight, View.MeasureSpec.EXACTLY)
