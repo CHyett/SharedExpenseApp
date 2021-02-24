@@ -5,7 +5,7 @@
 
     <data>
 
-        <variable name="viewmodel" type="com.example.sharedexpenseapp.testgroupfragment.TestGroupFragmentViewModel" />
+        <variable name="viewmodel" type="com.partem.application.testgroupfragment.TestGroupFragmentViewModel" />
 
     </data>
 

@@ -4,7 +4,7 @@
 
     <data>
 
-        <variable name="viewmodel" type="com.example.sharedexpenseapp.testchargingfragment.TestChargingFragmentViewModel"/>
+        <variable name="viewmodel" type="com.partem.application.testchargingfragment.TestChargingFragmentViewModel"/>
 
     </data>
 

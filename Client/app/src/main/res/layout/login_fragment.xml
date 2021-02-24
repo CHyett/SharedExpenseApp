@@ -7,7 +7,7 @@
 
         <variable
             name="viewmodel"
-            type="com.example.sharedexpenseapp.login.LoginViewModel" />
+            type="com.partem.application.login.LoginViewModel" />
 
     </data>
 

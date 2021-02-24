@@ -8,7 +8,7 @@
 
         <variable
             name="viewmodel"
-            type="com.example.sharedexpenseapp.mainactivity.MainActivityViewModel" />
+            type="com.partem.application.mainactivity.MainActivityViewModel" />
 
     </data>
 
@@ -61,7 +61,7 @@
                 android:background="@drawable/nav_drawer_bg"
                 android:choiceMode="singleChoice"
                 android:divider="@drawable/main_activity_nav_drawer_divider"
-                android:childDivider="@drawable/main_activity_nav_drawer_divider"
+                android:childDivider="@drawable/main_activity_nav_drawer_child_divider"
                 android:dividerHeight="@dimen/main_activity_nav_drawer_divider_height"
                 android:focusable="false"
                 android:groupIndicator="@null"

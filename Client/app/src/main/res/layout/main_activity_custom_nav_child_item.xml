@@ -12,6 +12,6 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/colorWhite" />
+        android:textColor="@color/colorPrimary" />
 
 </RelativeLayout>

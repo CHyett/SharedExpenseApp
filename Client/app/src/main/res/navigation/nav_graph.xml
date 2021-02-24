@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.sharedexpenseapp.login.LoginFragment"
+        android:name="com.partem.application.login.LoginFragment"
         android:label="LoginFragment"
         tools:layout="@layout/login_fragment">
 
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.sharedexpenseapp.registration.RegisterFragment"
+        android:name="com.partem.application.registration.RegisterFragment"
         android:label="RegisterFragment"
         tools:layout="@layout/register_fragment">
 
@@ -31,31 +31,31 @@
 
     <fragment
         android:id="@+id/homePageFragment"
-        android:name="com.example.sharedexpenseapp.homepage.HomePageFragment"
+        android:name="com.partem.application.homepage.HomePageFragment"
         android:label="HomePageFragment"
         tools:layout="@layout/home_page_fragment" />
 
     <fragment
         android:id="@+id/testGroupFragment"
-        android:name="com.example.sharedexpenseapp.testgroupfragment.TestGroupFragment"
+        android:name="com.partem.application.testgroupfragment.TestGroupFragment"
         android:label="TestGroupFragment"
         tools:layout="@layout/test_group_fragment"/>
 
     <fragment
         android:id="@+id/testPayingFragment"
-        android:name="com.example.sharedexpenseapp.testpayingfragment.TestPayingFragment"
+        android:name="com.partem.application.testpayingfragment.TestPayingFragment"
         android:label="TestPayingFragment"
         tools:layout="@layout/test_paying_fragment"/>
 
     <fragment
         android:id="@+id/testChargingFragment"
-        android:name="com.example.sharedexpenseapp.testchargingfragment.TestChargingFragment"
+        android:name="com.partem.application.testchargingfragment.TestChargingFragment"
         android:label="TestChargingFragment"
         tools:layout="@layout/test_charging_fragment"/>
 
     <fragment
         android:id="@+id/splashScreen"
-        android:name="com.example.sharedexpenseapp.splash.Splash"
+        android:name="com.partem.application.splash.Splash"
         android:label="Splash screen"
         tools:layout="@layout/splash"/>
 

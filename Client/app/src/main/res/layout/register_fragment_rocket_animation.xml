@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="viewmodel" type="com.example.sharedexpenseapp.registration.RegisterViewModel" />
+        <variable name="viewmodel" type="com.partem.application.registration.RegisterViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

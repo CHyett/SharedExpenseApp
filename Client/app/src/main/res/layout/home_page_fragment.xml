@@ -5,7 +5,7 @@
 
     <data>
 
-        <variable name="viewmodel" type="com.example.sharedexpenseapp.homepage.HomePageViewModel" />
+        <variable name="viewmodel" type="com.partem.application.homepage.HomePageViewModel" />
 
     </data>
 
