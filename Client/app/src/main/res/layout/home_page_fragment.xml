@@ -79,7 +79,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="7">
+                android:layout_weight="7.5">
 
                 <ImageView
                     android:id="@+id/home_fragment_dollar_sign_image"
@@ -116,7 +116,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="7" />
+                android:layout_weight="6" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:background="@color/colorPrimary"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/home_fragment_groups_list"

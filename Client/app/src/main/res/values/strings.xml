@@ -62,4 +62,13 @@
     <string name="test_paying_fragment_group_target_hint">Which group are you paying?</string>
     <string name="test_paying_fragment_group_amount_hint">How much are you sending?</string>
 
+    <!-- strings used for settings fragment -->
+    <string name="settings_fragment_account">Account</string>
+    <string name="settings_fragment_notifications">Notifications</string>
+    <string name="settings_fragment_payment_methods">Payment Methods</string>
+    <string name="settings_fragment_direct_deposit">Direct Deposit</string>
+    <string name="settings_fragment_security">Security</string>
+    <string name="settings_fragment_contact_us">Contact Us</string>
+    <string name="settings_fragment_sign_out">Sign Out</string>
+
 </resources>

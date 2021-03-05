@@ -66,11 +66,7 @@ class MainActivity : AppCompatActivity() {
         initNavDrawer()
         populateExpandableList()
         for((i, notificationChannelName) in notificationChannelList.withIndex()) {
-            val channel = NotificationChannel(
-                i.toString(),
-                notificationChannelName,
-                NotificationManager.IMPORTANCE_HIGH
-            )
+            val channel = NotificationChannel(i.toString(), notificationChannelName, NotificationManager.IMPORTANCE_HIGH)
             val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
@@ -161,10 +157,11 @@ class MainActivity : AppCompatActivity() {
         adapter = CustomDrawerAdapter(this, headerList, childList)
         binding.mainActivityDrawerLayoutList.setAdapter(adapter)
         binding.mainActivityDrawerLayoutList.setOnGroupClickListener { _, _, groupPosition, _ ->
-            if(groupPosition == 0)
-                findNavController(R.id.nav_host_fragment_container_view).navigate(R.id.splashScreen)
-            else if(groupPosition == 4)
-                viewModel.logOut()
+            when (groupPosition) {
+                0 -> findNavController(R.id.nav_host_fragment_container_view).navigate(R.id.splashScreen)
+                3 -> findNavController(R.id.nav_host_fragment_container_view).navigate(R.id.settingsFragment)
+                4 -> viewModel.logOut()
+            }
             if (binding.mainActivityDrawerLayoutList.isGroupExpanded(groupPosition)) {
                 binding.mainActivityDrawerLayoutList.collapseGroupWithAnimation(groupPosition)
             } else {

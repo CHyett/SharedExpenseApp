@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/settings_fragment_root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="100"
+        tools:background="@color/colorSecondary"
+        tools:context=".settings.SettingsFragment">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/settings_fragment_account_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="14">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_fragment_account"
+                android:textSize="@dimen/settings_fragment_text"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginLeft="@dimen/settings_fragment_button_margin_sides"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/partem_logo"
+                android:layout_marginRight="@dimen/settings_fragment_button_margin_sides"
+                app:layout_constraintDimensionRatio="h,1:1"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:contentDescription="@string/content_desc" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:background="@color/colorPrimary"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/settings_fragment_notifications_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="14">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_fragment_notifications"
+                android:textSize="@dimen/settings_fragment_text"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginLeft="@dimen/settings_fragment_button_margin_sides"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/partem_logo"
+                android:layout_marginRight="@dimen/settings_fragment_button_margin_sides"
+                app:layout_constraintDimensionRatio="h,1:1"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:contentDescription="@string/content_desc"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:background="@color/colorPrimary"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/settings_fragment_payment_methods_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="14">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_fragment_payment_methods"
+                android:textSize="@dimen/settings_fragment_text"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginLeft="@dimen/settings_fragment_button_margin_sides"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/partem_logo"
+                android:layout_marginRight="@dimen/settings_fragment_button_margin_sides"
+                app:layout_constraintDimensionRatio="h,1:1"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:contentDescription="@string/content_desc"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:background="@color/colorPrimary"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/settings_fragment_direct_deposit_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="14">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_fragment_direct_deposit"
+                android:textSize="@dimen/settings_fragment_text"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginLeft="@dimen/settings_fragment_button_margin_sides"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/partem_logo"
+                android:layout_marginRight="@dimen/settings_fragment_button_margin_sides"
+                app:layout_constraintDimensionRatio="h,1:1"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:contentDescription="@string/content_desc"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:background="@color/colorPrimary"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/settings_fragment_security_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="14">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_fragment_security"
+                android:textSize="@dimen/settings_fragment_text"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginLeft="@dimen/settings_fragment_button_margin_sides"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/partem_logo"
+                android:layout_marginRight="@dimen/settings_fragment_button_margin_sides"
+                app:layout_constraintDimensionRatio="h,1:1"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:contentDescription="@string/content_desc"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:background="@color/colorPrimary"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/settings_fragment_contact_us_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="14">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_fragment_contact_us"
+                android:textSize="@dimen/settings_fragment_text"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginLeft="@dimen/settings_fragment_button_margin_sides"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/partem_logo"
+                android:layout_marginRight="@dimen/settings_fragment_button_margin_sides"
+                app:layout_constraintDimensionRatio="h,1:1"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:contentDescription="@string/content_desc"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:background="@color/colorPrimary"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/settings_fragment_sign_out_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="14">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_fragment_sign_out"
+                android:textSize="@dimen/settings_fragment_text"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginLeft="@dimen/settings_fragment_button_margin_sides"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/partem_logo"
+                android:layout_marginRight="@dimen/settings_fragment_button_margin_sides"
+                app:layout_constraintDimensionRatio="h,1:1"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:contentDescription="@string/content_desc"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</layout>

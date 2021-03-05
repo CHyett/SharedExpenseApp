@@ -21,18 +21,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.partem.application.R
 import com.partem.application.databinding.HomePageFragmentBinding
-import com.partem.application.login.LoginFragment
 import com.partem.application.mainactivity.MainActivityViewModel
 import com.partem.application.enums.RECYCLER_DATA
 import com.partem.application.util.BlurController
 
-private const val BLUR_RADIUS = 20
-private const val MOTIONLAYOUT_TRANSITION_DURATION = 500
-private const val NAV_DRAWER_ANIMATION_DURATION = 500L
 
 class HomePageFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener {
-
-    companion object { fun newInstance() = LoginFragment() }
 
     //Exclusive ViewModel for HomePageFragment
     private lateinit var viewModel: HomePageViewModel
@@ -52,7 +46,6 @@ class HomePageFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(HomePageViewModel::class.java)
 
         //Prevent can't find nav controller in onCreate error
         if(sharedViewModel.navController == null) {
@@ -91,30 +84,15 @@ class HomePageFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(HomePageViewModel::class.java)
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
 
         sharedViewModel.setAppBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.color.colorSecondary)!!)
         sharedViewModel.lockNavDrawer(false)
         sharedViewModel.hideToolbar(false)
-        //val textViewFades = applyTextFadeAnimation()
-
-        //LiveData observers
-        /*sharedViewModel.isNavDrawerOpen.observe(viewLifecycleOwner, {
-            if(it) {
-                for(animation in textViewFades)
-                    animation.reverse()
-                Blurry.with(requireContext()).radius(BLUR_RADIUS).sampling(2).animate(NAV_DRAWER_ANIMATION_DURATION.toInt()).onto(binding.homePageFragmentRootConstraintLayout)
-            } else {
-                for(animation in textViewFades)
-                    animation.start()
-                Blurry.delete(binding.homePageFragmentRootConstraintLayout)
-            }
-        })*/
 
         //Click listeners
-
-
 
     }
 
@@ -221,20 +199,6 @@ class HomePageFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener {
             )
         }
     }
-
-    /*private fun applyTextFadeAnimation(): Array<ObjectAnimator> {
-        val anim1 = ObjectAnimator.ofFloat(binding.homePageFragmentWelcomeMessage, "alpha", 0.0f, 1.0f)
-        anim1.duration = NAV_DRAWER_ANIMATION_DURATION
-        val anim2 = ObjectAnimator.ofFloat(binding.homePageFragmentExpensesMessage, "alpha", 0.0f, 1.0f)
-        anim2.duration = NAV_DRAWER_ANIMATION_DURATION
-        val anim3 = ObjectAnimator.ofFloat(binding.homePageFragmentChargesMessage, "alpha", 0.0f, 1.0f)
-        anim3.duration = NAV_DRAWER_ANIMATION_DURATION
-        val anim4 = ObjectAnimator.ofFloat(binding.homeFragmentDualButtonCharges, "alpha", 0.0f, 1.0f)
-        anim4.duration = NAV_DRAWER_ANIMATION_DURATION
-        val anim5 = ObjectAnimator.ofFloat(binding.homeFragmentDualButtonExpenses, "alpha", 0.0f, 1.0f)
-        anim5.duration = NAV_DRAWER_ANIMATION_DURATION
-        return arrayOf(anim1, anim2, anim3, anim4, anim5)
-    }*/
 
     private fun initRecyclerView() {
         binding.homeFragmentGroupsList.layoutManager = object: LinearLayoutManager(requireContext()) {

@@ -59,4 +59,10 @@
         android:label="Splash screen"
         tools:layout="@layout/splash"/>
 
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.partem.application.settings.SettingsFragment"
+        android:label="SettingsFragment"
+        tools:layout="@layout/settings_fragment" />
+
 </navigation>
