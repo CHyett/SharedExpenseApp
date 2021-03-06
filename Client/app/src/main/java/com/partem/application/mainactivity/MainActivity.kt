@@ -171,11 +171,9 @@ class MainActivity : AppCompatActivity() {
                     binding.mainActivityDrawerLayout.closeDrawer(Gravity.RIGHT)
                 }
             }
-            if (binding.mainActivityDrawerLayoutList.isGroupExpanded(groupPosition)) {
+            if(binding.mainActivityDrawerLayoutList.isGroupExpanded(groupPosition))
                 binding.mainActivityDrawerLayoutList.collapseGroupWithAnimation(groupPosition)
-            } else {
-                binding.mainActivityDrawerLayoutList.expandGroupWithAnimation(groupPosition)
-            }
+            else binding.mainActivityDrawerLayoutList.expandGroupWithAnimation(groupPosition)
             true
         }
         binding.mainActivityDrawerLayoutList.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
@@ -184,6 +182,8 @@ class MainActivity : AppCompatActivity() {
                 "Pay" -> navController.navigate(R.id.test_paying_fragment)
                 "Charge" -> navController.navigate(R.id.test_charging_fragment)
             }
+            if(binding.mainActivityDrawerLayoutList.isGroupExpanded(groupPosition))
+                binding.mainActivityDrawerLayoutList.collapseGroupWithAnimation(groupPosition)
             binding.mainActivityDrawerLayout.closeDrawer(Gravity.RIGHT)
             true
         }

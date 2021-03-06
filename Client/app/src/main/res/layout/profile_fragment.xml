@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Hello World"
+                android:text="placeholder text"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/profile_fragment_real_name" />
 
@@ -47,7 +47,8 @@
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:src="@{viewmodel.profilePictureImage}"
-                tools:src="@drawable/blank_profile" />
+                tools:src="@drawable/blank_profile"
+                android:contentDescription="@string/content_desc" />
 
         </RelativeLayout>
 
@@ -60,7 +61,6 @@
                 android:id="@+id/profile_fragment_username_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewmodel.usernameText}"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/profile_fragment_informational_text"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -74,7 +74,6 @@
                 android:id="@+id/profile_fragment_num_groups_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewmodel.userGroups}"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/profile_fragment_informational_text"
                 app:layout_constraintBottom_toTopOf="@+id/profile_fragment_username_text"

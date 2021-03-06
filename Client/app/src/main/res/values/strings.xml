@@ -72,7 +72,7 @@
     <string name="settings_fragment_sign_out">Sign Out</string>
 
     <!-- strings used in profile fragment -->
-    <string name="profile_fragment_username">Username: </string>
-    <string name="profile_fragment_groups">Groups: </string>
+    <string name="profile_fragment_username">Username: %1$s</string>
+    <string name="profile_fragment_groups">Groups: %1$d</string>
 
 </resources>

@@ -15,8 +15,4 @@ class ProfileFragmentViewModel: ViewModel() {
     val userGroups: LiveData<String>
         get() = liveUserGroups
 
-    private val liveUsernameText = MutableLiveData("${R.string.profile_fragment_username}")
-    val usernameText: LiveData<String>
-        get() = liveUsernameText
-
 }

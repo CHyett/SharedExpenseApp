@@ -50,8 +50,11 @@ class ProfileFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //LiveData observers
+        //TODO: This will have to be changed to dynamically get group size from server cache
+        binding.profileFragmentNumGroupsText.text = getString(R.string.profile_fragment_groups, RECYCLER_DATA.size)
 
+        //LiveData observers
+        MainActivityViewModel.user.observe(viewLifecycleOwner, { binding.profileFragmentUsernameText.text = getString(R.string.profile_fragment_username, it) })
 
         //Click listeners
 
@@ -72,3 +75,11 @@ class ProfileFragment: Fragment() {
     private fun addDataSet() = groupAdapter.submitList(RECYCLER_DATA)
 
 }
+
+/*
+*
+* TODO:
+*  Recycler item TextViews are also translucent when only the parent layout should be translucent
+*  RecyclerView dividers need to have a left indent
+*
+* */
