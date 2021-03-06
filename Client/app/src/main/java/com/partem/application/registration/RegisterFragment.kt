@@ -189,7 +189,7 @@ class RegisterFragment : Fragment() {
                                 sharedViewModel.saveUsername(it)
                                 sharedViewModel.saveLoginStatus(true)
                             }
-                            navController.popBackStack(R.id.loginFragment, true)
+                            navController.popBackStack(R.id.login_fragment, true)
                         }
                     }
                 } else {

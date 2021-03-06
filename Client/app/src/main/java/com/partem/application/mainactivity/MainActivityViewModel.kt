@@ -4,7 +4,6 @@ import android.app.Application
 import android.graphics.drawable.Drawable
 import android.view.View
 import androidx.lifecycle.*
-import androidx.navigation.NavController
 import com.partem.application.ApplicationRepository
 import com.partem.application.enums.Endpoints
 import com.partem.application.database.ApplicationDatabase
@@ -41,9 +40,6 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
     internal val isNavDrawerOpen: LiveData<Boolean>
         get() = liveIsNavDrawerOpen
 
-    //App nav controller
-    internal var navController: NavController? = null
-
     //Gateway to access persistent data
     private val repository: ApplicationRepository = ApplicationRepository(ApplicationDatabase.getDatabase(application, viewModelScope).entryDao(), viewModelScope)
 
@@ -59,26 +55,11 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
     //Boolean to indicate whether username gas been loaded from local database
     var isDatabaseLoaded = false
 
+    //Boolean to keep track of splash screen status
+    var hasShownSplashScreen = false
+
     //List of callbacks fired after database fetches complete
     private val onDatabaseLoadedListeners = arrayListOf<() -> Unit>()
-
-    init {
-        var loginStatus = false
-        var name: String? = ""
-        CoroutineScope(Dispatchers.IO).launch {
-            coroutineScope {
-                launch { loginStatus = repository.getIsLoggedIn() }
-                launch { name = repository.getUsername() }
-            }
-            withContext(Dispatchers.Main) {
-                liveIsLoggedIn.value = loginStatus
-                liveUser.value = name
-                isDatabaseLoaded = true
-                for (listener in onDatabaseLoadedListeners)
-                    listener()
-            }
-        }
-    }
 
     companion object {
 
@@ -97,6 +78,23 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
 
     }
 
+    init {
+        var loginStatus = false
+        var name: String? = ""
+        CoroutineScope(Dispatchers.IO).launch {
+            coroutineScope {
+                launch { loginStatus = repository.getIsLoggedIn() }
+                launch { name = repository.getUsername() }
+            }
+            withContext(Dispatchers.Main) {
+                liveIsLoggedIn.value = loginStatus
+                liveUser.value = name
+                isDatabaseLoaded = true
+                for (listener in onDatabaseLoadedListeners) listener()
+            }
+        }
+    }
+
     fun addOnDatabaseLoadedListener(callback: () -> Unit) = onDatabaseLoadedListeners.add(callback)
 
     fun lockNavDrawer(status: Boolean) { liveShowNavDrawer.value = status }
@@ -107,6 +105,28 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
 
     internal fun setNavDrawerStatus(status: Boolean) { liveIsNavDrawerOpen.value = status }
 
+    internal fun logIn(username: String, password: String, callback: (status: Boolean) -> Unit) {
+        val params = RequestParams()
+        params.put("username", username)
+        params.put("password", password)
+        client.get(Endpoints.LOGIN_ENDPOINT.endpoint, params, object: AsyncHttpResponseHandler() {
+            override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
+                //Ask cy what is returned from the server here. You might need to assign it to the livedata
+                //responseBody?.let { liveLoginStatus.value = String(responseBody) }
+                if(statusCode == 200) {
+                    saveLoginStatus(true)
+                    saveUsername(username)
+                    callback(true)
+                } else callback(false)
+            }
+
+            override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?, error: Throwable?) {
+                //responseBody?.let { liveLoginStatus.value = "Failed! ${String(it)}" }
+                error?.let { println("Throwable was ${error.message}") }
+            }
+        })
+    }
+
     internal fun logOut() {
         liveUser.value = null
         liveIsLoggedIn.value = false
@@ -116,21 +136,25 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         }
     }
 
-    internal suspend fun saveLoginStatus(loginStatus: Boolean) {
-        liveIsLoggedIn.postValue(loginStatus)
-        repository.setIsLoggedIn(Entry(Tags.LOGIN.tag, null, loginStatus))
-        println("login status saved")
-    }
-
-    internal suspend fun saveUsername(username: String?) {
-        liveUser.postValue(username)
-        username?.let {
-            repository.setUsername(Entry(Tags.USERNAME.tag, username, null))
-            println("username saved")
+    internal fun saveLoginStatus(loginStatus: Boolean) {
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.setIsLoggedIn(Entry(Tags.LOGIN.tag, null, loginStatus))
+            println("login status saved")
+            withContext(Dispatchers.Main) { liveIsLoggedIn.value = loginStatus }
         }
     }
 
-    fun cacheUserGroups() {
+    internal fun saveUsername(username: String?) {
+        username?.let {
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.setUsername(Entry(Tags.USERNAME.tag, it, null))
+                println("username saved")
+                withContext(Dispatchers.Main) { liveUser.value = it }
+            }
+        }
+    }
+
+    fun cacheUserGroups(callback: ((Boolean) -> Unit)? = null) {
         println("Request made and username is $isDatabaseLoaded")
         /*if(ChronoUnit.MINUTES.between(timeStamp, LocalDateTime.now()) >= REFRESH_GROUPS_THRESHOLD) {
             for(group in TEST_DATA)

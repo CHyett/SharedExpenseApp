@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.airbnb.lottie.LottieAnimationView
 import com.google.firebase.iid.FirebaseInstanceId
@@ -25,6 +26,8 @@ import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var navController: NavController
 
     private lateinit var viewModel: MainActivityViewModel
 
@@ -40,42 +43,39 @@ class MainActivity : AppCompatActivity() {
 
     private val notificationChannelMappings = HashMap<String, String>()
 
-    private val notificationChannelList = arrayOf(
-        "Group invitations",
-        "Friend requests",
-        "Group members",
-        "Finance notifications"
-    )
+    private val notificationChannelList = arrayOf("Group invitations", "Friend requests", "Group members", "Finance notifications")
 
     init {
 
-        for(i in 0..3)
-            notificationChannelMappings[i.toString()] = notificationChannelList[i]
+        for(i in 0..3) notificationChannelMappings[i.toString()] = notificationChannelList[i]
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        navController = findNavController(R.id.nav_host_fragment_container_view)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        val viewModelFactory = MainActivityViewModelFactory(application)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel::class.java)
+        viewModel = ViewModelProvider(this, MainActivityViewModelFactory(application)).get(MainActivityViewModel::class.java)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         BlurController.context = this
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
         initNavDrawer()
         populateExpandableList()
-        for((i, notificationChannelName) in notificationChannelList.withIndex()) {
-            val channel = NotificationChannel(i.toString(), notificationChannelName, NotificationManager.IMPORTANCE_HIGH)
-            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
+        initNotificationChannels()
         
         //LiveData observers
         //observe login status and send firebase token if user is logged in
         MainActivityViewModel.isLoggedIn.observe(this, {
-            if (it && isConnected(application))
-                viewModel.sendToServer()
+            if (it && isConnected(application)) viewModel.sendToServer()
+            else if(!it) {
+                while(navController.currentBackStackEntry != null) navController.popBackStack()
+                navController.navigate(R.id.login_fragment)
+            }
         })
         viewModel.showNavDrawer.observe(this, {
             if (it)
@@ -103,10 +103,19 @@ class MainActivity : AppCompatActivity() {
                 binding.mainActivityDrawerLayout.openDrawer(Gravity.RIGHT)
             viewModel.setNavDrawerStatus(!viewModel.isNavDrawerOpen.value!!)
         }
+        binding.mainActivityToolbarSettings.setOnClickListener { navController.navigate(R.id.settings_fragment) }
 
         //Set up firebase
         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this) { MainActivityViewModel.firebaseToken = it?.token }
 
+    }
+
+    private fun initNotificationChannels() {
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        for((i, notificationChannelName) in notificationChannelList.withIndex()) {
+            val channel = NotificationChannel(i.toString(), notificationChannelName, NotificationManager.IMPORTANCE_HIGH)
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 
     private fun initNavDrawer() {
@@ -123,12 +132,7 @@ class MainActivity : AppCompatActivity() {
         binding.mainActivityToolbarHamburger.speed = 2f
         binding.mainActivityDrawerLayoutList.bringToFront()
         binding.mainActivityDrawerLayout.requestLayout()
-        binding.mainActivityDrawerLayout.setScrimColor(
-            ContextCompat.getColor(
-                this,
-                R.color.transparent
-            )
-        )
+        binding.mainActivityDrawerLayout.setScrimColor(ContextCompat.getColor(this, R.color.transparent))
         binding.mainActivityDrawerLayout.addDrawerListener(PartemDrawerListener)
         var childModelsList = ArrayList<DrawerItem>()
         var menuItem = DrawerItem("History", true, false)
@@ -158,9 +162,14 @@ class MainActivity : AppCompatActivity() {
         binding.mainActivityDrawerLayoutList.setAdapter(adapter)
         binding.mainActivityDrawerLayoutList.setOnGroupClickListener { _, _, groupPosition, _ ->
             when (groupPosition) {
-                0 -> findNavController(R.id.nav_host_fragment_container_view).navigate(R.id.splashScreen)
-                3 -> findNavController(R.id.nav_host_fragment_container_view).navigate(R.id.settingsFragment)
-                4 -> viewModel.logOut()
+                3 -> {
+                    navController.navigate(R.id.settings_fragment)
+                    binding.mainActivityDrawerLayout.closeDrawer(Gravity.RIGHT)
+                }
+                4 -> {
+                    viewModel.logOut()
+                    binding.mainActivityDrawerLayout.closeDrawer(Gravity.RIGHT)
+                }
             }
             if (binding.mainActivityDrawerLayoutList.isGroupExpanded(groupPosition)) {
                 binding.mainActivityDrawerLayoutList.collapseGroupWithAnimation(groupPosition)
@@ -171,10 +180,11 @@ class MainActivity : AppCompatActivity() {
         }
         binding.mainActivityDrawerLayoutList.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
             when (childList[headerList[groupPosition]]?.get(childPosition)?.itemName) {
-                "Groups" -> findNavController(R.id.nav_host_fragment_container_view).navigate(R.id.testGroupFragment)
-                "Pay" -> findNavController(R.id.nav_host_fragment_container_view).navigate(R.id.testPayingFragment)
-                "Charge" -> findNavController(R.id.nav_host_fragment_container_view).navigate(R.id.testChargingFragment)
+                "Groups" -> navController.navigate(R.id.test_group_fragment)
+                "Pay" -> navController.navigate(R.id.test_paying_fragment)
+                "Charge" -> navController.navigate(R.id.test_charging_fragment)
             }
+            binding.mainActivityDrawerLayout.closeDrawer(Gravity.RIGHT)
             true
         }
         binding.mainActivityDrawerLayoutList.setOnGroupExpandListener {
@@ -214,6 +224,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onBackPressed() { if(navController.currentDestination?.id != R.id.splash_screen) super.onBackPressed() }
 
 }
 

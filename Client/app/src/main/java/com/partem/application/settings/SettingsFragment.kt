@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.partem.application.R
 import com.partem.application.databinding.SettingsFragmentBinding
 import com.partem.application.homepage.HomePageViewModel
@@ -41,6 +42,9 @@ class SettingsFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //Click listeners
+        binding.settingsFragmentProfileContainer.setOnClickListener {
+            findNavController().navigate(R.id.profile_fragment)
+        }
 
     }
 

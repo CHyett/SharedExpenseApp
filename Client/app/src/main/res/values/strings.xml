@@ -66,9 +66,13 @@
     <string name="settings_fragment_account">Account</string>
     <string name="settings_fragment_notifications">Notifications</string>
     <string name="settings_fragment_payment_methods">Payment Methods</string>
-    <string name="settings_fragment_direct_deposit">Direct Deposit</string>
+    <string name="settings_fragment_profile">Profile</string>
     <string name="settings_fragment_security">Security</string>
     <string name="settings_fragment_contact_us">Contact Us</string>
     <string name="settings_fragment_sign_out">Sign Out</string>
+
+    <!-- strings used in profile fragment -->
+    <string name="profile_fragment_username">Username: </string>
+    <string name="profile_fragment_groups">Groups: </string>
 
 </resources>

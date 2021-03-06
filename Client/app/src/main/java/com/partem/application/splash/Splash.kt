@@ -6,40 +6,48 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.partem.application.R
+import com.partem.application.dev_tools.makeHTTPRequest
 import com.partem.application.mainactivity.MainActivityViewModel
-import kotlinx.coroutines.*
 
 class Splash : Fragment() {
 
-    private lateinit var viewModel: SplashViewModel
+    private lateinit var navController: NavController
 
     private val sharedViewModel: MainActivityViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.splash, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedViewModel.hideToolbar(true)
-        viewModel.liveTransitionToApp.observe(viewLifecycleOwner, {
-            if(it)
-                findNavController().navigate(R.id.homePageFragment)
-        })
-        CoroutineScope(Dispatchers.Default).launch {
-            delay(3000)
-            withContext(Dispatchers.Main) {
-                viewModel.liveTransitionToApp.value = true
-                sharedViewModel.hideToolbar(false)
+        if (sharedViewModel.isDatabaseLoaded) handleInitialNavigation()
+        else sharedViewModel.addOnDatabaseLoadedListener { handleInitialNavigation() }
+    }
+
+    private fun handleInitialNavigation() {
+        navController = findNavController()
+        val options = NavOptions.Builder().setPopUpTo(navController.graph.startDestination, true).build()
+        if (MainActivityViewModel.isLoggedIn.value!!) {
+            //Use this code in production
+            /*if(sharedViewModel.hasShownSplashScreen) navController.navigate(R.id.home_fragment, null, options)
+            else {
+                sharedViewModel.hasShownSplashScreen = true
+                sharedViewModel.cacheUserGroups { navController.navigate(R.id.home_fragment, null, options) }
+            }*/
+            if(sharedViewModel.hasShownSplashScreen) navController.navigate(R.id.home_fragment, null, options)
+            else {
+                sharedViewModel.hasShownSplashScreen = true
+                makeHTTPRequest { navController.navigate(R.id.home_fragment, null, options) }
             }
+        } else {
+            sharedViewModel.hasShownSplashScreen = true
+            navController.navigate(R.id.login_fragment, null, options)
         }
     }
 

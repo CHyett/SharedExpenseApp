@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,9 +30,6 @@ class HomePageFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener {
     //Exclusive ViewModel for HomePageFragment
     private lateinit var viewModel: HomePageViewModel
 
-    //App nav controller
-    private lateinit var navController: NavController
-
     //Binding for interacting with ui components
     private lateinit var binding: HomePageFragmentBinding
 
@@ -41,26 +37,11 @@ class HomePageFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private val sharedViewModel: MainActivityViewModel by activityViewModels()
 
     //Home fragment recycler view adapter
-    private lateinit var groupAdapter: GroupRecyclerAdapter
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        //Prevent can't find nav controller in onCreate error
-        if(sharedViewModel.navController == null) {
-            navController = findNavController()
-            sharedViewModel.navController = navController
-        } else {
-            navController = sharedViewModel.navController!!
-        }
-    }
+    private val groupAdapter = GroupRecyclerAdapter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        if (sharedViewModel.isDatabaseLoaded)
-            sharedViewModel.cacheUserGroups()
-        else
-            sharedViewModel.addOnDatabaseLoadedListener { sharedViewModel.cacheUserGroups() }
+        if (sharedViewModel.isDatabaseLoaded) sharedViewModel.cacheUserGroups()
+        else sharedViewModel.addOnDatabaseLoadedListener { sharedViewModel.cacheUserGroups() }
         binding = DataBindingUtil.inflate(inflater, R.layout.home_page_fragment, container, false)
         BlurController.subjectView = binding.homeFragmentRootLinearLayout
         initRecyclerView()
@@ -71,15 +52,7 @@ class HomePageFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        //If username is present, unlock screen, otherwise send user to login fragment
-        MainActivityViewModel.isLoggedIn.observe(viewLifecycleOwner, {
-            if (!it) {
-                navController.navigate(R.id.loginFragment)
-            } else {
-                askForPermissions()
-            }
-        })
+        askForPermissions()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -208,13 +181,10 @@ class HomePageFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener {
             }
         }
         binding.homeFragmentGroupsList.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
-        groupAdapter = GroupRecyclerAdapter()
         binding.homeFragmentGroupsList.adapter = groupAdapter
     }
 
-    private fun addDataSet() {
-        groupAdapter.submitList(RECYCLER_DATA)
-    }
+    private fun addDataSet() = groupAdapter.submitList(RECYCLER_DATA)
 
     //SwipeRefreshLayout onRefresh interface listener
     override fun onRefresh() {

@@ -3,66 +3,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homePageFragment">
+    app:startDestination="@id/splash_screen">
 
     <fragment
-        android:id="@+id/loginFragment"
+        android:id="@+id/login_fragment"
         android:name="com.partem.application.login.LoginFragment"
         android:label="LoginFragment"
         tools:layout="@layout/login_fragment">
 
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
-            app:destination="@id/registerFragment" />
+            app:destination="@id/register_fragment"/>
 
     </fragment>
 
     <fragment
-        android:id="@+id/registerFragment"
+        android:id="@+id/register_fragment"
         android:name="com.partem.application.registration.RegisterFragment"
         android:label="RegisterFragment"
         tools:layout="@layout/register_fragment">
 
         <action
             android:id="@+id/action_registerFragment_to_homePageFragment"
-            app:destination="@id/homePageFragment" />
+            app:destination="@id/home_fragment" />
 
     </fragment>
 
     <fragment
-        android:id="@+id/homePageFragment"
+        android:id="@+id/home_fragment"
         android:name="com.partem.application.homepage.HomePageFragment"
         android:label="HomePageFragment"
         tools:layout="@layout/home_page_fragment" />
 
     <fragment
-        android:id="@+id/testGroupFragment"
+        android:id="@+id/test_group_fragment"
         android:name="com.partem.application.testgroupfragment.TestGroupFragment"
         android:label="TestGroupFragment"
         tools:layout="@layout/test_group_fragment"/>
 
     <fragment
-        android:id="@+id/testPayingFragment"
+        android:id="@+id/test_paying_fragment"
         android:name="com.partem.application.testpayingfragment.TestPayingFragment"
         android:label="TestPayingFragment"
         tools:layout="@layout/test_paying_fragment"/>
 
     <fragment
-        android:id="@+id/testChargingFragment"
+        android:id="@+id/test_charging_fragment"
         android:name="com.partem.application.testchargingfragment.TestChargingFragment"
         android:label="TestChargingFragment"
         tools:layout="@layout/test_charging_fragment"/>
 
     <fragment
-        android:id="@+id/splashScreen"
+        android:id="@+id/splash_screen"
         android:name="com.partem.application.splash.Splash"
         android:label="Splash screen"
         tools:layout="@layout/splash"/>
 
     <fragment
-        android:id="@+id/settingsFragment"
+        android:id="@+id/settings_fragment"
         android:name="com.partem.application.settings.SettingsFragment"
         android:label="SettingsFragment"
         tools:layout="@layout/settings_fragment" />
+
+    <fragment
+        android:id="@+id/profile_fragment"
+        android:name="com.partem.application.profile.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/profile_fragment" />
 
 </navigation>

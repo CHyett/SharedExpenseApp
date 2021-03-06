@@ -21,9 +21,7 @@ import com.basgeekball.awesomevalidation.AwesomeValidation
 import com.basgeekball.awesomevalidation.ValidationStyle
 import com.partem.application.R
 import com.partem.application.databinding.LoginFragmentBinding
-import com.google.android.material.snackbar.Snackbar
 import com.partem.application.mainactivity.MainActivityViewModel
-import kotlinx.coroutines.*
 
 
 private const val USERNAME_REGEX = "^[A-Z0-9a-z]{7,15}$"
@@ -33,8 +31,6 @@ private const val PASSWORD_ERROR = "Your password must be between 8-15 alphanume
 
 
 class LoginFragment : Fragment() {
-
-    companion object { fun newInstance() = LoginFragment() }
 
     private lateinit var binding: LoginFragmentBinding
 
@@ -51,9 +47,7 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        CoroutineScope(Dispatchers.IO).launch {
-            sharedViewModel.saveLoginStatus(false)
-        }
+
         viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
         navController = findNavController()
         askForPermissions()
@@ -73,28 +67,16 @@ class LoginFragment : Fragment() {
         validation.addValidation(binding.loginFragmentPasswordInput, PASSWORD_REGEX, PASSWORD_ERROR)
 
         //LiveData observers
-        viewModel.loginStatus.observe(viewLifecycleOwner, {
-                Snackbar.make(binding.loginFragmentSignInButton, it, Snackbar.LENGTH_LONG).setAction("Action", null).show()
-        })
+
 
         //Click listeners
         binding.loginFragmentSignUpButton.setOnClickListener { navController.navigate(R.id.action_loginFragment_to_registerFragment) }
         binding.loginFragmentSignInButton.setOnClickListener {
             if (validation.validate()) {
                 if(isConnected(context as Application)) {
-                    viewModel.logIn {
-                        if(it) {
-                            val username = viewModel.liveUsername.value!!
-                            CoroutineScope(Dispatchers.IO).launch {
-                                coroutineScope {
-                                    sharedViewModel.saveUsername(username)
-                                    sharedViewModel.saveLoginStatus(true)
-                                }
-                                navController.popBackStack()
-                            }
-                            viewModel.livePassword.value = ""
-                            viewModel.liveUsername.value = ""
-                        }
+                    sharedViewModel.logIn(viewModel.liveUsername.value!!, viewModel.livePassword.value!!) {
+                        if(!it)
+                            Toast.makeText(activity, "Sorry, we don't recognize an account with those credentials.", Toast.LENGTH_LONG).show()
                     }
                 } else {
                     Toast.makeText(context, com.partem.application.util.NOT_CONNECTED_MESSAGE, Toast.LENGTH_SHORT).show()
