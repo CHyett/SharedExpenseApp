@@ -1,5 +1,6 @@
 package com.partem.application.profile
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -68,7 +69,9 @@ class ProfileFragment: Fragment() {
                 return true
             }
         }
-        binding.profileFragmentGroupsRecyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+        val divider = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+        divider.setDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.profile_fragment_recycler_divider)!!)
+        binding.profileFragmentGroupsRecyclerView.addItemDecoration(divider)
         binding.profileFragmentGroupsRecyclerView.adapter = groupAdapter
     }
 
@@ -79,7 +82,6 @@ class ProfileFragment: Fragment() {
 /*
 *
 * TODO:
-*  Recycler item TextViews are also translucent when only the parent layout should be translucent
 *  RecyclerView dividers need to have a left indent
 *
 * */
