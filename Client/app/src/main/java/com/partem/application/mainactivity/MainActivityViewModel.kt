@@ -214,5 +214,6 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
 *
 * TODO:
 *   group list cache in sending requests with no username present on init. Possibly because it hasn't been read from the database yet.
+*   Get real name from server in caching call. Tell cy to send you the extra information.
 *
 * */

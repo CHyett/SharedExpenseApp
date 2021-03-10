@@ -90,6 +90,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="50"
+            android:background="@color/profileFragmentTranslucent"
+            android:paddingLeft="@dimen/profile_fragment_recycler_padding_left"
             android:scrollbars="vertical" />
 
     </LinearLayout>

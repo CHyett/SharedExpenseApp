@@ -9,4 +9,8 @@
     <color name="colorGray">#888888</color>
     <color name="blackOverlay">#99000000</color>
     <color name="colorAccentTranslucent">#BBFFFFFF</color>
+
+    <!-- profile fragment RecyclerView colors -->
+    <color name="profileFragmentTranslucent">#33FFFFFF</color>
+
 </resources>

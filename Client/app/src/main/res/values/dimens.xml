@@ -107,7 +107,7 @@
     <dimen name="profile_fragment_informational_text">20sp</dimen>
 
     <!-- profile fragment recycler view dimens -->
-    <dimen name="profile_fragment_recycler_item_text_margin_left">20dp</dimen>
+    <dimen name="profile_fragment_recycler_padding_left">20dp</dimen>
     <dimen name="profile_fragment_recycler_item_text_size">20sp</dimen>
     <dimen name="profile_fragment_recycler_item_vertical_margins">20dp</dimen>
 
