@@ -13,4 +13,7 @@
     <!-- profile fragment RecyclerView colors -->
     <color name="profileFragmentTranslucent">#33FFFFFF</color>
 
+    <!-- Colors listed here are usde for testing purposes and should not be used in release builds -->
+    <color name="green">#00ff00</color>
+
 </resources>

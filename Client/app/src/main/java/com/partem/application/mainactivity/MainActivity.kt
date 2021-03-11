@@ -106,7 +106,10 @@ class MainActivity : AppCompatActivity() {
         binding.mainActivityToolbarSettings.setOnClickListener { navController.navigate(R.id.settings_fragment) }
 
         //Set up firebase
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this) { MainActivityViewModel.firebaseToken = it?.token }
+        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this) {
+            println("OnSuccessListener fired. token is ${it?.token}")
+            MainActivityViewModel.firebaseToken = it?.token
+        }
 
     }
 

@@ -4,7 +4,9 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.partem.application.NotificationReceiver
 import com.partem.application.R
 import com.partem.application.mainactivity.MainActivityViewModel
@@ -38,25 +40,24 @@ fun NotificationManager.makeNotification(remoteMessage: RemoteMessage, context: 
             .setContentTitle(remoteMessage.data["topic"])
             .setContentText(remoteMessage.data["text"])
             .setPriority(NotificationManager.IMPORTANCE_HIGH)
-            .setSmallIcon(R.mipmap.app_icon_round)
+            .setSmallIcon(R.drawable.partem_notification_icon)
             .addAction(R.mipmap.ic_launcher, "Accept", PendingIntent.getBroadcast(context, 1, acceptBroadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT))
             .addAction(R.mipmap.app_icon, "Decline", PendingIntent.getBroadcast(context, 2, declineBroadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT))
                 .setStyle(NotificationCompat.BigTextStyle().bigText(remoteMessage.data["text"]))
                 .setAutoCancel(true)
             .setOnlyAlertOnce(true)
-            .setColor(0x01021E)
+            .setColor(context.getColor(R.color.colorPrimary))
         notify(NOTIFICATION_ID, builder.build())
     } else {
-
         val builder = NotificationCompat.Builder(context, remoteMessage.data["type"]!!)
             .setSmallIcon(R.drawable.partem_logo)
             .setContentTitle(remoteMessage.data["topic"])
             .setContentText(remoteMessage.data["text"])
             .setPriority(NotificationManager.IMPORTANCE_HIGH)
-            .setSmallIcon(R.drawable.partem_logo)
+            .setSmallIcon(R.drawable.partem_notification_icon)
             .setAutoCancel(true)
             .setOnlyAlertOnce(true)
-            .setColor(0x01021E)
+            .setColor(context.getColor(R.color.colorPrimary))
                 .setStyle(NotificationCompat.BigTextStyle().bigText(remoteMessage.data["text"]))
         notify(NOTIFICATION_ID, builder.build())
 

@@ -11,8 +11,7 @@ import com.partem.application.mainactivity.MainActivityViewModel
 class NotificationService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
-        println("The token is: $token")
-        println("That was printed from NotificationService.kt")
+        println("The token is: $token.\nPrinted from NotificationService.kt")
         MainActivityViewModel.firebaseToken = token
     }
 

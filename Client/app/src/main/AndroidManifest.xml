@@ -50,7 +50,7 @@
         </activity>
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/progress_bar"/>
+            android:resource="@drawable/partem_notification_icon"/>
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorPrimary" />
@@ -61,6 +61,6 @@
 <!-- Notes:
 
  TODO:
- change android:resource tag in meta-data to whatever drawable icon you want the app notification to have
- add notification channels
+
+
  -->
