@@ -4,9 +4,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
 import com.partem.application.NotificationReceiver
 import com.partem.application.R
 import com.partem.application.mainactivity.MainActivityViewModel

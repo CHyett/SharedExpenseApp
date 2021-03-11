@@ -8,7 +8,7 @@ import com.google.firebase.messaging.RemoteMessage
 import com.partem.application.mainactivity.MainActivityViewModel
 
 
-class NotificationService : FirebaseMessagingService() {
+class NotificationService: FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         println("The token is: $token.\nPrinted from NotificationService.kt")
@@ -17,6 +17,7 @@ class NotificationService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
+        println("onMessageReceived was called.")
         (ContextCompat.getSystemService(applicationContext, NotificationManager::class.java) as NotificationManager).makeNotification(message, applicationContext)
     }
 
