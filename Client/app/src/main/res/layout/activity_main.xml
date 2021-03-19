@@ -40,7 +40,7 @@
                 android:id="@+id/main_activity_toolbar_hamburger"
                 android:layout_width="@dimen/main_activity_top_nav_imageview_size"
                 android:layout_height="@dimen/main_activity_top_nav_imageview_size"
-                android:paddingRight="@dimen/main_activity_top_nav_imageview_padding"
+                android:layout_marginRight="@dimen/main_activity_top_nav_imageview_padding"
                 android:scaleType="centerCrop"
                 android:layout_alignParentRight="true"
                 android:gravity="center_vertical"

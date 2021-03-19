@@ -85,10 +85,10 @@ class MainActivity : AppCompatActivity() {
         })
         viewModel.isNavDrawerOpen.observe(this, {
             if (it) {
-                binding.mainActivityToolbarHamburger.setMinAndMaxProgress(0.25f, 0.34f)
+                binding.mainActivityToolbarHamburger.setMinAndMaxProgress(0.0f, 0.5f)
                 BlurController.blurScreen()
             } else {
-                binding.mainActivityToolbarHamburger.setMinAndMaxProgress(0.75f, 0.84f)
+                binding.mainActivityToolbarHamburger.setMinAndMaxProgress(0.5f, 1.0f)
                 BlurController.clearBlur()
             }
             binding.mainActivityToolbarHamburger.playAnimation()
