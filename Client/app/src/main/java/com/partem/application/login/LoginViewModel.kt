@@ -9,4 +9,6 @@ class LoginViewModel: ViewModel() {
 
     val livePassword = MutableLiveData<String>()
 
+    val liveIsChecked = MutableLiveData<Boolean>()
+
 }

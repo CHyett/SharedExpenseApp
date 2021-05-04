@@ -100,12 +100,13 @@
             android:id="@+id/login_fragment_form"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="15">
+            android:layout_weight="20">
 
             <EditText
                 android:id="@+id/login_fragment_email_input"
                 style="@style/login_fragment_edittext"
                 android:hint="@string/login_fragment_email_input_hint"
+                android:text="@={viewmodel.liveUsername}"
                 android:importantForAutofill="no"
                 android:inputType="textEmailAddress"
                 app:layout_constraintBottom_toTopOf="@+id/login_fragment_password_input"
@@ -116,13 +117,40 @@
             <EditText
                 android:id="@+id/login_fragment_password_input"
                 style="@style/login_fragment_edittext"
+                android:text="@={viewmodel.livePassword}"
                 android:hint="@string/login_fragment_password_input_hint"
                 android:importantForAutofill="no"
                 android:inputType="textPassword"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/login_fragment_email_input"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toTopOf="@+id/login_fragment_remember_layout"/>
+
+            <LinearLayout
+                android:id="@+id/login_fragment_remember_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_fragment_password_input"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/login_fragment_remember_checkbox"
+                    android:checked="@={viewmodel.liveIsChecked}"
+                    android:layout_width="@dimen/login_fragment_checkbox"
+                    android:layout_height="@dimen/login_fragment_checkbox"
+                    android:layout_marginLeft="@dimen/login_fragment_checkbox_horizontal_margins"
+                    android:layout_marginRight="@dimen/login_fragment_checkbox_horizontal_margins"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/login_fragment_checkbox"
+                    android:text="@string/login_fragment_remember"
+                    android:textColor="@color/colorGray"/>
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -135,7 +163,7 @@
             android:id="@+id/login_fragment_buttons"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="30">
+            android:layout_weight="25">
 
             <Button
                 android:id="@+id/login_fragment_sign_in_button"

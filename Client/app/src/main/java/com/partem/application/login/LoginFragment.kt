@@ -73,7 +73,7 @@ class LoginFragment : Fragment() {
         binding.loginFragmentSignUpButton.setOnClickListener { navController.navigate(R.id.action_loginFragment_to_registerFragment) }
         binding.loginFragmentSignInButton.setOnClickListener {
             if (validation.validate()) {
-                if(isConnected(context as Application)) {
+                if(isConnected(requireContext().applicationContext)) {
                     sharedViewModel.logIn(viewModel.liveUsername.value!!, viewModel.livePassword.value!!) {
                         if(!it)
                             Toast.makeText(activity, "Sorry, we don't recognize an account with those credentials.", Toast.LENGTH_LONG).show()

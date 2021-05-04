@@ -41,6 +41,8 @@
     <dimen name="login_fragment_policy">15sp</dimen>
     <dimen name="login_fragment_policy_padding_sides">20dp</dimen>
     <dimen name="login_fragment_policy_margin_top">30dp</dimen>
+    <dimen name="login_fragment_checkbox">30dp</dimen>
+    <dimen name="login_fragment_checkbox_horizontal_margins">15dp</dimen>
 
     <!-- register screen dimens -->
     <dimen name="register_fragment_username_edittext_margin_top">60dp</dimen>
