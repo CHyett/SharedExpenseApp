@@ -26,8 +26,7 @@ class Splash : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedViewModel.hideToolbar(true)
-        if (sharedViewModel.isDatabaseLoaded) handleInitialNavigation()
-        else sharedViewModel.addOnDatabaseLoadedListener { handleInitialNavigation() }
+        handleInitialNavigation()
     }
 
     private fun handleInitialNavigation() {

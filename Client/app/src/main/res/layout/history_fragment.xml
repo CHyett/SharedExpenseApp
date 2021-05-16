@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable name="viewmodel" type="com.partem.application.history.HistoryFragmentViewModel" />
+
+    </data>
+
+    <LinearLayout
+        android:id="@+id/history_fragment_root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:padding="@dimen/view_pager_padding"
+            android:background="@drawable/pager_background"
+            android:layout_margin="50dp">
+
+            <View
+                android:id="@+id/history_fragment_tab_indicator"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/view_pager_height"
+                android:background="@drawable/tab_indicator"/>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/history_fragment_tab"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/view_pager_height"
+                app:tabGravity="fill"
+                app:tabMode="fixed"
+                app:tabIndicatorColor="@null"
+                app:tabRippleColor="@null"/>
+
+        </FrameLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/history_fragment_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+</layout>

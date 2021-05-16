@@ -104,7 +104,7 @@
 
             <EditText
                 android:id="@+id/login_fragment_email_input"
-                style="@style/login_fragment_edittext"
+                style="@style/edit_text"
                 android:hint="@string/login_fragment_email_input_hint"
                 android:text="@={viewmodel.liveUsername}"
                 android:importantForAutofill="no"
@@ -116,7 +116,7 @@
 
             <EditText
                 android:id="@+id/login_fragment_password_input"
-                style="@style/login_fragment_edittext"
+                style="@style/edit_text"
                 android:text="@={viewmodel.livePassword}"
                 android:hint="@string/login_fragment_password_input_hint"
                 android:importantForAutofill="no"
@@ -157,7 +157,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="4"/>
+            android:layout_weight="1"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/login_fragment_buttons"
@@ -178,18 +178,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="spread" />
 
-            <Button
-                android:id="@+id/login_fragment_sign_up_button"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/login_fragment_button_height"
-                android:background="@drawable/primary_button_bg"
-                android:text="@string/login_fragment_sign_up"
-                android:textColor="@color/colorAccent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/login_fragment_join_button_text" />
-
             <TextView
                 android:id="@+id/login_fragment_join_button_text"
                 android:layout_width="wrap_content"
@@ -202,13 +190,25 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/login_fragment_sign_in_button" />
 
+            <Button
+                android:id="@+id/login_fragment_sign_up_button"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_fragment_button_height"
+                android:background="@drawable/primary_button_bg"
+                android:text="@string/login_fragment_sign_up"
+                android:textColor="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_fragment_join_button_text" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/login_fragment_policy_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="5">
+            android:layout_weight="8">
 
             <TextView
                 android:id="@+id/login_fragment_policy"
@@ -219,9 +219,9 @@
                 android:textSize="@dimen/login_fragment_policy"
                 android:textAlignment="center"
                 android:textColorLink="@color/colorPrimary"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

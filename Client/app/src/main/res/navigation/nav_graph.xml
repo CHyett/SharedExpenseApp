@@ -70,5 +70,10 @@
         android:name="com.partem.application.profile.ProfileFragment"
         android:label="ProfileFragment"
         tools:layout="@layout/profile_fragment" />
+    <fragment
+        android:id="@+id/history_fragment"
+        android:name="com.partem.application.history.HistoryFragment"
+        android:label="HistoryFragment"
+        tools:layout="@layout/history_fragment" />
 
 </navigation>

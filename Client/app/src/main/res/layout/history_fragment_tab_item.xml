@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.recyclerview.widget.RecyclerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/history_fragment_pager_tab_item_recycler"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:scrollbars="vertical"
+    android:background="@color/profileFragmentTranslucent"
+    android:paddingLeft="@dimen/history_fragment_recycler_padding_left"/>

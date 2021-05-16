@@ -13,7 +13,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -40,8 +39,7 @@ class HomePageFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private val groupAdapter = GroupRecyclerAdapter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        if (sharedViewModel.isDatabaseLoaded) sharedViewModel.cacheUserGroups()
-        else sharedViewModel.addOnDatabaseLoadedListener { sharedViewModel.cacheUserGroups() }
+        sharedViewModel.cacheUserGroups()
         binding = DataBindingUtil.inflate(inflater, R.layout.home_page_fragment, container, false)
         BlurController.subjectView = binding.homeFragmentRootLinearLayout
         initRecyclerView()
@@ -52,11 +50,6 @@ class HomePageFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        askForPermissions()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(HomePageViewModel::class.java)
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
@@ -66,7 +59,7 @@ class HomePageFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener {
         sharedViewModel.hideToolbar(false)
 
         //Click listeners
-
+        askForPermissions()
     }
 
     private fun askForPermissions() {

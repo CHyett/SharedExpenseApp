@@ -1,19 +1,17 @@
 package com.partem.application.mainactivity
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.drawable.Drawable
 import android.view.View
 import androidx.lifecycle.*
-import com.partem.application.ApplicationRepository
 import com.partem.application.enums.Endpoints
-import com.partem.application.database.ApplicationDatabase
-import com.partem.application.database.Entry
+import com.partem.application.enums.Tags
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
 import com.loopj.android.http.RequestParams
 import cz.msebera.android.httpclient.Header
-import kotlinx.coroutines.*
-import com.partem.application.enums.Tags
 import java.time.LocalDateTime
 
 private const val REFRESH_GROUPS_THRESHOLD = 5L
@@ -41,7 +39,7 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         get() = liveIsNavDrawerOpen
 
     //Gateway to access persistent data
-    private val repository: ApplicationRepository = ApplicationRepository(ApplicationDatabase.getDatabase(application, viewModelScope).entryDao(), viewModelScope)
+    private val sharedPrefs: SharedPreferences = application.getSharedPreferences(Tags.SHARED_PREFS_NAME, Context.MODE_PRIVATE)
 
     //HttpClient for this ViewModel
     private val client = AsyncHttpClient()
@@ -52,14 +50,8 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
     //Time stamp for data caching
     private val timeStamp = LocalDateTime.now().minusMinutes(5L)
 
-    //Boolean to indicate whether username gas been loaded from local database
-    var isDatabaseLoaded = false
-
     //Boolean to keep track of splash screen status
     var hasShownSplashScreen = false
-
-    //List of callbacks fired after database fetches complete
-    private val onDatabaseLoadedListeners = arrayListOf<() -> Unit>()
 
     companion object {
 
@@ -76,26 +68,35 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         internal val user: LiveData<String?>
             get() = liveUser
 
+        private val liveRememberUser = MutableLiveData<Boolean>()
+        internal val rememberUser: LiveData<Boolean>
+            get() = liveRememberUser
+
     }
 
     init {
         var loginStatus = false
         var name: String? = ""
-        CoroutineScope(Dispatchers.IO).launch {
-            coroutineScope {
-                launch { loginStatus = repository.getIsLoggedIn() }
-                launch { name = repository.getUsername() }
-            }
-            withContext(Dispatchers.Main) {
-                liveIsLoggedIn.value = loginStatus
-                liveUser.value = name
-                isDatabaseLoaded = true
-                for (listener in onDatabaseLoadedListeners) listener()
-            }
+        var remember = false
+        //Delete this when you want to log in normally
+        sharedPrefs.edit().apply {
+            putBoolean(Tags.PREFS_LOGIN_HANDLE, true)
+            putString(Tags.PREFS_USERNAME_HANDLE, "tnoah122")
+            putBoolean(Tags.PREFS_REMEMBER_HANDLE, true)
+            if(!commit()) println("Could not commit changes to shared preferences.")
         }
+        val editor = sharedPrefs.edit()
+        if(sharedPrefs.contains(Tags.PREFS_LOGIN_HANDLE)) loginStatus = sharedPrefs.getBoolean(Tags.PREFS_LOGIN_HANDLE, false)
+        else editor.putBoolean(Tags.PREFS_LOGIN_HANDLE, false)
+        if(sharedPrefs.contains(Tags.PREFS_USERNAME_HANDLE)) name = sharedPrefs.getString(Tags.PREFS_USERNAME_HANDLE, "")
+        else editor.putString(Tags.PREFS_USERNAME_HANDLE, "")
+        if(sharedPrefs.contains(Tags.PREFS_REMEMBER_HANDLE)) remember = sharedPrefs.getBoolean(Tags.PREFS_REMEMBER_HANDLE, false)
+        else editor.putBoolean(Tags.PREFS_REMEMBER_HANDLE, false)
+        if(!editor.commit()) println("Could not commit changes to shared prefs.")
+        liveIsLoggedIn.value = loginStatus
+        liveUser.value = name
+        liveRememberUser.value = remember
     }
-
-    fun addOnDatabaseLoadedListener(callback: () -> Unit) = onDatabaseLoadedListeners.add(callback)
 
     fun lockNavDrawer(status: Boolean) { liveShowNavDrawer.value = status }
 
@@ -105,7 +106,7 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
 
     internal fun setNavDrawerStatus(status: Boolean) { liveIsNavDrawerOpen.value = status }
 
-    internal fun logIn(username: String, password: String, callback: (status: Boolean) -> Unit) {
+    internal fun logIn(username: String, password: String, rememberUser: Boolean, callback: (status: Boolean) -> Unit) {
         val params = RequestParams()
         params.put("username", username)
         params.put("password", password)
@@ -116,6 +117,7 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
                 if(statusCode == 200) {
                     saveLoginStatus(true)
                     saveUsername(username)
+                    saveRememberUser(rememberUser)
                     callback(true)
                 } else callback(false)
             }
@@ -127,35 +129,49 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         })
     }
 
+    //TODO: How does this change when we find out what the remember checkbox does?
     internal fun logOut() {
         liveUser.value = null
         liveIsLoggedIn.value = false
-        CoroutineScope(Dispatchers.IO).launch {
-            repository.setUsername(Entry(Tags.USERNAME.tag, null, null))
-            repository.setIsLoggedIn(Entry(Tags.LOGIN.tag, null, false))
+        sharedPrefs.edit().apply {
+            putBoolean(Tags.PREFS_LOGIN_HANDLE, false)
+            putString(Tags.PREFS_USERNAME_HANDLE, null)
+            putBoolean(Tags.PREFS_REMEMBER_HANDLE, false)
+            if(!commit()) println("Could not commit changes to shared prefs.")
         }
     }
 
     internal fun saveLoginStatus(loginStatus: Boolean) {
-        CoroutineScope(Dispatchers.IO).launch {
-            repository.setIsLoggedIn(Entry(Tags.LOGIN.tag, null, loginStatus))
-            println("login status saved")
-            withContext(Dispatchers.Main) { liveIsLoggedIn.value = loginStatus }
+        sharedPrefs.edit().apply {
+            putBoolean(Tags.PREFS_LOGIN_HANDLE, loginStatus)
+            if(!commit()) println("Could not commit changes to shared prefs.")
         }
+        println("login status saved")
+        liveIsLoggedIn.value = loginStatus
     }
 
     internal fun saveUsername(username: String?) {
         username?.let {
-            CoroutineScope(Dispatchers.IO).launch {
-                repository.setUsername(Entry(Tags.USERNAME.tag, it, null))
-                println("username saved")
-                withContext(Dispatchers.Main) { liveUser.value = it }
+            sharedPrefs.edit().apply {
+                putString(Tags.PREFS_USERNAME_HANDLE, it)
+                if(!commit()) println("Could not commit changes to shared prefs.")
             }
+            println("username saved")
+            liveUser.value = it
         }
     }
 
+    internal fun saveRememberUser(rememberUser: Boolean) {
+        sharedPrefs.edit().apply {
+            putBoolean(Tags.PREFS_REMEMBER_HANDLE, rememberUser)
+            if(!commit()) println("Could not commit changes to shared prefs.")
+        }
+        println("remember user saved")
+        liveRememberUser.value = rememberUser
+    }
+
     fun cacheUserGroups(callback: ((Boolean) -> Unit)? = null) {
-        println("Request made and username is $isDatabaseLoaded")
+        println("Request made and username is true")
         /*if(ChronoUnit.MINUTES.between(timeStamp, LocalDateTime.now()) >= REFRESH_GROUPS_THRESHOLD) {
             for(group in TEST_DATA)
                 userGroups[group.getString("name")] = group.getInt("id")
@@ -203,8 +219,9 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
     }
 
     override fun onCleared() {
-        liveIsLoggedIn.value?.let { CoroutineScope(Dispatchers.IO).launch { saveLoginStatus(it) }}
-        liveUser.value?.let { CoroutineScope(Dispatchers.IO).launch { saveUsername(it) }}
+        liveIsLoggedIn.value?.let { saveLoginStatus(it) }
+        liveUser.value?.let { saveUsername(it) }
+        liveRememberUser.value?.let { saveRememberUser(it) }
         super.onCleared()
     }
 

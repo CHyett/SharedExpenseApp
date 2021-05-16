@@ -14,6 +14,10 @@ class GroupRecyclerAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var items = RECYCLER_DATA
 
+    override fun getItemCount(): Int = items.size
+
+    fun submitList(groupList: Array<Group>) { items = groupList }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return GroupRecyclerAdapterViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.home_fragment_recycler_item, parent, false))
     }
@@ -23,15 +27,10 @@ class GroupRecyclerAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         holder.bind(items[position])
     }
 
-    override fun getItemCount(): Int = items.size
-
-    fun submitList(groupList: Array<Group>) {
-        items = groupList
-    }
-
     class GroupRecyclerAdapterViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
         private val groupName: TextView = itemView.home_fragment_recycler_group_name
+
         private val groupDetails: TextView = itemView.home_fragment_recycler_group_details
 
         fun bind(group: Group) {

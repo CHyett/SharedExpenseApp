@@ -9,152 +9,16 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/register_fragment_root_constraint_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorSecondary"
-        tools:context=".login.LoginFragment">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/register_fragment_image_holder"
-            android:layout_width="@dimen/register_fragment_profile_picture_width_height"
-            android:layout_height="@dimen/register_fragment_profile_picture_width_height"
-            android:layout_marginTop="@dimen/register_fragment_imageview_margin_top"
-            app:cardCornerRadius="@dimen/register_fragment_profile_picture_radius"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+    <TextView
+        android:layout_width="10dp"
+        android:layout_height="10dp"/>
 
-            <ImageView
-                android:id="@+id/register_fragment_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/blankprofile" />
-
-        </androidx.cardview.widget.CardView>
-
-        <ImageView
-            android:id="@+id/register_fragment_progress_bar_left_icon"
-            android:layout_width="@dimen/register_fragment_progress_bar_icon_size"
-            android:layout_height="@dimen/register_fragment_progress_bar_icon_size"
-            android:layout_marginTop="@dimen/register_fragment_progress_bar_icon_margin_top"
-            android:src="@drawable/fuel"
-            app:layout_constraintEnd_toStartOf="@+id/register_fragment_progress_bar_outer"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/register_fragment_image_holder" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/register_fragment_progress_bar_outer"
-            android:layout_width="@dimen/register_fragment_progress_bar_width"
-            android:layout_height="@dimen/register_fragment_progress_bar_height"
-            android:layout_marginTop="@dimen/register_fragment_progress_bar_margin_top"
-            android:background="@color/colorAccent"
-            android:padding="@dimen/register_fragment_progress_bar_outer_padding"
-            app:cardCornerRadius="@dimen/register_fragment_progress_bar_corners"
-            app:layout_constraintEnd_toStartOf="@+id/register_fragment_progress_bar_right_icon"
-            app:layout_constraintStart_toEndOf="@+id/register_fragment_progress_bar_left_icon"
-            app:layout_constraintTop_toBottomOf="@+id/register_fragment_image_holder">
-
-            <ProgressBar
-                android:id="@+id/register_fragment_progress_bar_inner"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:progressDrawable="@drawable/progress_bar" />
-
-        </androidx.cardview.widget.CardView>
-
-        <ImageView
-            android:id="@+id/register_fragment_progress_bar_right_icon"
-            android:layout_width="@dimen/register_fragment_progress_bar_icon_size"
-            android:layout_height="@dimen/register_fragment_progress_bar_icon_size"
-            android:layout_marginTop="@dimen/register_fragment_progress_bar_icon_margin_top"
-            android:src="@{viewmodel.liveProgressAnimatable}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/register_fragment_progress_bar_outer"
-            app:layout_constraintTop_toBottomOf="@+id/register_fragment_image_holder" />
-
-        <EditText
-            android:id="@+id/register_username_edittext"
-            style="@style/register_fragment_edittext"
-            android:layout_marginTop="@dimen/register_fragment_username_edittext_margin_top"
-            android:autofillHints="@string/register_screen_username_autofill"
-            android:hint="@string/register_username_edittext_hint"
-            android:inputType="text"
-            android:text="@={viewmodel.newUserUsername}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/register_fragment_progress_bar_outer" />
-
-        <EditText
-            android:id="@+id/register_password_edittext"
-            style="@style/register_fragment_edittext"
-            android:layout_marginTop="@dimen/register_fragment_email_edittext_margin_top"
-            android:autofillHints="@string/register_screen_password_autofill"
-            android:hint=""
-            android:inputType="textPassword"
-            android:text="@={viewmodel.newUserPassword}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/register_username_edittext" />
-
-        <EditText
-            android:id="@+id/register_confirm_password_edittext"
-            style="@style/register_fragment_edittext"
-            android:autofillHints="@string/register_screen_password_autofill"
-            android:hint="@string/register_confirm_password_edittext_hint"
-            android:inputType="textPassword"
-            android:layout_marginTop="@dimen/register_fragment_password_edittext_margin_top"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/register_password_edittext" />
-
-        <EditText
-            android:id="@+id/register_email_edittext"
-            style="@style/register_fragment_edittext"
-            android:layout_marginTop="@dimen/register_fragment_email_edittext_margin_top"
-            android:autofillHints="@string/register_screen_email_autofill"
-            android:hint="@string/register_email_edittext_hint"
-            android:inputType="textEmailAddress"
-            android:text="@={viewmodel.newUserEmail}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/register_confirm_password_edittext" />
-
-        <Button
-            android:id="@+id/register_fragment_submit_button"
-            style="@style/register_fragment_submit_button"
-            android:layout_marginTop="@dimen/register_fragment_submit_button_margin_top"
-            app:isEnabled="@{viewmodel.isRegistrationButtonEnabled}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/register_email_edittext" />
-
-        <TextView
-            android:id="@+id/register_fragment_agreement_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/register_fragment_agreement_margin_bottom"
-            android:gravity="center_horizontal"
-            android:text="@string/register_screen_agreement_text"
-            android:textSize="@dimen/register_fragment_agreement_text_size"
-            android:textColor="@color/colorAccent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
 
     <!--
 
     TODO:
-    Add primary color border around fuel tank
 
 
     -->

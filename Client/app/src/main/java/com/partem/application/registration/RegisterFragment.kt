@@ -30,8 +30,6 @@ import androidx.navigation.Navigation
 import com.basgeekball.awesomevalidation.AwesomeValidation
 import com.basgeekball.awesomevalidation.ValidationStyle
 import com.bumptech.glide.Glide
-import com.daimajia.androidanimations.library.Techniques
-import com.daimajia.androidanimations.library.YoYo
 import com.partem.application.R
 import com.partem.application.databinding.RegisterFragmentBinding
 import com.partem.application.mainactivity.MainActivityViewModel
@@ -89,13 +87,14 @@ class RegisterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
 
+        //PROGRESS BAR IS SUBJECT TO DELETION
         //Initialize progress bar animation
-        progressAnimation = ProgressBarAnimation(binding.registerFragmentProgressBarInner, 0, 0)
+        /*progressAnimation = ProgressBarAnimation(binding.registerFragmentProgressBarInner, 0, 0)
         progressAnimation.duration = PROGRESS_BAR_ANIMATION_TIME
-        binding.registerFragmentProgressBarInner.interpolator = PathInterpolator(0f, 0f, 0.5f, 1f)
+        binding.registerFragmentProgressBarInner.interpolator = PathInterpolator(0f, 0f, 0.5f, 1f)*/
 
         //Make terms of service open in browser
-        binding.registerFragmentAgreementTextview.movementMethod = LinkMovementMethod.getInstance()
+        //binding.registerFragmentAgreementTextview.movementMethod = LinkMovementMethod.getInstance()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -107,16 +106,12 @@ class RegisterFragment : Fragment() {
         sharedViewModel.lockNavDrawer(true)
         sharedViewModel.hideToolbar(true)
 
-        //Animation initialization
-        constraintSetHide.clone(binding.registerFragmentRootConstraintLayout)
-        constraintSetShow.clone(activity, R.layout.register_fragment_rocket_animation)
-
         //Form validation
-        val validation = AwesomeValidation(ValidationStyle.COLORATION)
+        /*val validation = AwesomeValidation(ValidationStyle.COLORATION)
         validation.addValidation(binding.registerUsernameEdittext, USERNAME_REGEX, USERNAME_ERROR)
         //validation.addValidation(binding.registerScreenPasswordEdittext, PASSWORD_REGEX, PASSWORD_ERROR)
         validation.addValidation(binding.registerConfirmPasswordEdittext, { it == viewModel.newUserPassword.value }, CONFIRM_PASSWORD_ERROR)
-        validation.addValidation(binding.registerEmailEdittext, Patterns.EMAIL_ADDRESS, EMAIL_ERROR)
+        validation.addValidation(binding.registerEmailEdittext, Patterns.EMAIL_ADDRESS, EMAIL_ERROR)*/
 
         //LiveData observers
         viewModel.registrationStatus.observe(viewLifecycleOwner, {
@@ -157,30 +152,13 @@ class RegisterFragment : Fragment() {
                 viewModel.isInvalidEmail = true
             }
         })
-        viewModel.liveProgress.observe(viewLifecycleOwner, {
-            progressAnimation.from = progressAnimation.to
-            progressAnimation.to = it
-            binding.registerFragmentProgressBarInner.startAnimation(progressAnimation)
 
-            //Launch rocket only once
-            if(it == 100 && !hasRocketLaunched) {
-                viewModel.liveProgressAnimatable.value = R.drawable.rocketwithfire
-                YoYo.with(Techniques.Shake).duration(700).onEnd {
-                    val t = ChangeBounds()
-                    t.interpolator = PathInterpolator(0.5f,-0.32f,0.9f,0.36f)
-                    t.duration = 750L
-                    TransitionManager.beginDelayedTransition(binding.registerFragmentRootConstraintLayout, t)
-                    constraintSetShow.applyTo(binding.registerFragmentRootConstraintLayout)
-                    hasRocketLaunched = true
-                }.playOn(binding.registerFragmentProgressBarRightIcon)
-            }
-        })
 
         //Click listeners
-        binding.registerFragmentImage.setOnClickListener {
+        /*binding.registerFragmentImage.setOnClickListener {
             startActivityForResult(Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI), RESULT_LOAD_IMAGE)
-        }
-        binding.registerFragmentSubmitButton.setOnClickListener {
+        }*/
+        /*binding.registerFragmentSubmitButton.setOnClickListener {
             if(validation.validate()) {
                 if(isConnected(context as Application)) {
                     viewModel.register {
@@ -196,16 +174,16 @@ class RegisterFragment : Fragment() {
                     Toast.makeText(context, com.partem.application.util.NOT_CONNECTED_MESSAGE, Toast.LENGTH_SHORT).show()
                 }
             }
-        }
+        }*/
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data?.data != null) {
             viewModel.profilePicturePath = getRealPathFromURI(data.data!!)
             Glide.with(this).load(data.data).into(binding.registerFragmentImage)
         }
-    }
+    }*/
 
     private fun getRealPathFromURI(contentURI: Uri): String {
         val result: String

@@ -33,9 +33,6 @@ class RegisterViewModel : ViewModel() {
     //2-way data binding for progress bar
     internal val liveProgress = MutableLiveData(0)
 
-    //2-way data binding for rocket ImageView
-    val liveProgressAnimatable = MutableLiveData(R.drawable.rocketnofire)
-
     //Registration status LiveData
     private val liveRegistrationStatus = MutableLiveData<String>()
     internal val registrationStatus: LiveData<String>

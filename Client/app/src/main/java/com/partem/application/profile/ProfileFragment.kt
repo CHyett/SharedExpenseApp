@@ -37,8 +37,8 @@ class ProfileFragment: Fragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(ProfileFragmentViewModel::class.java)
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
@@ -46,10 +46,6 @@ class ProfileFragment: Fragment() {
         sharedViewModel.setAppBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.color.colorSecondary)!!)
         sharedViewModel.lockNavDrawer(false)
         sharedViewModel.hideToolbar(false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         //TODO: This will have to be changed to dynamically get group size from server cache
         binding.profileFragmentNumGroupsText.text = getString(R.string.profile_fragment_groups, RECYCLER_DATA.size)
@@ -70,7 +66,7 @@ class ProfileFragment: Fragment() {
             }
         }
         val divider = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
-        divider.setDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.profile_fragment_recycler_divider)!!)
+        divider.setDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.recycler_divider)!!)
         binding.profileFragmentGroupsRecyclerView.addItemDecoration(divider)
         binding.profileFragmentGroupsRecyclerView.adapter = groupAdapter
     }

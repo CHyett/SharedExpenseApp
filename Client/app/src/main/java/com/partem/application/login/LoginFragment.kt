@@ -22,6 +22,7 @@ import com.basgeekball.awesomevalidation.ValidationStyle
 import com.partem.application.R
 import com.partem.application.databinding.LoginFragmentBinding
 import com.partem.application.mainactivity.MainActivityViewModel
+import com.partem.application.util.BlurController
 
 
 private const val USERNAME_REGEX = "^[A-Z0-9a-z]{7,15}$"
@@ -74,7 +75,7 @@ class LoginFragment : Fragment() {
         binding.loginFragmentSignInButton.setOnClickListener {
             if (validation.validate()) {
                 if(isConnected(requireContext().applicationContext)) {
-                    sharedViewModel.logIn(viewModel.liveUsername.value!!, viewModel.livePassword.value!!) {
+                    sharedViewModel.logIn(viewModel.liveUsername.value!!, viewModel.livePassword.value!!, viewModel.liveIsChecked.value!!) {
                         if(!it)
                             Toast.makeText(activity, "Sorry, we don't recognize an account with those credentials.", Toast.LENGTH_LONG).show()
                     }

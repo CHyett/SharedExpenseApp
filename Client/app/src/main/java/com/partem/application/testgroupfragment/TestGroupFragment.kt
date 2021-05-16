@@ -33,8 +33,8 @@ class TestGroupFragment : Fragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(TestGroupFragmentViewModel::class.java)
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this

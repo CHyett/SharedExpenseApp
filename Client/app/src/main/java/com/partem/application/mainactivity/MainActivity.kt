@@ -22,7 +22,6 @@ import com.partem.application.navdrawer.CustomDrawerAdapter
 import com.partem.application.navdrawer.DrawerItem
 import com.partem.application.util.BlurController
 import com.partem.application.util.isConnected
-import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -165,6 +164,10 @@ class MainActivity : AppCompatActivity() {
         binding.mainActivityDrawerLayoutList.setAdapter(adapter)
         binding.mainActivityDrawerLayoutList.setOnGroupClickListener { _, _, groupPosition, _ ->
             when (groupPosition) {
+                0 -> {
+                    navController.navigate(R.id.history_fragment)
+                    binding.mainActivityDrawerLayout.closeDrawer(Gravity.RIGHT)
+                }
                 3 -> {
                     navController.navigate(R.id.settings_fragment)
                     binding.mainActivityDrawerLayout.closeDrawer(Gravity.RIGHT)
