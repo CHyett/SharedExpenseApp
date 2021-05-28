@@ -30,6 +30,7 @@
     <string name="login_fragment_button_join_text">or</string>
     <string name="login_fragment_policy">By proceeding, you also agree to the <a href="https://ourapp.live/tos">Terms of Service</a> and <a href="https://ourapp.live/pp">Privacy Policy.</a></string>
     <string name="login_fragment_remember">Remember me</string>
+    <string name="login_fragment_logout">You have now signed out!</string>
 
     <!-- Strings used for register fragment -->
     <string name="register_confirm_password_edittext_hint">Confirm password</string>

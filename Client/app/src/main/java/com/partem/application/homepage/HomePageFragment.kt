@@ -26,16 +26,24 @@ import com.partem.application.util.BlurController
 
 class HomePageFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
-    //Exclusive ViewModel for HomePageFragment
+    /**
+     * Exclusive ViewModel for HomePageFragment
+     */
     private lateinit var viewModel: HomePageViewModel
 
-    //Binding for interacting with ui components
+    /**
+     * Binding for interacting with UI components
+     */
     private lateinit var binding: HomePageFragmentBinding
 
-    //Main ViewModel for the whole app
+    /**
+     * The main ViewModel for the entire app. Stores values that are shared across multiple fragments.
+     */
     private val sharedViewModel: MainActivityViewModel by activityViewModels()
 
-    //Home fragment recycler view adapter
+    /**
+     * Home fragment recycler view adapter
+     */
     private val groupAdapter = GroupRecyclerAdapter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -62,6 +70,9 @@ class HomePageFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener {
         askForPermissions()
     }
 
+    /**
+     * This method asks the user for the permissions that this app needs to operate properly.
+     */
     private fun askForPermissions() {
         val externalWriteCheck = ContextCompat.checkSelfPermission(
             requireActivity().applicationContext,
@@ -166,6 +177,9 @@ class HomePageFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
+    /**
+     * Styles the home page's RecyclerView and sets the adapter.
+     */
     private fun initRecyclerView() {
         binding.homeFragmentGroupsList.layoutManager = object: LinearLayoutManager(requireContext()) {
             override fun checkLayoutParams(lp: RecyclerView.LayoutParams?): Boolean {
@@ -177,6 +191,9 @@ class HomePageFragment: Fragment(), SwipeRefreshLayout.OnRefreshListener {
         binding.homeFragmentGroupsList.adapter = groupAdapter
     }
 
+    /**
+     * Submits data to the home page's RecyclerView adapter.
+     */
     private fun addDataSet() = groupAdapter.submitList(RECYCLER_DATA)
 
     //SwipeRefreshLayout onRefresh interface listener

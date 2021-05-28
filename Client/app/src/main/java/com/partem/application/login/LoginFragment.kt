@@ -33,12 +33,24 @@ private const val PASSWORD_ERROR = "Your password must be between 8-15 alphanume
 
 class LoginFragment : Fragment() {
 
+    /**
+     * Data binding object used to reference login fragment views.
+     */
     private lateinit var binding: LoginFragmentBinding
 
+    /**
+     * Navigation controller for the main activity. This is used to navigate through UI pages.
+     */
     private lateinit var navController: NavController
 
+    /**
+     * The main ViewModel for the entire app. Stores values that are shared across multiple fragments.
+     */
     private val sharedViewModel: MainActivityViewModel by activityViewModels()
 
+    /**
+     * ViewModel to hold data for the login fragment.
+     */
     private lateinit var viewModel: LoginViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -48,15 +60,11 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
         navController = findNavController()
         askForPermissions()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
         binding.viewmodel = viewModel
+        binding.onLogout = sharedViewModel.loggedOut
         binding.lifecycleOwner = this
         sharedViewModel.setAppBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.color.colorSecondary)!!)
         sharedViewModel.lockNavDrawer(true)
@@ -76,8 +84,7 @@ class LoginFragment : Fragment() {
             if (validation.validate()) {
                 if(isConnected(requireContext().applicationContext)) {
                     sharedViewModel.logIn(viewModel.liveUsername.value!!, viewModel.livePassword.value!!, viewModel.liveIsChecked.value!!) {
-                        if(!it)
-                            Toast.makeText(activity, "Sorry, we don't recognize an account with those credentials.", Toast.LENGTH_LONG).show()
+                        if(!it) Toast.makeText(activity, "Sorry, we don't recognize an account with those credentials.", Toast.LENGTH_LONG).show()
                     }
                 } else {
                     Toast.makeText(context, com.partem.application.util.NOT_CONNECTED_MESSAGE, Toast.LENGTH_SHORT).show()
@@ -86,6 +93,9 @@ class LoginFragment : Fragment() {
         }
     }
 
+    /**
+     * This method asks the user for the permissions that this app needs to operate properly.
+     */
     private fun askForPermissions() {
         val externalWriteCheck = ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         val networkStateCheck = ContextCompat.checkSelfPermission(requireActivity().applicationContext, Manifest.permission.ACCESS_NETWORK_STATE)
@@ -120,7 +130,6 @@ class LoginFragment : Fragment() {
 
     }
 
-
 }
 
 
@@ -130,7 +139,8 @@ class LoginFragment : Fragment() {
 *
 * TODO:
 *  Set back stack so that users do not go back to login if they hit back button.
-*  Change login status to type of string and pair if possible (experimental idea. Haven't used pairs for live data)
+*  Change login status to type of string and pair if possible. (experimental idea. Haven't used pairs for live data)
 *  Implement what happens if the user rejects permissions in onRequestPermissionsResult.
+*  Get Better looking form validation.
 *
 * */

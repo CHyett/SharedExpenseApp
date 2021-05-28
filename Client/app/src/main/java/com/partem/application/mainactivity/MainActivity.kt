@@ -26,27 +26,55 @@ import com.partem.application.util.isConnected
 
 class MainActivity : AppCompatActivity() {
 
+    /**
+     * Navigation controller for the main activity. This is used to navigate through UI pages.
+     */
     private lateinit var navController: NavController
 
+    /**
+     * The main ViewModel for the entire app. Stores values that are shared across multiple fragments.
+     */
     private lateinit var viewModel: MainActivityViewModel
 
+    /**
+     * The DataBinding object used to reference the layout's views.
+     */
     private lateinit var binding: ActivityMainBinding
 
+    /**
+     * The adapter for the navigation drawer's ExpandableListView.
+     */
     private lateinit var adapter: CustomDrawerAdapter
 
+    /**
+     * Variable used for nav drawer dropdown animation.
+     */
     private var lastExpandedPosition = -1
 
+    /**
+     * The list containing parent items for the nav drawer's ExpandableListView.
+     */
     private val headerList = ArrayList<DrawerItem>()
 
+    /**
+     * The map containing child items for the nav drawer's parent items.
+     */
     private val childList = HashMap<DrawerItem, List<DrawerItem>>()
 
+    //TODO: Finish documentation on this field.
+    /**
+     *
+     */
     private val notificationChannelMappings = HashMap<String, String>()
 
+    /**
+     * Array of strings containing all notification channel names.
+     */
     private val notificationChannelList = arrayOf("Group invitations", "Friend requests", "Group members", "Finance notifications")
 
     init {
 
-        for(i in 0..3) notificationChannelMappings[i.toString()] = notificationChannelList[i]
+        for(i in notificationChannelList.indices) notificationChannelMappings[i.toString()] = notificationChannelList[i]
 
     }
 
@@ -70,7 +98,7 @@ class MainActivity : AppCompatActivity() {
         //LiveData observers
         //observe login status and send firebase token if user is logged in
         MainActivityViewModel.isLoggedIn.observe(this, {
-            if (it && isConnected(application)) viewModel.sendToServer()
+            if (it && isConnected(application)) viewModel.updateFirebaseToken()
             else if(!it) {
                 while(navController.currentBackStackEntry != null) navController.popBackStack()
                 navController.navigate(R.id.login_fragment)
@@ -112,6 +140,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Creates notification channels for the Partem app.
+     */
     private fun initNotificationChannels() {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         for((i, notificationChannelName) in notificationChannelList.withIndex()) {
@@ -120,6 +151,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Initializes the nav drawer's data.
+     *
+     * @see headerList
+     * @see childList
+     */
     private fun initNavDrawer() {
         PartemDrawerListener.drawerButton = binding.mainActivityToolbarHamburger
         PartemDrawerListener.viewModel = viewModel
@@ -159,6 +196,12 @@ class MainActivity : AppCompatActivity() {
         childList[menuItem] = emptyList()
     }
 
+    /**
+     * Submits nav drawer data to the nav drawer adapter and sets item click listeners.
+     *
+     * @see headerList
+     * @see childList
+     */
     private fun populateExpandableList() {
         adapter = CustomDrawerAdapter(this, headerList, childList)
         binding.mainActivityDrawerLayoutList.setAdapter(adapter)
@@ -201,6 +244,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Used to handle nav drawer touches and prevent UI glitches.
+     */
     private object PartemDrawerListener: DrawerLayout.DrawerListener {
         lateinit var viewModel: MainActivityViewModel
         lateinit var drawerButton: LottieAnimationView
@@ -231,6 +277,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //Ignore back button input if the previous screen is the splash screen
     override fun onBackPressed() { if(navController.currentDestination?.id != R.id.splash_screen) super.onBackPressed() }
 
 }

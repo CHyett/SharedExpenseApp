@@ -18,56 +18,88 @@ private const val REFRESH_GROUPS_THRESHOLD = 5L
 
 class MainActivityViewModel(application: Application): AndroidViewModel(application) {
 
-    //LiveData to hide toolbar on login and registration
+    /**
+     * LiveData to hide toolbar on login and registration.
+     */
     private val liveHideToolbar = MutableLiveData(View.GONE)
     val hideToolbar: LiveData<Int>
         get() = liveHideToolbar
 
-    //LiveData to lock or unlock nav drawer
+    /**
+     * LiveData to lock or unlock nav drawer.
+     */
     private val liveShowNavDrawer = MutableLiveData<Boolean>()
     internal val showNavDrawer: LiveData<Boolean>
         get() = liveShowNavDrawer
 
-    //LiveData for app background
+    /**
+     * LiveData for app background.
+     */
     private val liveAppBackgroundDrawable = MutableLiveData<Drawable>()
     val appBackgroundDrawable: LiveData<Drawable>
         get() = liveAppBackgroundDrawable
 
-    //LiveData for nav drawer status
+    /**
+     * LiveData for nav drawer status.
+     */
     private val liveIsNavDrawerOpen = MutableLiveData(false)
     internal val isNavDrawerOpen: LiveData<Boolean>
         get() = liveIsNavDrawerOpen
 
-    //Gateway to access persistent data
+    /**
+     * Gateway to access persistent data.
+     */
     private val sharedPrefs: SharedPreferences = application.getSharedPreferences(Tags.SHARED_PREFS_NAME, Context.MODE_PRIVATE)
 
-    //HttpClient for this ViewModel
+    /**
+     * HttpClient for this ViewModel.
+     */
     private val client = AsyncHttpClient()
 
-    //Array of groups that the user is a part of
+    /**
+     * Array of groups that the user is a part of.
+     */
     val userGroups = HashMap<String, Int>()
 
-    //Time stamp for data caching
+    /**
+     * Time stamp for data caching.
+     */
     private val timeStamp = LocalDateTime.now().minusMinutes(5L)
 
-    //Boolean to keep track of splash screen status
+    /**
+     * Boolean to keep track of splash screen status.
+     */
     var hasShownSplashScreen = false
+
+    /**
+     * Boolean to keep track of when the user logs out.
+     */
+    var loggedOut = false
 
     companion object {
 
-        //Firebase token for push notifications
+        /**
+         * Firebase token for push notifications.
+         */
         var firebaseToken: String? = null
 
-        //LiveData for whether the user is logged in or not
+        /**
+         * LiveData for whether the user is logged in or not.
+         */
         private val liveIsLoggedIn = MutableLiveData<Boolean>()
         internal val isLoggedIn: LiveData<Boolean>
             get() = liveIsLoggedIn
 
-        //LiveData for current user username
+        /**
+         * LiveData for current user username.
+         */
         private val liveUser = MutableLiveData<String?>()
         internal val user: LiveData<String?>
             get() = liveUser
 
+        /**
+         * LiveData for whether user would like to be remembered or not.
+         */
         private val liveRememberUser = MutableLiveData<Boolean>()
         internal val rememberUser: LiveData<Boolean>
             get() = liveRememberUser
@@ -78,13 +110,8 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         var loginStatus = false
         var name: String? = ""
         var remember = false
-        //Delete this when you want to log in normally
-        sharedPrefs.edit().apply {
-            putBoolean(Tags.PREFS_LOGIN_HANDLE, true)
-            putString(Tags.PREFS_USERNAME_HANDLE, "tnoah122")
-            putBoolean(Tags.PREFS_REMEMBER_HANDLE, true)
-            if(!commit()) println("Could not commit changes to shared preferences.")
-        }
+        //Dev
+        autoLogin()
         val editor = sharedPrefs.edit()
         if(sharedPrefs.contains(Tags.PREFS_LOGIN_HANDLE)) loginStatus = sharedPrefs.getBoolean(Tags.PREFS_LOGIN_HANDLE, false)
         else editor.putBoolean(Tags.PREFS_LOGIN_HANDLE, false)
@@ -98,14 +125,42 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         liveRememberUser.value = remember
     }
 
+    /**
+     * Locks and hides the nav drawer.
+     *
+     * @param status True if the nav drawer should be locked.
+     */
     fun lockNavDrawer(status: Boolean) { liveShowNavDrawer.value = status }
 
+    /**
+     * Hides the top action/tool bar.
+     *
+     * @param status True if the action/tool bar should be hidden from the user.
+     */
     fun hideToolbar(status: Boolean) { if(status) liveHideToolbar.value = View.GONE else liveHideToolbar.value = View.VISIBLE }
 
+    /**
+     * Sets the background for the app.
+     *
+     * @param drawable The drawable resource to be drawn on the screen.
+     */
     fun setAppBackgroundDrawable(drawable: Drawable) { liveAppBackgroundDrawable.value = drawable }
 
+    /**
+     * Sets the nav drawer state. (Open or closed)
+     *
+     * @param status True if the nav drawer is open
+     */
     internal fun setNavDrawerStatus(status: Boolean) { liveIsNavDrawerOpen.value = status }
 
+    /**
+     * Send username and password to server for login verification.
+     *
+     * @param username The user's username.
+     * @param password The user's password.
+     * @param rememberUser User's preference on credentials being remembered on next login.
+     * @param callback The callback function to be invoked. (callback(true) if login succeeded)
+     */
     internal fun logIn(username: String, password: String, rememberUser: Boolean, callback: (status: Boolean) -> Unit) {
         val params = RequestParams()
         params.put("username", username)
@@ -130,7 +185,11 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
     }
 
     //TODO: How does this change when we find out what the remember checkbox does?
+    /**
+     * Save user preferences to persistent storage.
+     */
     internal fun logOut() {
+        loggedOut = true
         liveUser.value = null
         liveIsLoggedIn.value = false
         sharedPrefs.edit().apply {
@@ -141,6 +200,11 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         }
     }
 
+    /**
+     * Save the current login status to persistent storage.
+     *
+     * @param loginStatus The current login status of the user.
+     */
     internal fun saveLoginStatus(loginStatus: Boolean) {
         sharedPrefs.edit().apply {
             putBoolean(Tags.PREFS_LOGIN_HANDLE, loginStatus)
@@ -150,6 +214,11 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         liveIsLoggedIn.value = loginStatus
     }
 
+    /**
+     * Save username to persistent storage.
+     *
+     * @param username The user's username.
+     */
     internal fun saveUsername(username: String?) {
         username?.let {
             sharedPrefs.edit().apply {
@@ -161,6 +230,11 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         }
     }
 
+    /**
+     * Save rememberUser parameter to persistent storage.
+     *
+     * @param rememberUser User's preference on whether they'd like to be remembered on the next log in or not.
+     */
     internal fun saveRememberUser(rememberUser: Boolean) {
         sharedPrefs.edit().apply {
             putBoolean(Tags.PREFS_REMEMBER_HANDLE, rememberUser)
@@ -170,6 +244,7 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         liveRememberUser.value = rememberUser
     }
 
+    //Document this if and when it starts being used
     fun cacheUserGroups(callback: ((Boolean) -> Unit)? = null) {
         println("Request made and username is true")
         /*if(ChronoUnit.MINUTES.between(timeStamp, LocalDateTime.now()) >= REFRESH_GROUPS_THRESHOLD) {
@@ -199,7 +274,10 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         }*/
     }
 
-    fun sendToServer() {
+    /**
+     * Sets current username's firebase token on the backend server.
+     */
+    fun updateFirebaseToken() {
         if (firebaseToken != null) {
             val params = RequestParams()
             params.put("token", firebaseToken)
@@ -218,11 +296,28 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         }
     }
 
+    //Save important data to SharedPrefs for next login
     override fun onCleared() {
         liveIsLoggedIn.value?.let { saveLoginStatus(it) }
         liveUser.value?.let { saveUsername(it) }
         liveRememberUser.value?.let { saveRememberUser(it) }
         super.onCleared()
+    }
+
+    //Dev tools
+
+    /**
+     * Automatically log a user in with the following username:
+     *
+     * username: tnoah122
+     */
+    private fun autoLogin() {
+        sharedPrefs.edit().apply {
+            putBoolean(Tags.PREFS_LOGIN_HANDLE, true)
+            putString(Tags.PREFS_USERNAME_HANDLE, "tnoah122")
+            putBoolean(Tags.PREFS_REMEMBER_HANDLE, true)
+            if(!commit()) println("Could not commit changes to shared preferences.")
+        }
     }
 
 }

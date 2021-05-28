@@ -4,8 +4,7 @@ import androidx.lifecycle.ViewModel
 
 class HomePageViewModel: ViewModel() {
 
-    //Boolean to represent state of dual button motion layout
-    internal var isExpensesClicked = true
+
 
     /*
     *
