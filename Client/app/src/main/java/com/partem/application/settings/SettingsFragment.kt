@@ -19,14 +19,15 @@ import com.partem.application.util.BlurController
 
 class SettingsFragment: Fragment() {
 
+    /**
+     * DataBinding reference for settings fragment.
+     */
     private lateinit var binding: SettingsFragmentBinding
 
+    /**
+     * The main ViewModel for the entire app. Stores values that are shared across multiple fragments.
+     */
     private val sharedViewModel: MainActivityViewModel by activityViewModels()
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        binding.lifecycleOwner = this
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         sharedViewModel.setAppBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.color.colorSecondary)!!)
@@ -42,9 +43,7 @@ class SettingsFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //Click listeners
-        binding.settingsFragmentProfileContainer.setOnClickListener {
-            findNavController().navigate(R.id.profile_fragment)
-        }
+        binding.settingsFragmentProfileContainer.setOnClickListener { findNavController().navigate(R.id.profile_fragment) }
 
     }
 

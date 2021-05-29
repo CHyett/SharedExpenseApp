@@ -11,6 +11,12 @@ import cz.msebera.android.httpclient.Header
 
 class NotificationReceiver: BroadcastReceiver() {
 
+    /**
+     * Specifies what happens when a push notification is reacted to.
+     *
+     * @param context The context on which to operate on.
+     * @param intent Holds  information on what the user intends to do with the push notification.
+     */
     override fun onReceive(context: Context?, intent: Intent?) {
         val client = AsyncHttpClient()
         val params = RequestParams()
@@ -21,7 +27,7 @@ class NotificationReceiver: BroadcastReceiver() {
             "accept" -> params.put("response", true)
             "decline" -> params.put("response", false)
         }
-        client.post(Endpoints.GROUP_INVITATION_REPLY.endpoint, params, object: AsyncHttpResponseHandler() {
+        client.post(Endpoints.GROUP_INVITATION_REPLY, params, object: AsyncHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
                 println("Group reply success! Response is ${String(responseBody!!)}")
             }

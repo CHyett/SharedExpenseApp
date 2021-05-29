@@ -21,36 +21,63 @@ import java.net.MalformedURLException
 
 class RegisterViewModel : ViewModel() {
 
-    //2-way data binding for username EditText
+    /**
+     * 2-way data binding for username EditText
+     */
     val newUserUsername = MutableLiveData<String>()
 
-    //2-way data binding for password EditText
+    /**
+     * 2-way data binding for password EditText
+     */
     val newUserPassword = MutableLiveData<String>()
 
-    //2-way data binding for email EditText
+    /**
+     * 2-way data binding for email EditText
+     */
     val newUserEmail = MutableLiveData<String>()
-
-    //2-way data binding for progress bar
-    internal val liveProgress = MutableLiveData(0)
 
     //Registration status LiveData
     private val liveRegistrationStatus = MutableLiveData<String>()
     internal val registrationStatus: LiveData<String>
         get() = liveRegistrationStatus
 
-    //LiveData to disable registration button
+    /**
+     * LiveData to disable registration button
+     */
     private val liveIsRegistrationButtonEnabled = MutableLiveData<Boolean>(true)
     val isRegistrationButtonEnabled: LiveData<Boolean>
         get() = liveIsRegistrationButtonEnabled
 
+    /**
+     * Object to make async HTTP requests to the server.
+     */
     private val httpClient = AsyncHttpClient()
 
+    /**
+     * Username validity flag.
+     */
     internal var isInvalidUsername = true
+
+    /**
+     * Password validity flag.
+     */
     internal var isInvalidPassword = true
+
+    /**
+     * EMail validity flag.
+     */
     internal var isInvalidEmail = true
 
+    /**
+     * File system path to profile picture image.
+     */
     internal var profilePicturePath: String? = null
 
+    /**
+     * Sends the client's eMail, username, and password to the server to be processed and registered.
+     *
+     * @param callback A callback function that will be called on success or on failure. (callback(true) if registration succeeded, callback(false) otherwise)
+     */
     internal fun register(callback: (name: String) -> Unit) {
         liveIsRegistrationButtonEnabled.value = false
         val username = newUserUsername.value!!
@@ -58,7 +85,7 @@ class RegisterViewModel : ViewModel() {
         params.put("username", newUserUsername.value)
         params.put("password", newUserPassword.value)
         params.put("email", newUserEmail.value)
-        httpClient.post(Endpoints.REGISTER_ENDPOINT.endpoint, params, object : AsyncHttpResponseHandler() {
+        httpClient.post(Endpoints.REGISTER_ENDPOINT, params, object : AsyncHttpResponseHandler() {
                 override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
                     responseBody?.let { liveRegistrationStatus.value = String(it) }
                     profilePicturePath?.let { uploadProfilePicture(username) }
@@ -73,12 +100,20 @@ class RegisterViewModel : ViewModel() {
             })
     }
 
+    /**
+     * Clears any text inside of the username, password, and eMail text fields.
+     */
     private fun clearEditTexts() {
         newUserUsername.postValue("")
         newUserPassword.postValue("")
         newUserEmail.postValue("")
     }
 
+    /**
+     * Sends the user's optional profile picture to the server.
+     *
+     * @param username The username of the user that this image belongs to.
+     */
     private fun uploadProfilePicture(username: String) {
         val maxBufferSize = 1024 * 1024
         val sourceFile = File(profilePicturePath!! )
@@ -90,7 +125,7 @@ class RegisterViewModel : ViewModel() {
         } else {
             try {
                 val inStream = FileInputStream(sourceFile)
-                val uploadUrl = java.net.URL(Endpoints.PROFILE_PIC_ENDPOINT.endpoint)
+                val uploadUrl = java.net.URL(Endpoints.PROFILE_PIC_ENDPOINT)
                 val conn = uploadUrl.openConnection() as HttpURLConnection
                 conn.doInput = true
                 conn.doOutput = true

@@ -1,6 +1,5 @@
 package com.partem.application.profile
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,12 +20,24 @@ import com.partem.application.util.BlurController
 
 class ProfileFragment: Fragment() {
 
+    /**
+     * ViewModel for the profile fragment.
+     */
     private lateinit var viewModel: ProfileFragmentViewModel
 
+    /**
+     * DataBinding reference for history fragment.
+     */
     private lateinit var binding: ProfileFragmentBinding
 
+    /**
+     * The main ViewModel for the entire app. Stores values that are shared across multiple fragments.
+     */
     private val sharedViewModel: MainActivityViewModel by activityViewModels()
 
+    /**
+     * The adapter that will handle the this fragment's RecyclerView.
+     */
     private val groupAdapter = GroupRecyclerAdapter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -58,6 +69,9 @@ class ProfileFragment: Fragment() {
 
     }
 
+    /**
+     * Styles and sets this fragment's RecyclerView's adapter.
+     */
     private fun initRecyclerView() {
         binding.profileFragmentGroupsRecyclerView.layoutManager = object: LinearLayoutManager(requireContext()) {
             override fun checkLayoutParams(lp: RecyclerView.LayoutParams?): Boolean {
@@ -71,6 +85,9 @@ class ProfileFragment: Fragment() {
         binding.profileFragmentGroupsRecyclerView.adapter = groupAdapter
     }
 
+    /**
+     * Sets this fragment's RecyclerView's adapter's display data.
+     */
     private fun addDataSet() = groupAdapter.submitList(RECYCLER_DATA)
 
 }

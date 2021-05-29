@@ -15,11 +15,25 @@ import com.partem.application.models.Transaction
 
 class TabsPagerAdapter: PagerAdapter() {
 
-    //Structure containing fragment tabs
+    /**
+     * Structure containing fragment tabs
+     */
     private val tabs = arrayOf("Transactions", "Payments")
 
+    /**
+     * Gets the number of tabs that will be displayed.
+     *
+     * @return The number of tabs.
+     */
     override fun getCount(): Int = tabs.size
 
+    /**
+     * Gets the text of the tab for the given index.
+     *
+     * @return The text of the tab given position in the tabs list.
+     *
+     * @see tabs
+     */
     override fun getPageTitle(position: Int): CharSequence = tabs[position]
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
@@ -36,6 +50,13 @@ class TabsPagerAdapter: PagerAdapter() {
         return child
     }
 
+    /**
+     * Sets style for this tab's RecyclerView and adds a HistoryFragmentRecyclerAdapter to it.
+     *
+     * @param context Context on which this method will operate on.
+     * @param layout The layout representing the current tab.
+     * @param adapter The HistoryFragmentRecyclerAdapter that will be added to this tab's RecyclerView.
+     */
     private fun initRecyclerView(context: Context, layout: View, adapter: HistoryFragmentRecyclerAdapter) {
         val recyclerView = layout.findViewById(R.id.history_fragment_pager_tab_item_recycler) as RecyclerView
         recyclerView.layoutManager = object: LinearLayoutManager(context) {
@@ -50,6 +71,12 @@ class TabsPagerAdapter: PagerAdapter() {
         recyclerView.adapter = adapter
     }
 
+    /**
+     * Sets the data set for the current tab's RecyclerView's HistoryFragmentRecyclerAdapter to operate on.
+     *
+     * @param position The position of the current tab within the tabs list.
+     * @param adapter The HistoryFragmentRecyclerAdapter that will be given a data set.
+     */
     private fun addDataSet(position: Int, adapter: HistoryFragmentRecyclerAdapter) {
         val list: Array<Transaction> = if(position == 0) HISTORY_TRANSACTIONS_DATA.clone()
         else {

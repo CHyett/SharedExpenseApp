@@ -15,8 +15,14 @@ import com.partem.application.mainactivity.MainActivityViewModel
 
 class Splash : Fragment() {
 
+    /**
+     * Navigation controller used to navigate between fragments.
+     */
     private lateinit var navController: NavController
 
+    /**
+     * The main ViewModel for the entire app. Stores values that are shared across multiple fragments.
+     */
     private val sharedViewModel: MainActivityViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -29,6 +35,9 @@ class Splash : Fragment() {
         handleInitialNavigation()
     }
 
+    /**
+     * Navigates the user to where they should be and shows splash screen if necessary.
+     */
     private fun handleInitialNavigation() {
         navController = findNavController()
         val options = NavOptions.Builder().setPopUpTo(navController.graph.startDestination, true).build()

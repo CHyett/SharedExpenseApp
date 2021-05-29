@@ -17,16 +17,24 @@ import com.partem.application.util.BlurController
 
 class HistoryFragment : Fragment() {
 
-    //view model for the history fragment
+    /**
+     * ViewModel for the history fragment.
+     */
     private lateinit var viewModel: HistoryFragmentViewModel
 
-    //data binding reference for history fragment
+    /**
+     * DataBinding reference for history fragment.
+     */
     private lateinit var binding: HistoryFragmentBinding
 
-    //view model for the whole app
+    /**
+     * The main ViewModel for the entire app. Stores values that are shared across multiple fragments.
+     */
     private val sharedViewModel: MainActivityViewModel by activityViewModels()
 
-    //Active tab drawable width
+    /**
+     * Active tab drawable width.
+     */
     private var indicatorWidth = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -53,11 +61,6 @@ class HistoryFragment : Fragment() {
             override fun onPageSelected(position: Int) {}           //noop
         })
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
     }
 
 }

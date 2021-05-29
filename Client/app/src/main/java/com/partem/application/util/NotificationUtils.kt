@@ -16,8 +16,9 @@ private const val NOTIFICATION_ID = 0
 
 /**
  * Extension function to build and deliver notifications.
+ *
  * @param remoteMessage: RemoteMessage object to be parsed through and displayed in notification.
- * @param context: activity context.
+ * @param context Context on which to operate on.
  */
 fun NotificationManager.makeNotification(remoteMessage: RemoteMessage, context: Context) {
     val type = remoteMessage.data["type"]!!

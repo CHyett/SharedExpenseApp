@@ -10,11 +10,21 @@ import com.partem.application.mainactivity.MainActivityViewModel
 
 class NotificationService: FirebaseMessagingService() {
 
+    /**
+     * Specifies what happens when a new Firebase token is received by the device.
+     *
+     * @param token The firebase token represented as a String.
+     */
     override fun onNewToken(token: String) {
         println("The token is: $token.\nPrinted from NotificationService.kt")
         MainActivityViewModel.firebaseToken = token
     }
 
+    /**
+     * Specifies what happens when a notification is received from the server.
+     *
+     * @param message The push notification received from the server.
+     */
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
         println("onMessageReceived was called.")
