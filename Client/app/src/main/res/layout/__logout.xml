@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable name="viewmodel" type="com.partem.application.login.LoginViewModel" />
+
+    </data>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginRight="@dimen/login_fragment_margin_sides"
+        android:layout_marginLeft="@dimen/login_fragment_margin_sides"
+        android:orientation="vertical"
+        android:weightSum="100"
+        tools:background="@color/colorSecondary"
+        tools:context=".login.LoginFragment">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="35">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_fragment_logout"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/login_fragment_logout"
+                android:textAlignment="center"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/logout_fragment_form"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="20">
+
+            <EditText
+                android:id="@+id/logout_fragment_email_input"
+                style="@style/edit_text"
+                android:hint="@string/login_fragment_email_input_hint"
+                android:text="@={viewmodel.liveUsername}"
+                android:importantForAutofill="no"
+                android:inputType="textEmailAddress"
+                app:layout_constraintBottom_toTopOf="@+id/logout_fragment_password_input"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/logout_fragment_password_input"
+                style="@style/edit_text"
+                android:text="@={viewmodel.livePassword}"
+                android:hint="@string/login_fragment_password_input_hint"
+                android:importantForAutofill="no"
+                android:inputType="textPassword"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/logout_fragment_email_input"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/logout_fragment_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="25">
+
+            <Button
+                android:id="@+id/logout_fragment_sign_in_button"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_fragment_button_height"
+                android:background="@drawable/primary_button_bg"
+                android:text="@string/login_fragment_sign_in"
+                android:textColor="@color/colorAccent"
+                app:layout_constraintBottom_toTopOf="@+id/logout_fragment_join_button_text"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="spread" />
+
+            <TextView
+                android:id="@+id/logout_fragment_join_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_fragment_button_join_text"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/login_fragment_button_join_text_size"
+                app:layout_constraintBottom_toTopOf="@+id/logout_fragment_sign_up_button"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/logout_fragment_sign_in_button" />
+
+            <Button
+                android:id="@+id/logout_fragment_sign_up_button"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_fragment_button_height"
+                android:background="@drawable/primary_button_bg"
+                android:text="@string/login_fragment_sign_up"
+                android:textColor="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/logout_fragment_join_button_text" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="5"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/logout_fragment_policy_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="8">
+
+            <TextView
+                android:id="@+id/logout_fragment_policy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_fragment_policy"
+                android:textColor="@color/colorGray"
+                android:textSize="@dimen/login_fragment_policy"
+                android:textAlignment="center"
+                android:textColorLink="@color/colorPrimary"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+</layout>

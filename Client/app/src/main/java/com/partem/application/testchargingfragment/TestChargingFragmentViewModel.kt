@@ -29,7 +29,7 @@ class TestChargingFragmentViewModel: ViewModel() {
         params.add("username", MainActivityViewModel.user.value)
         params.add("amount", liveGroupCharge.value)
         params.add("groupID", id)
-        client.post(Endpoints.ADD_GROUP_CHARGE.endpoint, params, object: AsyncHttpResponseHandler() {
+        client.post(Endpoints.ADD_GROUP_CHARGE, params, object: AsyncHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
                 responseBody?.let { println("The response is: ${String(it)}") }
             }

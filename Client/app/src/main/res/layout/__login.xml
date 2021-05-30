@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable name="viewmodel" type="com.partem.application.login.LoginViewModel" />
+
+    </data>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginRight="@dimen/login_fragment_margin_sides"
+        android:layout_marginLeft="@dimen/login_fragment_margin_sides"
+        android:orientation="vertical"
+        android:weightSum="100"
+        tools:background="@color/colorSecondary"
+        tools:context=".login.LoginFragment">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/login_fragment_logo_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="20">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/login_fragment_partem_logo_card_view_holder"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:cardCornerRadius="@dimen/partem_logo_card_view_corners"
+                app:layout_constraintDimensionRatio="w,1:1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/partem_logo"
+                    android:contentDescription="@string/autofill_hints"/>
+
+            </androidx.cardview.widget.CardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/login_fragment_title_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="15">
+
+            <TextView
+                android:id="@+id/login_fragment_welcome_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_fragment_welcome_title"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/login_fragment_welcome_text_title_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/login_fragment_form"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="20">
+
+            <EditText
+                android:id="@+id/login_fragment_email_input"
+                style="@style/edit_text"
+                android:hint="@string/login_fragment_email_input_hint"
+                android:text="@={viewmodel.liveUsername}"
+                android:importantForAutofill="no"
+                android:inputType="textEmailAddress"
+                app:layout_constraintBottom_toTopOf="@+id/login_fragment_password_input"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/login_fragment_password_input"
+                style="@style/edit_text"
+                android:text="@={viewmodel.livePassword}"
+                android:hint="@string/login_fragment_password_input_hint"
+                android:importantForAutofill="no"
+                android:inputType="textPassword"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_fragment_email_input"
+                app:layout_constraintBottom_toTopOf="@+id/login_fragment_remember_layout"/>
+
+            <LinearLayout
+                android:id="@+id/login_fragment_remember_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_fragment_password_input"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/login_fragment_remember_checkbox"
+                    android:checked="@={viewmodel.liveIsChecked}"
+                    android:layout_width="@dimen/login_fragment_checkbox"
+                    android:layout_height="@dimen/login_fragment_checkbox"
+                    android:layout_marginLeft="@dimen/login_fragment_checkbox_horizontal_margins"
+                    android:layout_marginRight="@dimen/login_fragment_checkbox_horizontal_margins" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/login_fragment_checkbox"
+                    android:text="@string/login_fragment_remember"
+                    android:textColor="@color/colorGray"/>
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/login_fragment_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="25">
+
+            <Button
+                android:id="@+id/login_fragment_sign_in_button"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_fragment_button_height"
+                android:background="@drawable/primary_button_bg"
+                android:text="@string/login_fragment_sign_in"
+                android:textColor="@color/colorAccent"
+                app:layout_constraintBottom_toTopOf="@+id/login_fragment_join_button_text"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="spread" />
+
+            <TextView
+                android:id="@+id/login_fragment_join_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_fragment_button_join_text"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/login_fragment_button_join_text_size"
+                app:layout_constraintBottom_toTopOf="@+id/login_fragment_sign_up_button"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_fragment_sign_in_button" />
+
+            <Button
+                android:id="@+id/login_fragment_sign_up_button"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_fragment_button_height"
+                android:background="@drawable/primary_button_bg"
+                android:text="@string/login_fragment_sign_up"
+                android:textColor="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/login_fragment_join_button_text" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/login_fragment_policy_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="8">
+
+            <TextView
+                android:id="@+id/login_fragment_policy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_fragment_policy"
+                android:textColor="@color/colorGray"
+                android:textSize="@dimen/login_fragment_policy"
+                android:textAlignment="center"
+                android:textColorLink="@color/colorPrimary"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+</layout>

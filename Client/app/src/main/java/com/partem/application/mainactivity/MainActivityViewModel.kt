@@ -111,7 +111,7 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         var name: String? = ""
         var remember = false
         //Dev
-        autoLogin()
+        //autoLogin()
         val editor = sharedPrefs.edit()
         if(sharedPrefs.contains(Tags.PREFS_LOGIN_HANDLE)) loginStatus = sharedPrefs.getBoolean(Tags.PREFS_LOGIN_HANDLE, false)
         else editor.putBoolean(Tags.PREFS_LOGIN_HANDLE, false)
@@ -165,7 +165,7 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         val params = RequestParams()
         params.put("username", username)
         params.put("password", password)
-        client.get(Endpoints.LOGIN_ENDPOINT.endpoint, params, object: AsyncHttpResponseHandler() {
+        client.get(Endpoints.LOGIN_ENDPOINT, params, object: AsyncHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
                 //Ask cy what is returned from the server here. You might need to assign it to the livedata
                 //responseBody?.let { liveLoginStatus.value = String(responseBody) }
@@ -282,7 +282,7 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
             val params = RequestParams()
             params.put("token", firebaseToken)
             params.put("username", user.value!!)
-            client.post(Endpoints.FIREBASE_TOKEN_ENDPOINT.endpoint, params, object : AsyncHttpResponseHandler() {
+            client.post(Endpoints.FIREBASE_TOKEN_ENDPOINT, params, object : AsyncHttpResponseHandler() {
                 override fun onSuccess(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?) {
                     println("firebase token post request status code: $statusCode")
                     responseBody?.let { println(String(it)) }

@@ -1,7 +1,6 @@
 package com.partem.application.login
 
 import android.Manifest
-import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +10,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.partem.application.util.isConnected
@@ -20,7 +20,9 @@ import androidx.navigation.fragment.findNavController
 import com.basgeekball.awesomevalidation.AwesomeValidation
 import com.basgeekball.awesomevalidation.ValidationStyle
 import com.partem.application.R
+import com.partem.application.databinding.LoginBinding
 import com.partem.application.databinding.LoginFragmentBinding
+import com.partem.application.databinding.LogoutBinding
 import com.partem.application.mainactivity.MainActivityViewModel
 import com.partem.application.util.BlurController
 
@@ -55,6 +57,7 @@ class LoginFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.login_fragment, container, false)
+        BlurController.subjectView = binding.loginFragmentRoot
         return binding.root
     }
 
@@ -66,28 +69,50 @@ class LoginFragment : Fragment() {
         binding.viewmodel = viewModel
         binding.onLogout = sharedViewModel.loggedOut
         binding.lifecycleOwner = this
+        if(sharedViewModel.loggedOut) binding.logoutLayout.viewmodel = viewModel else binding.loginLayout.viewmodel = viewModel
         sharedViewModel.setAppBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.color.colorSecondary)!!)
         sharedViewModel.lockNavDrawer(true)
         sharedViewModel.hideToolbar(true)
 
-        //Form validation
-        val validation = AwesomeValidation(ValidationStyle.COLORATION)
-        validation.addValidation(binding.loginFragmentEmailInput, USERNAME_REGEX, USERNAME_ERROR)
-        validation.addValidation(binding.loginFragmentPasswordInput, PASSWORD_REGEX, PASSWORD_ERROR)
-
         //LiveData observers
 
-
         //Click listeners
-        binding.loginFragmentSignUpButton.setOnClickListener { navController.navigate(R.id.action_loginFragment_to_registerFragment) }
-        binding.loginFragmentSignInButton.setOnClickListener {
-            if (validation.validate()) {
-                if(isConnected(requireContext().applicationContext)) {
-                    sharedViewModel.logIn(viewModel.liveUsername.value!!, viewModel.livePassword.value!!, viewModel.liveIsChecked.value!!) {
-                        if(!it) Toast.makeText(activity, "Sorry, we don't recognize an account with those credentials.", Toast.LENGTH_LONG).show()
+        handleFormValidation()
+
+    }
+
+    /**
+     * Function to handle assigning click listeners and form validation to the proper layout. (Login or logout)
+     */
+    private fun handleFormValidation() {
+        val validation = AwesomeValidation(ValidationStyle.COLORATION)
+        when(sharedViewModel.loggedOut) {
+            true -> {
+                validation.addValidation(binding.logoutLayout.logoutFragmentEmailInput, USERNAME_REGEX, USERNAME_ERROR)
+                validation.addValidation(binding.logoutLayout.logoutFragmentPasswordInput, PASSWORD_REGEX, PASSWORD_ERROR)
+                binding.logoutLayout.logoutFragmentSignUpButton.setOnClickListener { navController.navigate(R.id.action_loginFragment_to_registerFragment) }
+                binding.logoutLayout.logoutFragmentSignInButton.setOnClickListener {
+                    if (validation.validate()) {
+                        if(isConnected(requireContext().applicationContext)) {
+                            sharedViewModel.logIn(viewModel.liveUsername.value!!, viewModel.livePassword.value!!, viewModel.liveIsChecked.value!!) {
+                                if(!it) Toast.makeText(activity, "Sorry, we don't recognize an account with those credentials.", Toast.LENGTH_LONG).show()
+                            }
+                        } else Toast.makeText(context, com.partem.application.util.NOT_CONNECTED_MESSAGE, Toast.LENGTH_SHORT).show()
                     }
-                } else {
-                    Toast.makeText(context, com.partem.application.util.NOT_CONNECTED_MESSAGE, Toast.LENGTH_SHORT).show()
+                }
+            }
+            false -> {
+                validation.addValidation(binding.loginLayout.loginFragmentEmailInput, USERNAME_REGEX, USERNAME_ERROR)
+                validation.addValidation(binding.loginLayout.loginFragmentPasswordInput, PASSWORD_REGEX, PASSWORD_ERROR)
+                binding.loginLayout.loginFragmentSignUpButton.setOnClickListener { navController.navigate(R.id.action_loginFragment_to_registerFragment) }
+                binding.loginLayout.loginFragmentSignInButton.setOnClickListener {
+                    if (validation.validate()) {
+                        if(isConnected(requireContext().applicationContext)) {
+                            sharedViewModel.logIn(viewModel.liveUsername.value!!, viewModel.livePassword.value!!, viewModel.liveIsChecked.value!!) {
+                                if(!it) Toast.makeText(activity, "Sorry, we don't recognize an account with those credentials.", Toast.LENGTH_LONG).show()
+                            }
+                        } else Toast.makeText(context, com.partem.application.util.NOT_CONNECTED_MESSAGE, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }

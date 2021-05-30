@@ -83,39 +83,27 @@ class RegisterFragment : Fragment() {
             Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
         })
         viewModel.newUserUsername.observe(viewLifecycleOwner, {
-            val progress = viewModel.liveProgress.value!!
             val matchStatus = it.matches(usernameRegex)
-            if(matchStatus && viewModel.isInvalidUsername) {
-                viewModel.liveProgress.value = progress + 34
+            if(matchStatus && viewModel.isInvalidUsername)
                 viewModel.isInvalidUsername = false
-            } else if(!matchStatus && !viewModel.isInvalidUsername) {
-                viewModel.liveProgress.value = progress - 34
+            else if(!matchStatus && !viewModel.isInvalidUsername)
                 viewModel.isInvalidUsername = true
-            }
         })
         viewModel.newUserPassword.observe(viewLifecycleOwner, {
-            val progress = viewModel.liveProgress.value!!
             //val matchStatus = it.matches(PasswordRegex)
             //This should be deleted when the password regex works
             val notEmpty = it.isNotEmpty()
-            if(notEmpty && viewModel.isInvalidPassword) {
-                viewModel.liveProgress.value = progress + 33
+            if(notEmpty && viewModel.isInvalidPassword)
                 viewModel.isInvalidPassword = false
-            } else if(!notEmpty && !viewModel.isInvalidPassword) {
-                viewModel.liveProgress.value = progress - 33
+            else if(!notEmpty && !viewModel.isInvalidPassword)
                 viewModel.isInvalidPassword = true
-            }
         })
         viewModel.newUserEmail.observe(viewLifecycleOwner, {
-            val progress = viewModel.liveProgress.value!!
             val matchStatus = it.matches(emailRegex)
-            if(matchStatus && viewModel.isInvalidEmail) {
-                viewModel.liveProgress.value = progress + 33
+            if(matchStatus && viewModel.isInvalidEmail)
                 viewModel.isInvalidEmail = false
-            } else if(!matchStatus && !viewModel.isInvalidEmail) {
-                viewModel.liveProgress.value = progress - 33
+            else if(!matchStatus && !viewModel.isInvalidEmail)
                 viewModel.isInvalidEmail = true
-            }
         })
 
 
