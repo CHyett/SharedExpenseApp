@@ -15,7 +15,7 @@ val RECYCLER_DATA = arrayOf(Group(1, "myGroup1", 100.0f, 0.3f), Group(2, "myGrou
 /**
  * Mock data to be displayed on the history fragment.
  */
-val HISTORY_TRANSACTIONS_DATA = arrayOf(Transaction("Nick T.", -123.45), Transaction("Cy Cy", 42.31),
-        Transaction("Cancun", -1812.77), Transaction("Dinner", 20.38), Transaction("Chris", 5.08),
+val HISTORY_TRANSACTIONS_DATA = arrayOf(Transaction("Nick T.", -123.45), Transaction("Cy Cy", 42.31, "Snek"),
+        Transaction("Cancun", -1812.77, "That was super fun."), Transaction("Dinner", 20.38), Transaction("Chris", 5.08, "Revenue generated from band."),
         Transaction("Noah", -35.09), Transaction("Emily", 10.00), Transaction("Rent", -500.00),
-        Transaction("Lake Isabella", 500.65), Transaction("Europe", 1000.0))
+        Transaction("Lake Isabella", 500.65, "Groceries and shit"), Transaction("Europe", 1000.0))

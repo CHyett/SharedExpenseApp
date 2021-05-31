@@ -4,10 +4,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import androidx.viewpager.widget.PagerAdapter
 import com.partem.application.R
 import com.partem.application.enums.HISTORY_TRANSACTIONS_DATA
@@ -59,16 +58,10 @@ class TabsPagerAdapter: PagerAdapter() {
      */
     private fun initRecyclerView(context: Context, layout: View, adapter: HistoryFragmentRecyclerAdapter) {
         val recyclerView = layout.findViewById(R.id.history_fragment_pager_tab_item_recycler) as RecyclerView
-        recyclerView.layoutManager = object: LinearLayoutManager(context) {
-            override fun checkLayoutParams(lp: RecyclerView.LayoutParams?): Boolean {
-                lp?.height = layout.height / 10
-                return true
-            }
-        }
-        val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-        divider.setDrawable(AppCompatResources.getDrawable(context, R.drawable.recycler_divider)!!)
-        recyclerView.addItemDecoration(divider)
+        (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
+        recyclerView.setHasFixedSize(true)
     }
 
     /**

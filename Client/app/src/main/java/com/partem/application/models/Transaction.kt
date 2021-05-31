@@ -6,4 +6,4 @@ package com.partem.application.models
  *
  * @constructor
  */
-data class Transaction(val target: String, val amount: Double)
+data class Transaction(val target: String, val amount: Double, val description: String? = null)

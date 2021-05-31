@@ -3,8 +3,10 @@ package com.partem.application.history
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import android.widget.LinearLayout
 import com.partem.application.R
 import com.partem.application.enums.HISTORY_TRANSACTIONS_DATA
 import com.partem.application.models.Transaction
@@ -14,12 +16,12 @@ import kotlin.math.abs
 /**
  * Adapter for the history fragment RecyclerView.
  */
-class HistoryFragmentRecyclerAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class HistoryFragmentRecyclerAdapter: RecyclerView.Adapter<HistoryFragmentRecyclerAdapter.HistoryRecyclerAdapterViewHolder>() {
 
     /**
      * List of transactions that will be displayed on the screen.
      */
-    private var items = HISTORY_TRANSACTIONS_DATA
+    private var items = Array(HISTORY_TRANSACTIONS_DATA.size) { TransactionRecyclerItem(HISTORY_TRANSACTIONS_DATA[it]) }
 
     /**
      * The number of items in the items list.
@@ -35,7 +37,7 @@ class HistoryFragmentRecyclerAdapter: RecyclerView.Adapter<RecyclerView.ViewHold
      *
      * @param groupList The list of Transactions to be submitted.
      */
-    fun submitList(groupList: Array<Transaction>) { items = groupList }
+    fun submitList(groupList: Array<Transaction>) { items = Array(groupList.size) { TransactionRecyclerItem(groupList[it]) } }
 
     //TODO: Complete documentation for the viewType parameter.
     /**
@@ -46,7 +48,7 @@ class HistoryFragmentRecyclerAdapter: RecyclerView.Adapter<RecyclerView.ViewHold
      *
      * @return A HistoryRecyclerAdapterViewHolder with a view from the inflated parent given.
      */
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryRecyclerAdapterViewHolder {
         return HistoryRecyclerAdapterViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.history_fragment_recycler_item, parent, false))
     }
 
@@ -56,10 +58,7 @@ class HistoryFragmentRecyclerAdapter: RecyclerView.Adapter<RecyclerView.ViewHold
      * @param position The index of the Transaction in the items array.
      * @param holder The holder that the Transaction will be bound to.
      */
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        holder as HistoryRecyclerAdapterViewHolder
-        holder.bind(items[position])
-    }
+    override fun onBindViewHolder(holder: HistoryRecyclerAdapterViewHolder, position: Int) = holder.bind(items[position])
 
     //TODO: Complete documentation for the constructor.
     /**
@@ -67,7 +66,7 @@ class HistoryFragmentRecyclerAdapter: RecyclerView.Adapter<RecyclerView.ViewHold
      *
      * @constructor
      */
-    class HistoryRecyclerAdapterViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class HistoryRecyclerAdapterViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
         /**
          * The name of the target for this Transaction.
@@ -80,13 +79,40 @@ class HistoryFragmentRecyclerAdapter: RecyclerView.Adapter<RecyclerView.ViewHold
         private val amount: TextView = itemView.history_fragment_recycler_amount
 
         /**
+         * Button for showing optional description.
+         */
+        private val descriptionBtn: ImageView = itemView.history_fragment_recycler_dropdown_btn
+
+        /**
+         * Layout containing transaction description.
+         */
+        private val descriptionLayout: LinearLayout = itemView.history_fragment_recycler_optional_description_layout
+
+        /**
+         * The transaction description. (Optional)
+         */
+        private val description: TextView = itemView.history_fragment_recycler_optional_description
+
+        init {
+            descriptionBtn.setOnClickListener {
+                items[adapterPosition].isExpanded = !items[adapterPosition].isExpanded
+                notifyItemChanged(adapterPosition)
+            }
+        }
+
+        /**
          * Binds the Transaction data to TextViews.
          *
-         * @param transaction The Transaction object which will be bound to this holder.
+         * @param item The Transaction object which will be bound to this holder.
          */
-        fun bind(transaction: Transaction) {
-            targetName.text = transaction.target
-            amount.text = if(transaction.amount >= 0.0) "$${transaction.amount}"  else "-$${abs(transaction.amount)}"
+        fun bind(item: TransactionRecyclerItem) {
+            targetName.text = item.transaction.target
+            amount.text = if(item.transaction.amount >= 0.0) "$${item.transaction.amount}"  else "-$${abs(item.transaction.amount)}"
+            item.transaction.description?.let {
+                description.text = it
+                descriptionBtn.visibility = View.VISIBLE
+                descriptionLayout.visibility = if(item.isExpanded) View.VISIBLE  else View.GONE
+            }
         }
 
     }

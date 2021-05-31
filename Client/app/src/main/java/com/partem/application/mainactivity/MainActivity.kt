@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
         initNavDrawer()
         populateExpandableList()
         initNotificationChannels()
-        
+
         //LiveData observers
         //observe login status and send firebase token if user is logged in
         MainActivityViewModel.isLoggedIn.observe(this, {

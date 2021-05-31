@@ -111,7 +111,7 @@ class MainActivityViewModel(application: Application): AndroidViewModel(applicat
         var name: String? = ""
         var remember = false
         //Dev
-        //autoLogin()
+        autoLogin()
         val editor = sharedPrefs.edit()
         if(sharedPrefs.contains(Tags.PREFS_LOGIN_HANDLE)) loginStatus = sharedPrefs.getBoolean(Tags.PREFS_LOGIN_HANDLE, false)
         else editor.putBoolean(Tags.PREFS_LOGIN_HANDLE, false)
