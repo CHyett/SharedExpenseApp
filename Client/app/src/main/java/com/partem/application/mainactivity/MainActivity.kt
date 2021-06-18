@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat

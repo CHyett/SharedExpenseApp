@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SimpleItemAnimator
 import androidx.viewpager.widget.PagerAdapter
 import com.partem.application.R
 import com.partem.application.enums.HISTORY_TRANSACTIONS_DATA
@@ -43,6 +42,7 @@ class TabsPagerAdapter: PagerAdapter() {
         val inflater = LayoutInflater.from(container.context)
         val child = inflater.inflate(R.layout.history_fragment_tab_item, container, false) as ViewGroup
         val adapter = HistoryFragmentRecyclerAdapter()
+        adapter.setHasStableIds(true)
         initRecyclerView(container.context, child, adapter)
         addDataSet(position, adapter)
         container.addView(child)
@@ -58,8 +58,9 @@ class TabsPagerAdapter: PagerAdapter() {
      */
     private fun initRecyclerView(context: Context, layout: View, adapter: HistoryFragmentRecyclerAdapter) {
         val recyclerView = layout.findViewById(R.id.history_fragment_pager_tab_item_recycler) as RecyclerView
-        (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.itemAnimator!!.changeDuration = CHANGE_DURATION
+        recyclerView.itemAnimator!!.moveDuration = CHANGE_DURATION
+        recyclerView.layoutManager = object: LinearLayoutManager(context) { override fun supportsPredictiveItemAnimations(): Boolean = true }
         recyclerView.adapter = adapter
         recyclerView.setHasFixedSize(true)
     }

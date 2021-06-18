@@ -1,27 +1,34 @@
 package com.partem.application.history
 
+import android.animation.LayoutTransition
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.partem.application.R
 import com.partem.application.enums.HISTORY_TRANSACTIONS_DATA
 import com.partem.application.models.Transaction
 import kotlinx.android.synthetic.main.history_fragment_recycler_item.view.*
 import kotlin.math.abs
 
+internal const val EXPAND_ANIMATION = 0x0
+internal const val CHANGE_DURATION = 500L
+
 /**
  * Adapter for the history fragment RecyclerView.
  */
-class HistoryFragmentRecyclerAdapter: RecyclerView.Adapter<HistoryFragmentRecyclerAdapter.HistoryRecyclerAdapterViewHolder>() {
+class HistoryFragmentRecyclerAdapter : RecyclerView.Adapter<HistoryFragmentRecyclerAdapter.HistoryRecyclerAdapterViewHolder>() {
 
     /**
      * List of transactions that will be displayed on the screen.
      */
     private var items = Array(HISTORY_TRANSACTIONS_DATA.size) { TransactionRecyclerItem(HISTORY_TRANSACTIONS_DATA[it]) }
+
 
     /**
      * The number of items in the items list.
@@ -32,12 +39,16 @@ class HistoryFragmentRecyclerAdapter: RecyclerView.Adapter<HistoryFragmentRecycl
      */
     override fun getItemCount(): Int = items.size
 
+    override fun getItemId(position: Int): Long = position.toLong()
+
     /**
      * Public method to set the items list.
      *
      * @param groupList The list of Transactions to be submitted.
      */
-    fun submitList(groupList: Array<Transaction>) { items = Array(groupList.size) { TransactionRecyclerItem(groupList[it]) } }
+    fun submitList(groupList: Array<Transaction>) {
+        items = Array(groupList.size) { TransactionRecyclerItem(groupList[it]) }
+    }
 
     //TODO: Complete documentation for the viewType parameter.
     /**
@@ -66,7 +77,7 @@ class HistoryFragmentRecyclerAdapter: RecyclerView.Adapter<HistoryFragmentRecycl
      *
      * @constructor
      */
-    inner class HistoryRecyclerAdapterViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class HistoryRecyclerAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         /**
          * The name of the target for this Transaction.
@@ -93,11 +104,21 @@ class HistoryFragmentRecyclerAdapter: RecyclerView.Adapter<HistoryFragmentRecycl
          */
         private val description: TextView = itemView.history_fragment_recycler_optional_description
 
+        /**
+         *
+         */
+        private val rootLayout: ConstraintLayout = itemView.history_fragment_recycler_item_root
+
         init {
             descriptionBtn.setOnClickListener {
                 items[adapterPosition].isExpanded = !items[adapterPosition].isExpanded
-                notifyItemChanged(adapterPosition)
+                notifyItemChanged(adapterPosition, EXPAND_ANIMATION)
             }
+            rootLayout.layoutTransition.setInterpolator(LayoutTransition.CHANGE_DISAPPEARING, AccelerateDecelerateInterpolator())
+            rootLayout.layoutTransition.setInterpolator(LayoutTransition.DISAPPEARING, AccelerateDecelerateInterpolator())
+            rootLayout.layoutTransition.setInterpolator(LayoutTransition.CHANGE_APPEARING, AccelerateDecelerateInterpolator())
+            rootLayout.layoutTransition.setInterpolator(LayoutTransition.APPEARING, AccelerateDecelerateInterpolator())
+            rootLayout.layoutTransition.setDuration(CHANGE_DURATION)
         }
 
         /**
@@ -107,14 +128,13 @@ class HistoryFragmentRecyclerAdapter: RecyclerView.Adapter<HistoryFragmentRecycl
          */
         fun bind(item: TransactionRecyclerItem) {
             targetName.text = item.transaction.target
-            amount.text = if(item.transaction.amount >= 0.0) "$${item.transaction.amount}"  else "-$${abs(item.transaction.amount)}"
+            amount.text = if (item.transaction.amount >= 0.0) "$${item.transaction.amount}" else "-$${abs(item.transaction.amount)}"
             item.transaction.description?.let {
                 description.text = it
                 descriptionBtn.visibility = View.VISIBLE
-                descriptionLayout.visibility = if(item.isExpanded) View.VISIBLE  else View.GONE
+                descriptionLayout.visibility = if (item.isExpanded) View.VISIBLE else View.GONE
             }
         }
 
     }
-
 }
