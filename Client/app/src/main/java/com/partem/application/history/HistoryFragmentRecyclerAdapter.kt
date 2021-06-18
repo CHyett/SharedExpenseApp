@@ -22,7 +22,7 @@ internal const val CHANGE_DURATION = 500L
 /**
  * Adapter for the history fragment RecyclerView.
  */
-class HistoryFragmentRecyclerAdapter : RecyclerView.Adapter<HistoryFragmentRecyclerAdapter.HistoryRecyclerAdapterViewHolder>() {
+class HistoryFragmentRecyclerAdapter: RecyclerView.Adapter<HistoryFragmentRecyclerAdapter.HistoryRecyclerAdapterViewHolder>() {
 
     /**
      * List of transactions that will be displayed on the screen.
@@ -77,7 +77,7 @@ class HistoryFragmentRecyclerAdapter : RecyclerView.Adapter<HistoryFragmentRecyc
      *
      * @constructor
      */
-    inner class HistoryRecyclerAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class HistoryRecyclerAdapterViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
         /**
          * The name of the target for this Transaction.
