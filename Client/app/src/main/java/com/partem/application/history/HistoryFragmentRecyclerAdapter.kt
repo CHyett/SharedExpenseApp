@@ -105,7 +105,7 @@ class HistoryFragmentRecyclerAdapter: RecyclerView.Adapter<HistoryFragmentRecycl
         private val description: TextView = itemView.history_fragment_recycler_optional_description
 
         /**
-         *
+         * The root layout of this item.
          */
         private val rootLayout: ConstraintLayout = itemView.history_fragment_recycler_item_root
 
