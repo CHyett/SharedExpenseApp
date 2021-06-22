@@ -126,6 +126,7 @@
     <dimen name="history_fragment_recycler_item_vertical_margins">20dp</dimen>
     <dimen name="history_fragment_amount_margin_right">30dp</dimen>
     <dimen name="history_fragment_image_size">30dp</dimen>
+    <dimen name="history_fragment_image_margin_right">20dp</dimen>
     <dimen name="history_fragment_divider_height">1dp</dimen>
 
 </resources>

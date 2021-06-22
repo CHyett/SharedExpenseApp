@@ -1,10 +1,12 @@
 package com.partem.application.history
 
 import android.animation.LayoutTransition
+import android.animation.ObjectAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -109,17 +111,6 @@ class HistoryFragmentRecyclerAdapter: RecyclerView.Adapter<HistoryFragmentRecycl
          */
         private val rootLayout: ConstraintLayout = itemView.history_fragment_recycler_item_root
 
-        init {
-            descriptionBtn.setOnClickListener {
-                items[adapterPosition].isExpanded = !items[adapterPosition].isExpanded
-                notifyItemChanged(adapterPosition, EXPAND_ANIMATION)
-            }
-            rootLayout.layoutTransition.setInterpolator(LayoutTransition.CHANGE_DISAPPEARING, AccelerateDecelerateInterpolator())
-            rootLayout.layoutTransition.setInterpolator(LayoutTransition.DISAPPEARING, AccelerateDecelerateInterpolator())
-            rootLayout.layoutTransition.setInterpolator(LayoutTransition.CHANGE_APPEARING, AccelerateDecelerateInterpolator())
-            rootLayout.layoutTransition.setInterpolator(LayoutTransition.APPEARING, AccelerateDecelerateInterpolator())
-            rootLayout.layoutTransition.setDuration(CHANGE_DURATION)
-        }
 
         /**
          * Binds the Transaction data to TextViews.
@@ -128,11 +119,25 @@ class HistoryFragmentRecyclerAdapter: RecyclerView.Adapter<HistoryFragmentRecycl
          */
         fun bind(item: TransactionRecyclerItem) {
             targetName.text = item.transaction.target
-            amount.text = if (item.transaction.amount >= 0.0) "$${item.transaction.amount}" else "-$${abs(item.transaction.amount)}"
+            amount.text = if(item.transaction.amount >= 0.0) " $${item.transaction.amount}" else "-$${abs(item.transaction.amount)}"
             item.transaction.description?.let {
                 description.text = it
                 descriptionBtn.visibility = View.VISIBLE
-                descriptionLayout.visibility = if (item.isExpanded) View.VISIBLE else View.GONE
+                descriptionLayout.visibility = if(item.isExpanded) View.VISIBLE else View.GONE
+                rootLayout.layoutTransition.setDuration(CHANGE_DURATION)
+                rootLayout.layoutTransition.setInterpolator(LayoutTransition.APPEARING, AccelerateDecelerateInterpolator())
+                rootLayout.layoutTransition.setInterpolator(LayoutTransition.DISAPPEARING, AccelerateDecelerateInterpolator())
+                rootLayout.layoutTransition.setInterpolator(LayoutTransition.CHANGE_APPEARING, AccelerateDecelerateInterpolator())
+                rootLayout.layoutTransition.setInterpolator(LayoutTransition.CHANGE_DISAPPEARING, AccelerateDecelerateInterpolator())
+                descriptionBtn.setOnClickListener {
+                    val anim = descriptionBtn.animate()
+                    anim.duration = CHANGE_DURATION
+                    anim.interpolator = LinearInterpolator()
+                    anim.rotation(if(items[adapterPosition].isExpanded) 0f else 180f)
+                    anim.start()
+                    items[adapterPosition].isExpanded = !items[adapterPosition].isExpanded
+                    notifyItemChanged(adapterPosition, EXPAND_ANIMATION)
+                }
             }
         }
 
